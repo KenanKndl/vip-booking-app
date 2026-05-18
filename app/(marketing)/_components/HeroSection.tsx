@@ -26,12 +26,12 @@ const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
-        transition: { staggerChildren: 0.15 }, // Biraz daha seri bir akış
+        transition: { staggerChildren: 0.15 },
     },
 };
 
 const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 12 }, // Yukarı kayma mesafesini de azalttık (Sakinlik için)
+    hidden: { opacity: 0, y: 12 },
     visible: {
         opacity: 1,
         y: 0,
@@ -51,61 +51,78 @@ export function HeroSection() {
     }, []);
 
     return (
-        <section className="min-h-screen bg-[#0d0d0d]">
-            {/* pt-24 -> pt-32 yapıldı, navbar'dan daha dengeli uzaklaşması için */}
-            <div className="mx-auto flex min-h-screen max-w-7xl flex-col justify-center px-6 pt-32 lg:px-8">
-                {/* pb-32 pt-20 -> pb-20 pt-12 düşürülerek genel dikey yığılma sıkılaştırıldı */}
-                <div className="relative flex min-h-[580px] items-center justify-center overflow-hidden px-6 pb-20 pt-12 md:px-12">
-                    <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center text-center">
-
+        <section className="min-h-[100svh] overflow-hidden bg-[#0d0d0d]">
+            <div className="mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-center px-4 pt-24 sm:px-6 sm:pt-28 lg:px-8 lg:pt-32">
+                <div className="relative flex min-h-[520px] items-center justify-center overflow-hidden px-0 pb-12 pt-8 sm:min-h-[560px] sm:px-6 sm:pb-16 sm:pt-10 md:min-h-[580px] md:px-12 md:pb-20 md:pt-12">
+                    <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center text-center">
                         <motion.div
-                            className="flex flex-col items-center gap-5" // gap-6 -> gap-5 indirildi
+                            className="flex w-full flex-col items-center gap-5"
                             variants={containerVariants}
                             initial="hidden"
                             animate="visible"
                         >
-                            <motion.p variants={itemVariants} className="text-xs font-medium tracking-[0.35em] text-white/40 uppercase md:text-sm">
+                            <motion.p
+                                variants={itemVariants}
+                                className="text-[10px] font-medium tracking-[0.28em] text-white/40 uppercase sm:text-xs sm:tracking-[0.35em] md:text-sm"
+                            >
                                 Premium VIP Transfer
                             </motion.p>
 
-                            {/* DEĞİŞİKLİK: md:text-6xl lg:text-7xl -> md:text-7xl lg:text-8xl yapıldı. Yazı büyütüldü ve leading-tight ile sıkıştırıldı */}
-                            <motion.h1 variants={itemVariants} className="max-w-4xl text-5xl font-bold tracking-tight text-white md:text-7xl lg:text-8xl leading-[1.1] md:leading-[1.05]">
-                                Güvenli, konforlu ve
+                            <motion.h1
+                                variants={itemVariants}
+                                className="max-w-[22rem] text-[2.55rem] font-bold leading-[1.05] tracking-tight text-white sm:max-w-2xl sm:text-5xl md:max-w-4xl md:text-7xl md:leading-[1.05] lg:text-8xl"
+                            >
+    <span className="block">
+        Güvenli, konforlu
+    </span>
 
-                                {/* DEĞİŞİKLİK: mt-2 kaldırıldı, h-[1.3em] -> h-[1.15em] çekilerek kelimeler arası dikey boşluk tamamen kapatıldı */}
-                                <div className="relative flex h-[1.15em] w-full justify-center overflow-hidden">
+                                <span className="hidden sm:inline"> ve</span>
+
+                                <div className="relative mx-auto flex h-[2.25em] w-full max-w-full justify-center overflow-hidden sm:h-[1.15em]">
                                     <AnimatePresence mode="popLayout">
                                         <motion.span
                                             key={index}
                                             initial={{ y: 40, opacity: 0 }}
                                             animate={{ y: 0, opacity: 1 }}
                                             exit={{ y: -40, opacity: 0 }}
-                                            transition={{ type: "spring", stiffness: 320, damping: 32 }}
-                                            className="whitespace-nowrap block"
+                                            transition={{
+                                                type: "spring",
+                                                stiffness: 320,
+                                                damping: 32,
+                                            }}
+                                            className="block max-w-full text-center sm:whitespace-nowrap"
                                         >
-                                            <span className={`${animatedPhrases[index].color}`}>
-                                                {animatedPhrases[index].highlight}
-                                            </span>
-                                            <span className="text-white">
-                                                {animatedPhrases[index].suffix}
-                                            </span>
+                <span className="block sm:inline">
+                    <span className="inline sm:hidden">ve </span>
+                    <span className={animatedPhrases[index].color}>
+                        {animatedPhrases[index].highlight}
+                    </span>
+                </span>
+
+                                            <span className="block text-white sm:inline">
+                    {animatedPhrases[index].suffix}
+                </span>
                                         </motion.span>
                                     </AnimatePresence>
                                 </div>
                             </motion.h1>
 
-                            {/* DEĞİŞİKLİK: mt-8 -> mt-5 çekilerek açıklama metni başlığa yaklaştırıldı */}
-                            <motion.p variants={itemVariants} className="mt-5 max-w-2xl text-base leading-relaxed text-white/55 md:text-lg">
+                            <motion.p
+                                variants={itemVariants}
+                                className="mt-5 max-w-[21rem] text-sm leading-7 text-white/55 sm:max-w-2xl sm:text-base md:text-lg"
+                            >
                                 Havalimanı, şehir içi ve özel etkinlik transferleriniz için lüks
                                 araçlar, profesyonel sürücüler ve zamanında ulaşım anlayışıyla
                                 rezervasyonunuzu kolayca oluşturun.
                             </motion.p>
 
-                            {/* DEĞİŞİKLİK: mt-8 -> mt-6 düşürüldü */}
-                            <motion.div variants={itemVariants} className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                            <motion.div
+                                variants={itemVariants}
+                                className="mt-6 flex w-full max-w-xs flex-col items-center justify-center gap-3 sm:max-w-none sm:flex-row sm:gap-4"
+                            >
                                 <Button
                                     asChild
-                                    className="h-12 rounded-full bg-white px-7 text-sm font-semibold text-black hover:bg-white/90"
+                                    className="h-12 w-full rounded-full bg-white px-7 text-sm font-semibold text-black hover:bg-white/90 sm:w-auto"
                                 >
                                     <Link href="#booking">Rezervasyon Yap</Link>
                                 </Button>
@@ -113,16 +130,15 @@ export function HeroSection() {
                                 <Button
                                     asChild
                                     variant="ghost"
-                                    className="h-12 rounded-full px-7 text-sm font-semibold text-white/75 hover:bg-white/10 hover:text-white"
+                                    className="h-12 w-full rounded-full px-7 text-sm font-semibold text-white/75 hover:bg-white/10 hover:text-white sm:w-auto"
                                 >
                                     <Link href="#gallery">Araçları İncele</Link>
                                 </Button>
                             </motion.div>
                         </motion.div>
 
-                        {/* DEĞİŞİKLİK: mt-16 -> mt-12 çekilerek iş ortakları alanı yukarı yaklaştırıldı */}
-                        <div className="mt-12 w-full max-w-3xl">
-                            <p className="mb-8 text-xs font-medium tracking-[0.25em] text-white/50 uppercase">
+                        <div className="mt-10 w-full max-w-3xl sm:mt-12">
+                            <p className="mb-6 text-[10px] font-medium tracking-[0.22em] text-white/50 uppercase sm:mb-8 sm:text-xs sm:tracking-[0.25em]">
                                 Bize güvenen{" "}
                                 <span className="bg-[#C084FC]/60 px-2 py-0.5 font-bold text-white">
                                     yüzlerce
@@ -131,14 +147,14 @@ export function HeroSection() {
                             </p>
 
                             <div className="relative overflow-hidden">
-                                <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-20 bg-gradient-to-r from-[#0d0d0d] to-transparent" />
-                                <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-20 bg-gradient-to-l from-[#0d0d0d] to-transparent" />
+                                <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-10 bg-gradient-to-r from-[#0d0d0d] to-transparent sm:w-20" />
+                                <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-10 bg-gradient-to-l from-[#0d0d0d] to-transparent sm:w-20" />
 
-                                <div className="flex w-max animate-trusted-scroll items-center gap-16">
+                                <div className="flex w-max animate-trusted-scroll items-center gap-8 sm:gap-16">
                                     {[...trustedNames, ...trustedNames].map((name, index) => (
                                         <span
                                             key={`${name}-${index}`}
-                                            className="whitespace-nowrap text-2xl font-semibold tracking-wide text-white/35 md:text-3xl"
+                                            className="whitespace-nowrap text-lg font-semibold tracking-wide text-white/35 sm:text-2xl md:text-3xl"
                                         >
                                             {name}
                                         </span>
@@ -146,7 +162,6 @@ export function HeroSection() {
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>

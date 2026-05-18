@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ChevronDown, Menu, X, Shield } from "lucide-react";
+import { ChevronDown, Menu, X, MapPinned } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     DropdownMenu,
@@ -51,14 +51,19 @@ export function Navbar() {
             <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-6 lg:px-8">
                 <div className="flex items-center gap-12">
                     {/* Logo Alanı */}
-                    <Link href="/" className="flex items-center gap-3 group">
-                        {/* İnce, şık, temiz bir sembol - Parlama veya dolgu yok, sadece saf outline */}
-                        <Shield className="h-4 w-4 text-white/60 stroke-[1.2] transition-colors group-hover:text-white" />
-                        <span className="text-sm font-bold tracking-[0.35em] text-white uppercase">
-        MATILDA
-    </span>
-                    </Link>
+                    <Link href="/" className="group flex items-center gap-3">
+                        <MapPinned className="h-8 w-8 shrink-0 text-white/60 stroke-[1.1] transition-colors group-hover:text-white" />
 
+                        <div className="flex flex-col leading-none">
+        <span className="text-sm font-bold tracking-[0.22em] text-white uppercase sm:tracking-[0.3em]">
+            MATILDA
+        </span>
+
+                            <span className="mt-1 text-[10px] font-medium tracking-[0.18em] text-white/40 uppercase sm:text-[11px] sm:tracking-[0.22em]">
+            VIP Transfer
+        </span>
+                        </div>
+                    </Link>
                     {/* Masaüstü Navigasyon */}
                     <nav className="hidden items-center gap-8 md:flex">
                         {navItems.map((item) => (
@@ -120,9 +125,34 @@ export function Navbar() {
                     <button
                         type="button"
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white"
+                        aria-label={isMobileMenuOpen ? "Menüyü kapat" : "Menüyü aç"}
+                        className="relative flex h-10 w-10 items-center justify-center rounded-full text-white/75 transition-colors duration-300 hover:text-white"
                     >
-                        {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                        <AnimatePresence mode="wait" initial={false}>
+                            {isMobileMenuOpen ? (
+                                <motion.span
+                                    key="close"
+                                    initial={{ opacity: 0, rotate: -90, scale: 0.85 }}
+                                    animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                                    exit={{ opacity: 0, rotate: 90, scale: 0.85 }}
+                                    transition={{ duration: 0.18, ease: "easeOut" }}
+                                    className="absolute"
+                                >
+                                    <X className="h-5 w-5" />
+                                </motion.span>
+                            ) : (
+                                <motion.span
+                                    key="menu"
+                                    initial={{ opacity: 0, rotate: 90, scale: 0.85 }}
+                                    animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                                    exit={{ opacity: 0, rotate: -90, scale: 0.85 }}
+                                    transition={{ duration: 0.18, ease: "easeOut" }}
+                                    className="absolute"
+                                >
+                                    <Menu className="h-5 w-5" />
+                                </motion.span>
+                            )}
+                        </AnimatePresence>
                     </button>
                 </div>
             </div>
@@ -135,7 +165,6 @@ export function Navbar() {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.15 }}
-                        // DEĞİŞİKLİK BURADA: Mobil panel altındaki border-b de temizlendi
                         className="absolute left-0 top-20 z-40 w-full bg-[#0d0d0d] px-6 py-8 md:hidden border-none"
                     >
                         <div className="flex flex-col gap-6">
@@ -144,21 +173,25 @@ export function Navbar() {
                                     key={item.href}
                                     href={item.href}
                                     onClick={() => setIsMobileMenuOpen(false)}
-                                    className="text-lg font-medium text-white/70 hover:text-white transition-colors"
+                                    className="text-lg font-medium text-white/70 transition-colors hover:text-white"
                                 >
                                     {item.label}
                                 </Link>
                             ))}
 
-                            <div className="h-px w-full bg-white/5 my-2" />
+                            <div className="my-2 h-px w-full bg-white/5" />
 
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-white/40 font-medium">Dil Seçimi</span>
-                                <div className="flex gap-2">
+        <span className="text-sm font-medium text-white/40">
+            Dil Seçimi
+        </span>
+
+                                <div className="flex gap-1.5">
                                     {languages.map((lang) => (
                                         <button
                                             key={lang.code}
-                                            className="px-3 py-1 rounded-md bg-white/5 text-xs font-semibold text-white/70 hover:bg-white hover:text-black transition-all"
+                                            type="button"
+                                            className="rounded-full px-3 py-1.5 text-xs font-semibold text-white/55 transition-all duration-300 hover:bg-white/10 hover:text-white"
                                         >
                                             {lang.code}
                                         </button>
@@ -166,11 +199,10 @@ export function Navbar() {
                                 </div>
                             </div>
 
-                            {/* DEĞİŞİKLİK: Tıklandığında menünün kapanması için onClick eklendi, tasarım korundu */}
                             <Link
                                 href="/rezervasyon"
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="inline-flex h-10 items-center justify-center rounded-none bg-white px-5 text-sm font-semibold text-black transition-colors hover:bg-[#22D3EE]"
+                                className="inline-flex h-12 items-center justify-center rounded-full bg-white px-6 text-sm font-semibold text-black transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg hover:shadow-white/10"
                             >
                                 Rezervasyon Yap
                             </Link>

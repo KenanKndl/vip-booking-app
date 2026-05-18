@@ -57,7 +57,7 @@ export function AboutSection() {
 
                 {/* AÇILIŞ EKRANI */}
                 <motion.div
-                    className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none"
+                    className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none"
                     animate={{
                         opacity: activeIndex === -1 ? 1 : 0,
                         y: activeIndex === -1 ? 0 : -100,
@@ -66,9 +66,13 @@ export function AboutSection() {
                     }}
                     transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    <h2 className="flex flex-col items-center justify-center gap-4 md:gap-6 text-center font-bold tracking-tighter uppercase select-none">
-                        <span className="text-7xl md:text-[9rem] leading-none text-white">BİZ</span>
-                        <span className="text-7xl md:text-[9rem] leading-none text-white/40">KİMİZ?</span>
+                    <p className="mb-6 max-w-md text-center text-sm font-medium tracking-[0.24em] text-white/40 uppercase">
+                        Yolculuğunuz başlamadan önce bizi yakından tanıyın.
+                    </p>
+
+                    <h2 className="flex flex-col items-center justify-center gap-4 text-center font-bold tracking-tighter uppercase select-none md:gap-6">
+                        <span className="text-7xl leading-none text-white md:text-[9rem]">BİZ</span>
+                        <span className="text-7xl leading-none text-white/40 md:text-[9rem]">KİMİZ?</span>
                     </h2>
                 </motion.div>
 

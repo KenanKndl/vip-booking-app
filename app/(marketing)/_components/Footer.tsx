@@ -1,6 +1,7 @@
 ﻿import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { FaInstagram, FaLinkedinIn, FaWhatsapp } from "react-icons/fa";
+import { CookieSettingsTrigger } from "./CookieSettingsTrigger";
 
 const footerLinks = [
     {
@@ -143,20 +144,12 @@ export function Footer() {
                             <Link href="#" className="transition-colors hover:text-white/60">
                                 Kullanım Şartları
                             </Link>
+
+                            <CookieSettingsTrigger />
                         </div>
                     </div>
                 </div>
             </footer>
-
-            <Link
-                href="https://wa.me/905000000000"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="WhatsApp ile iletişime geç"
-                className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/30 transition-transform duration-300 hover:scale-105"
-            >
-                <FaWhatsapp className="h-7 w-7" />
-            </Link>
         </>
     );
 }

@@ -61,24 +61,14 @@ export function HeroSection() {
                             initial="hidden"
                             animate="visible"
                         >
-                            <motion.p
-                                variants={itemVariants}
-                                className="text-[10px] font-medium tracking-[0.28em] text-white/40 uppercase sm:text-xs sm:tracking-[0.35em] md:text-sm"
-                            >
-                                Premium VIP Transfer
-                            </motion.p>
-
+                            {/* Desktop Başlık */}
                             <motion.h1
                                 variants={itemVariants}
-                                className="max-w-[22rem] text-[2.55rem] font-bold leading-[1.05] tracking-tight text-white sm:max-w-2xl sm:text-5xl md:max-w-4xl md:text-7xl md:leading-[1.05] lg:text-8xl"
+                                className="hidden max-w-4xl text-5xl font-bold leading-[1.05] tracking-tight text-white sm:block md:text-7xl lg:text-8xl"
                             >
-    <span className="block">
-        Güvenli, konforlu
-    </span>
+                                Güvenli, konforlu ve
 
-                                <span className="hidden sm:inline"> ve</span>
-
-                                <div className="relative mx-auto flex h-[2.25em] w-full max-w-full justify-center overflow-hidden sm:h-[1.15em]">
+                                <div className="relative mx-auto flex h-[1.15em] w-full justify-center overflow-hidden">
                                     <AnimatePresence mode="popLayout">
                                         <motion.span
                                             key={index}
@@ -90,16 +80,46 @@ export function HeroSection() {
                                                 stiffness: 320,
                                                 damping: 32,
                                             }}
-                                            className="block max-w-full text-center sm:whitespace-nowrap"
+                                            className="block whitespace-nowrap text-center"
                                         >
-                <span className="block sm:inline">
-                    <span className="inline sm:hidden">ve </span>
-                    <span className={animatedPhrases[index].color}>
-                        {animatedPhrases[index].highlight}
-                    </span>
+                <span className={animatedPhrases[index].color}>
+                    {animatedPhrases[index].highlight}
                 </span>
+                                            <span className="text-white">
+                    {animatedPhrases[index].suffix}
+                </span>
+                                        </motion.span>
+                                    </AnimatePresence>
+                                </div>
+                            </motion.h1>
 
-                                            <span className="block text-white sm:inline">
+                            {/* Mobil Başlık */}
+                            <motion.h1
+                                variants={itemVariants}
+                                className="block max-w-[22rem] text-[2.45rem] font-bold leading-[1.05] tracking-tight text-white sm:hidden"
+                            >
+    <span className="block">
+        Güvenli ve konforlu
+    </span>
+
+                                <div className="relative mx-auto flex h-[1.15em] w-full justify-center overflow-hidden">
+                                    <AnimatePresence mode="popLayout">
+                                        <motion.span
+                                            key={index}
+                                            initial={{ y: 36, opacity: 0 }}
+                                            animate={{ y: 0, opacity: 1 }}
+                                            exit={{ y: -36, opacity: 0 }}
+                                            transition={{
+                                                type: "spring",
+                                                stiffness: 320,
+                                                damping: 32,
+                                            }}
+                                            className="block whitespace-nowrap text-center"
+                                        >
+                <span className={animatedPhrases[index].color}>
+                    {animatedPhrases[index].highlight}
+                </span>
+                                            <span className="text-white">
                     {animatedPhrases[index].suffix}
                 </span>
                                         </motion.span>

@@ -2,9 +2,8 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Quote, Star } from "lucide-react";
+import { Quote } from "lucide-react";
 
-// Örnek VIP Müşteri Yorumları
 const testimonials = [
     {
         name: "Ahmet Yılmaz",
@@ -42,99 +41,157 @@ const testimonials = [
         image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=200&auto=format&fit=crop",
         text: "Sürpriz fiyat yok, geç kalma yok, stres yok. Uygulama üzerinden saniyeler içinde rezervasyon yapıp ödemeyi tamamladım. Kurumsal taşımacılıkta tek geçerim.",
     },
-    {
-        name: "Ayşe Çelik",
-        role: "Etkinlik Direktörü",
-        image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=200&auto=format&fit=crop",
-        text: "Geniş Sprinter araçlarıyla tüm ekibimizi fuar alanına sorunsuz taşıdılar. Bagaj kapasitesi ve araç içi konfor kalabalık gruplar için hayat kurtarıcı.",
-    },
-    {
-        name: "David Smith",
-        role: "CEO",
-        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop",
-        text: "Seamless experience from start to finish. The vehicle was immaculately clean and the driver navigated through traffic perfectly. Highly recommended.",
-    },
 ];
 
 export function TestimonialSection() {
     const targetRef = useRef<HTMLDivElement>(null);
+
     const { scrollYProgress } = useScroll({
         target: targetRef,
-        // Animasyonun başlangıç ve bitiş noktalarını daha pürüzsüz hale getiriyoruz
-        offset: ["start start", "end end"]
+        offset: ["start start", "end end"],
     });
 
-    // Daha iyi bir oran için başlangıcı %5'ten alıp %80'e kadar kaydırıyoruz.
-    const x = useTransform(scrollYProgress, [0, 1], ["5%", "-80%"]);
+    const x = useTransform(scrollYProgress, [0, 1], ["0%", "-58%"]);
+    const titleOpacity = useTransform(scrollYProgress, [0, 0.08, 0.9, 1], [0, 1, 1, 0]);
+    const titleY = useTransform(scrollYProgress, [0, 0.12], [28, 0]);
 
     return (
-        // Rahat bir scroll hissiyatı için yükseklik
-        <section ref={targetRef} className="relative h-[250vh] bg-[#0d0d0d]">
-
-            {/* Ekrana yapışan, ortalanmış ana kapsayıcı */}
-            <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
-
-                {/* Birebir ExploreSection hiyerarşisinde üst başlık */}
-                <div className="mx-auto w-full max-w-7xl px-6 lg:px-8 mb-12 shrink-0">
-                    <div className="flex items-end justify-between">
-                        <div>
-                            <p className="text-xs font-medium tracking-[0.35em] text-[#FACC15] uppercase flex items-center gap-2">
-                                <Star className="h-4 w-4 fill-[#FACC15]" /> Müşteri Memnuniyeti
-                            </p>
-                            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-white md:text-5xl">
-                                Misafirlerimizin <span className="text-white/60">VIP deneyimleri.</span>
-                            </h2>
-                        </div>
-                        <div className="hidden md:block pb-2">
-                            <p className="text-sm text-white/30 uppercase tracking-widest font-semibold flex items-center gap-2 animate-pulse">
-                                Yana Kaydırın <span className="text-lg">→</span>
-                            </p>
-                        </div>
+        <section
+            ref={targetRef}
+            className="relative h-[260vh] rounded-t-[2.5rem] bg-[#0d0d0d] md:rounded-t-[4rem]"
+        >
+            <div className="sticky top-0 flex h-screen items-center overflow-hidden px-6 py-24 lg:px-8">
+                <div className="mx-auto grid w-full max-w-7xl gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+                    <div className="relative min-w-0 overflow-visible">
+                        <motion.div
+                            style={{ x }}
+                            className="flex w-max gap-5 pr-[20vw]"
+                        >
+                            {testimonials.map((testimonial, index) => (
+                                <motion.div
+                                    key={`${testimonial.name}-${index}`}
+                                    initial={{ opacity: 0, y: 26, scale: 0.98 }}
+                                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                                    viewport={{ once: true, amount: 0.35 }}
+                                    transition={{
+                                        duration: 0.75,
+                                        ease: "easeOut",
+                                        delay: index * 0.04,
+                                    }}
+                                    className={[
+                                        "w-[300px] shrink-0 sm:w-[360px] lg:w-[390px]",
+                                        index % 2 === 1 ? "lg:translate-y-10" : "",
+                                    ].join(" ")}
+                                >
+                                    <TestimonialCard data={testimonial} featured={index === 0} />
+                                </motion.div>
+                            ))}
+                        </motion.div>
                     </div>
+
+                    <motion.div
+                        style={{ opacity: titleOpacity, y: titleY }}
+                        className="hidden text-right lg:block lg:pt-6"
+                    >
+                        <h2 className="text-4xl font-semibold tracking-tight text-white md:text-5xl lg:text-6xl">
+                            Misafirlerimizin{" "}
+                            <span className="text-white/45">VIP deneyimleri.</span>
+                        </h2>
+
+                        <p className="ml-auto mt-6 max-w-lg text-base leading-8 text-white/45 md:text-lg">
+                            Havalimanı transferlerinden özel etkinliklere kadar farklı
+                            yolculuklarda bizi tercih eden misafirlerimizin deneyimlerine göz atın.
+                        </p>
+
+                        <div className="ml-auto mt-8 flex w-fit items-center gap-3 rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-white/35">
+                            <span className="h-1.5 w-1.5 rounded-full bg-white/35" />
+                            Kaydırdıkça yorumları keşfedin
+                        </div>
+                    </motion.div>
                 </div>
 
-                {/* Yığılmayı engelleyen TEK SATIR (Row) Flex Kapsayıcı */}
-                <motion.div style={{ x }} className="flex px-6 lg:px-8 w-max items-center">
-                    <div className="flex gap-6">
-                        {testimonials.map((data, index) => (
-                            <div
-                                key={index}
-                                // Tekli veya çiftli numaralara göre yukarıdan hafif boşluk verip zarif bir "dalga" efekti oluşturuyoruz
-                                className={`w-[320px] md:w-[400px] shrink-0 transition-transform duration-500 ${index % 2 !== 0 ? 'mt-12' : ''}`}
-                            >
-                                <TestimonialCard data={data} />
-                            </div>
-                        ))}
-                    </div>
-                </motion.div>
+                <motion.div
+                    style={{ opacity: titleOpacity, y: titleY }}
+                    className="absolute left-6 right-6 top-24 block lg:hidden"
+                >
+                    <h2 className="max-w-2xl text-4xl font-semibold tracking-tight text-white md:text-5xl">
+                        Misafirlerimizin{" "}
+                        <span className="text-white/45">VIP deneyimleri.</span>
+                    </h2>
 
+                    <p className="mt-5 max-w-xl text-base leading-8 text-white/45">
+                        Havalimanı transferlerinden özel etkinliklere kadar farklı
+                        yolculuklarda bizi tercih eden misafirlerimizin deneyimlerine göz atın.
+                    </p>
+                </motion.div>
             </div>
         </section>
     );
 }
 
-// Birebir ExploreSection mantığına uyarlanmış "Yumuşak" (Rounded-[2rem]) Yorum Kartı
-function TestimonialCard({ data }: { data: typeof testimonials[0] }) {
+function TestimonialCard({
+                             data,
+                             featured = false,
+                         }: {
+    data: (typeof testimonials)[0];
+    featured?: boolean;
+}) {
     return (
-        <div className="group flex h-full flex-col justify-between overflow-hidden rounded-[2rem] border border-white/5 bg-white/[0.02] p-7 transition-all duration-300 hover:bg-white/[0.04] hover:border-white/10 min-h-[280px]">
+        <article
+            className={[
+                "group flex h-full flex-col justify-between border border-white/8 bg-white/[0.03] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-white/14 hover:bg-white/[0.05]",
+                featured
+                    ? "min-h-[390px] rounded-[2rem] p-8"
+                    : "min-h-[330px] rounded-[1.75rem] p-6",
+            ].join(" ")}
+        >
             <div>
-                {/* Tırnak işareti yıldız rengine (Altın) uyarlandı */}
-                <Quote className="h-8 w-8 text-[#FACC15]/20 mb-5 transition-colors duration-300 group-hover:text-[#FACC15]/40" />
-                <p className="text-sm leading-relaxed text-white/50 transition-colors group-hover:text-white/70">
-                    "{data.text}"
+                <div
+                    className={[
+                        "flex items-center justify-center bg-white/[0.06] text-white/25 transition-colors duration-300 group-hover:text-white/45",
+                        featured
+                            ? "h-12 w-12 rounded-[1.2rem]"
+                            : "h-10 w-10 rounded-[1.1rem]",
+                    ].join(" ")}
+                >
+                    <Quote className={featured ? "h-6 w-6" : "h-5 w-5"} />
+                </div>
+
+                <p
+                    className={[
+                        "mt-6 leading-relaxed text-white/58 transition-colors duration-300 group-hover:text-white/75",
+                        featured ? "text-lg md:text-xl md:leading-9" : "text-sm",
+                    ].join(" ")}
+                >
+                    “{data.text}”
                 </p>
             </div>
+
             <div className="mt-8 flex items-center gap-4">
                 <img
                     src={data.image}
                     alt={data.name}
-                    className="h-12 w-12 rounded-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
+                    className={[
+                        "shrink-0 rounded-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0",
+                        featured ? "h-14 w-14" : "h-11 w-11",
+                    ].join(" ")}
                 />
+
                 <div>
-                    <h4 className="text-base font-semibold text-white">{data.name}</h4>
-                    <p className="text-xs font-medium text-white/40 uppercase tracking-wider mt-0.5">{data.role}</p>
+                    <h4
+                        className={[
+                            "font-semibold tracking-tight text-white",
+                            featured ? "text-lg" : "text-base",
+                        ].join(" ")}
+                    >
+                        {data.name}
+                    </h4>
+
+                    <p className="mt-1 text-xs font-medium uppercase tracking-[0.18em] text-white/35">
+                        {data.role}
+                    </p>
                 </div>
             </div>
-        </div>
+        </article>
     );
 }

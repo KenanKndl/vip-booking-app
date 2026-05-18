@@ -19,8 +19,8 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className={cn("h-full antialiased", figtree.variable)}>
-        <body className="min-h-full bg-[#0d0d0d] font-sans text-foreground">
+        <html lang="tr" className={cn("h-full antialiased scroll-smooth", figtree.variable)}>
+        <body className="min-h-full bg-[#0d0d0d] font-sans text-foreground overflow-x-hidden">
         {children}
         </body>
         </html>

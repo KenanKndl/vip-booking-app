@@ -54,7 +54,7 @@ export function Navbar() {
                         href="/"
                         className="text-sm font-semibold tracking-[0.35em] text-white uppercase"
                     >
-                        VIP BOOKING
+                        MATILDA VIP TRANSFER
                     </Link>
 
                     {/* Masaüstü Navigasyon */}

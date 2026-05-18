@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     DropdownMenu,
@@ -50,11 +50,13 @@ export function Navbar() {
         }`}>
             <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-6 lg:px-8">
                 <div className="flex items-center gap-12">
-                    <Link
-                        href="/"
-                        className="text-sm font-semibold tracking-[0.35em] text-white uppercase"
-                    >
-                        MATILDA VIP TRANSFER
+                    {/* Logo Alanı */}
+                    <Link href="/" className="flex items-center gap-3 group">
+                        {/* İnce, şık, temiz bir sembol - Parlama veya dolgu yok, sadece saf outline */}
+                        <Shield className="h-4 w-4 text-white/60 stroke-[1.2] transition-colors group-hover:text-white" />
+                        <span className="text-sm font-bold tracking-[0.35em] text-white uppercase">
+        MATILDA
+    </span>
                     </Link>
 
                     {/* Masaüstü Navigasyon */}

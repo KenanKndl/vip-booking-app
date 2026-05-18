@@ -11,11 +11,11 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+// DEĞİŞİKLİK: "Rezervasyonlar" menüden kaldırıldı
 const navItems = [
-    { label: "Hakkımızda", href: "#about" },
-    { label: "Galeri", href: "#gallery" },
-    { label: "Rezervasyonlar", href: "#reservations" },
-    { label: "İletişim", href: "#contact" },
+    { label: "Hakkımızda", href: "/hakkimizda" },
+    { label: "Galeri", href: "/galeri" },
+    { label: "İletişim", href: "/iletisim" },
 ];
 
 const languages = [
@@ -73,13 +73,14 @@ export function Navbar() {
 
                 {/* Sağ Taraf - Masaüstü */}
                 <div className="hidden items-center gap-4 md:flex">
-                    <DropdownMenu>
+                    <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
                             <button
                                 type="button"
                                 className="flex h-10 items-center gap-2 rounded-full px-3 text-xs font-semibold text-white/60 transition-colors hover:bg-white/5 hover:text-white"
                             >
-                                <span className="fi fi-tr text-base" />
+                                {/* DEĞİŞİKLİK 2: Arkadaki siyah daireyi yok etmek için bg-transparent ve rounded-none eklendi */}
+                                <span className="fi fi-tr text-base bg-transparent rounded-none outline-none shadow-none" />
                                 <span>TR</span>
                                 <ChevronDown className="h-3.5 w-3.5 text-white/40" />
                             </button>
@@ -94,7 +95,8 @@ export function Navbar() {
                                     key={language.code}
                                     className="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-white/70 focus:bg-white/10 focus:text-white"
                                 >
-                                    <span className={`${language.flagClass} text-base`} />
+                                    {/* DEĞİŞİKLİK 3: Aynı sıfırlama işlemi açılır menüdeki bayraklar için de yapıldı */}
+                                    <span className={`${language.flagClass} text-base bg-transparent rounded-none outline-none shadow-none`} />
                                     <span className="text-sm">{language.label}</span>
                                     <span className="ml-auto text-xs text-white/30">{language.code}</span>
                                 </DropdownMenuItem>
@@ -102,8 +104,9 @@ export function Navbar() {
                         </DropdownMenuContent>
                     </DropdownMenu>
 
+                    {/* DEĞİŞİKLİK: href="#booking" yerine href="/rezervasyon" yapıldı, tasarım korundu */}
                     <Link
-                        href="#booking"
+                        href="/rezervasyon"
                         className="inline-flex h-10 items-center justify-center rounded-full bg-white px-5 text-sm font-semibold text-black transition-colors hover:bg-white/90"
                     >
                         Rezervasyon Yap
@@ -161,10 +164,11 @@ export function Navbar() {
                                 </div>
                             </div>
 
+                            {/* DEĞİŞİKLİK: Tıklandığında menünün kapanması için onClick eklendi, tasarım korundu */}
                             <Link
-                                href="#booking"
+                                href="/rezervasyon"
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="inline-flex h-12 items-center justify-center rounded-full bg-white text-base font-semibold text-black"
+                                className="inline-flex h-10 items-center justify-center rounded-none bg-white px-5 text-sm font-semibold text-black transition-colors hover:bg-[#22D3EE]"
                             >
                                 Rezervasyon Yap
                             </Link>

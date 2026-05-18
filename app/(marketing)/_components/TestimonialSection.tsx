@@ -62,10 +62,10 @@ export function TestimonialSection() {
         >
             <div className="sticky top-0 flex h-screen items-center overflow-hidden px-6 py-24 lg:px-8">
                 <div className="mx-auto grid w-full max-w-7xl gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-                    <div className="relative min-w-0 overflow-visible">
+                    <div className="relative min-w-0 overflow-hidden [mask-image:linear-gradient(to_right,black_0%,black_82%,transparent_100%)]">
                         <motion.div
                             style={{ x }}
-                            className="flex w-max gap-5 pr-[20vw]"
+                            className="flex w-max gap-5 pr-24"
                         >
                             {testimonials.map((testimonial, index) => (
                                 <motion.div
@@ -91,7 +91,7 @@ export function TestimonialSection() {
 
                     <motion.div
                         style={{ opacity: titleOpacity, y: titleY }}
-                        className="hidden text-right lg:block lg:pt-6"
+                        className="relative z-20 hidden text-right lg:block lg:pt-6"
                     >
                         <h2 className="text-4xl font-semibold tracking-tight text-white md:text-5xl lg:text-6xl">
                             Misafirlerimizin{" "}

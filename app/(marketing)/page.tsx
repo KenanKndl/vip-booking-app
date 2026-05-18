@@ -8,7 +8,7 @@ export default function MarketingHomePage() {
         <main className="min-h-screen bg-[#0d0d0d]">
             <HeroSection />
 
-            <div className="relative z-10 -mt-10 rounded-t-[2.5rem] bg-[#fafafa] md:-mt-16 md:rounded-t-[4rem]">
+            <div className="relative z-10 -mt-10 rounded-t-[2.5rem] bg-[#F3F5F5] md:-mt-16 md:rounded-t-[4rem]">
                 <ExploreSection />
                 <TestimonialSection />
                 <PricingSection />

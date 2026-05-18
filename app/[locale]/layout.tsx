@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
-import "./globals.css";
+import "../globals.css"; // [locale] klasörüne girdiğimiz için yol bir üst klasör oldu
 import { cn } from "@/lib/utils";
 
 const figtree = Figtree({
@@ -13,13 +13,20 @@ export const metadata: Metadata = {
     description: "Premium reservation and booking experience.",
 };
 
-export default function RootLayout({
+// Çoklu dil için asenkron yapıya çevrildi
+export default async function RootLayout({
                                        children,
+                                       params,
                                    }: Readonly<{
     children: React.ReactNode;
+    params: Promise<{ locale: string }>;
 }>) {
+    
+    // URL'den dili yakalıyoruz
+    const { locale } = await params;
+
     return (
-        <html lang="tr" className={cn("h-full antialiased scroll-smooth", figtree.variable)}>
+        <html lang={locale} className={cn("h-full antialiased scroll-smooth", figtree.variable)}>
         <body className="min-h-full bg-[#0d0d0d] font-sans text-foreground overflow-x-hidden">
         {children}
         </body>

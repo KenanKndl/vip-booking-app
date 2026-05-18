@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// 1. Lokasyonlar (Havalimanı, Otel, Bölge vb.)
+model Location {
+  id            String   @id @default(uuid())
+  name          String   
+  type          String   
+  
+  routesFrom    Route[]  @relation("RouteFromLocation")
+  routesTo      Route[]  @relation("RouteToLocation")
+}
+
+// 2. Araç Filosu
+model Vehicle {
+  id                String   @id @default(uuid())
+  name              String   
+  passengerCapacity Int      
+  luggageCapacity   Int      
+  imageUrl          String?  
+  isActive          Boolean  @default(true) 
+  
+  routes            Route[]
+}
+
+// 3. Rotalar ve Fiyatlandırma
+model Route {
+  id             String   @id @default(uuid())
+  fromLocationId String
+  toLocationId   String
+  vehicleId      String
+  priceTRY       Float    
+  priceEUR       Float    
+  distance       String?  
+  duration       String?  
+
+  fromLocation   Location @relation("RouteFromLocation", fields: [fromLocationId], references: [id])
+  toLocation     Location @relation("RouteToLocation", fields: [toLocationId], references: [id])
+  vehicle        Vehicle  @relation(fields: [vehicleId], references: [id])
+  reservations   Reservation[]
+}
+
+// 4. Rezervasyonlar
+model Reservation {
+  id              String   @id @default(uuid())
+  customerName    String
+  customerPhone   String
+  customerEmail   String?
+  transferDate    DateTime
+  flightNumber    String?  
+  passengers      Int
+  pickupAddress   String?  
+  dropoffAddress  String?  
+  totalPrice      Float
+  status          String   @default("PENDING") 
+
+  routeId         String
+  route           Route    @relation(fields: [routeId], references: [id])
+
+  createdAt       DateTime @default(now())
+}

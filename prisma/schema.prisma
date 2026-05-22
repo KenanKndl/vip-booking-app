@@ -1,3 +1,4 @@
+// 1. Veritabanı Bağlantı Ayarları
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,61 +9,115 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-// 1. Lokasyonlar (Havalimanı, Otel, Bölge vb.)
-model Location {
-  id            String   @id @default(uuid())
-  name          String   
-  type          String   
-  
-  routesFrom    Route[]  @relation("RouteFromLocation")
-  routesTo      Route[]  @relation("RouteToLocation")
+// 2. Sabit Değerler (Enums)
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
 }
 
-// 2. Araç Filosu
-model Vehicle {
-  id                String   @id @default(uuid())
-  name              String   
-  passengerCapacity Int      
-  luggageCapacity   Int      
-  imageUrl          String?  
-  isActive          Boolean  @default(true) 
-  
-  routes            Route[]
+enum GalleryCategory {
+  EXTERIOR
+  INTERIOR
+  SPECIAL
 }
 
-// 3. Rotalar ve Fiyatlandırma
-model Route {
+// 3. Sistem Ayarları (Admin Panel İçin)
+model AdminSettings {
   id             String   @id @default(uuid())
-  fromLocationId String
-  toLocationId   String
-  vehicleId      String
-  priceTRY       Float    
-  priceEUR       Float    
-  distance       String?  
-  duration       String?  
-
-  fromLocation   Location @relation("RouteFromLocation", fields: [fromLocationId], references: [id])
-  toLocation     Location @relation("RouteToLocation", fields: [toLocationId], references: [id])
-  vehicle        Vehicle  @relation(fields: [vehicleId], references: [id])
-  reservations   Reservation[]
+  adminEmail     String   @unique
+  hashedPassword String
+  whatsappNumber String
+  updatedAt      DateTime @updatedAt
 }
 
-// 4. Rezervasyonlar
+// 4. Rotalar (Nereden -> Nereye - Frontend'deki yapıya uygun hale getirildi)
+model Route {
+  id        String   @id @default(uuid())
+  pickup    String   // Kalkış Noktası (Örn: Antalya Havalimanı)
+  dropoff   String   // Varış Noktası (Örn: Kemer)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  prices       RoutePricing[]
+  reservations Reservation[]
+
+  @@unique([pickup, dropoff]) // Aynı rotanın mükerrer eklenmesini önler
+}
+
+// 5. Filo ve Araçlar
+model Vehicle {
+  id            String   @id @default(uuid())
+  name          String   // Örn: Maybach Royal Class VIP
+  type          String   // Örn: Binek VIP
+  pax           Int      // Yolcu Kapasitesi
+  luggage       Int      // Bagaj Kapasitesi
+  features      String[] // Örn: ["Wifi", "Tv", "Atıştırmalık"]
+  imageUrl      String?
+  isActive      Boolean  @default(true)
+  
+  prices        RoutePricing[]
+  reservations  Reservation[]
+}
+
+// 6. Fiyatlandırma (Hangi Rota, Hangi Araç, Ne Kadar?)
+model RoutePricing {
+  id        String   @id @default(uuid())
+  routeId   String
+  vehicleId String
+  price     Float
+  currency  String   @default("₺") // Enum yerine String yapıldı (₺, $, € kabul eder)
+
+  route     Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@unique([routeId, vehicleId]) // Bir rotada aynı araca sadece tek bir fiyat tanımlanabilir
+}
+
+// 7. Rezervasyonlar (Sistemin Kalbi)
 model Reservation {
   id              String   @id @default(uuid())
+  pnrCode         String   @unique // Örn: VIP7492
+  
+  // Zaman ve Yolcu Bilgileri
+  pickupDateTime  DateTime
+  adultCount      Int
+  childCount      Int      @default(0)
+  
+  // Seçimler
+  routeId         String
+  vehicleId       String
+  route           Route    @relation(fields: [routeId], references: [id])
+  vehicle         Vehicle  @relation(fields: [vehicleId], references: [id])
+
+  // Müşteri İletişim Bilgileri
   customerName    String
   customerPhone   String
-  customerEmail   String?
-  transferDate    DateTime
-  flightNumber    String?  
-  passengers      Int
-  pickupAddress   String?  
-  dropoffAddress  String?  
+  customerEmail   String
+
+  // VIP Detayları
+  flightNumber    String?  // Uçuş Numarası
+  needsBabySeat   Boolean  @default(false)
+  welcomeSign     String?  // İsim Tabelası
+  extraNotes      String?  // Özel İstekler
+
+  // Fiyat ve Durum Takibi
   totalPrice      Float
-  status          String   @default("PENDING") 
-
-  routeId         String
-  route           Route    @relation(fields: [routeId], references: [id])
-
+  currency        String   @default("₺") // Fiyatlandırma ile uyumlu olması için String yapıldı
+  status          ReservationStatus @default(PENDING)
+  
   createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([pnrCode])
+  @@index([status, pickupDateTime])
+}
+
+// 8. Galeri Sistemi
+model GalleryImage {
+  id        String          @id @default(uuid())
+  url       String
+  category  GalleryCategory
+  createdAt DateTime        @default(now())
 }

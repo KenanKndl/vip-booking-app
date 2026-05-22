@@ -1,14 +1,25 @@
 ﻿import { ReservationSection } from "../_components/ReservationSection";
+import { prisma } from "@/lib/prisma";
 
-export const metadata = {
-    title: "Rezervasyon Yap | VIP Booking",
-    description: "VIP transferiniz için anında online rezervasyon oluşturun. Güvenli ödeme ve lüks araç garantisi.",
-};
+// Sayfanın her zaman en güncel veriyi çekmesini sağlar
+export const dynamic = "force-dynamic";
 
-export default function ReservationPage() {
+export default async function RezervasyonPage() {
+    // Veritabanındaki rotaları, içindeki araç fiyatlandırmalarıyla birlikte çekiyoruz
+    const routes = await prisma.route.findMany({
+        include: {
+            prices: {
+                include: {
+                    vehicle: true
+                }
+            }
+        }
+    });
+
     return (
         <main className="min-h-screen bg-[#0d0d0d] pt-20">
-            <ReservationSection />
+            {/* Veritabanından gelen rotaları forma aktarıyoruz */}
+            <ReservationSection dbRoutes={routes} />
         </main>
     );
 }

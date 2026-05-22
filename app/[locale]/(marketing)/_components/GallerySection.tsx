@@ -1,75 +1,36 @@
 ﻿"use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Maximize2, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Maximize2, X, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
 
 const categories = ["Tümü", "İç Mekan", "Dış Görünüm", "Özel Anlar"];
 
-type GalleryImage = {
-    id: number;
-    src: string;
-    category: string;
-    title: string;
-    style: string;
+// Veritabanı İngilizce Enum -> Arayüz Türkçe Kategori Eşleştirmesi
+const CAT_MAP: Record<string, string> = {
+    'EXTERIOR': 'Dış Görünüm',
+    'INTERIOR': 'İç Mekan',
+    'SPECIAL': 'Özel Anlar'
 };
 
-const galleryData: GalleryImage[] = [
-    {
-        id: 1,
-        src: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=800&auto=format&fit=crop",
-        category: "İç Mekan",
-        title: "Lounge Tasarım",
-        style: "aspect-square",
-    },
-    {
-        id: 2,
-        src: "https://images.unsplash.com/photo-1609521263047-f8f205293f24?q=80&w=800&auto=format&fit=crop",
-        category: "Dış Görünüm",
-        title: "Mercedes Benz Vito",
-        style: "aspect-[3/4]",
-    },
-    {
-        id: 3,
-        src: "https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=800&auto=format&fit=crop",
-        category: "İç Mekan",
-        title: "Premium Deri Detaylar",
-        style: "aspect-[4/3]",
-    },
-    {
-        id: 4,
-        src: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop",
-        category: "Özel Anlar",
-        title: "Havalimanı Karşılama",
-        style: "aspect-video",
-    },
-    {
-        id: 5,
-        src: "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=800&auto=format&fit=crop",
-        category: "Dış Görünüm",
-        title: "VIP Transfer",
-        style: "aspect-square",
-    },
-    {
-        id: 6,
-        src: "https://images.unsplash.com/photo-1555008872-f03b347ffb53?q=80&w=800&auto=format&fit=crop",
-        category: "İç Mekan",
-        title: "Özel Aydınlatma",
-        style: "aspect-[3/4]",
-    },
-    {
-        id: 7,
-        src: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=800&auto=format&fit=crop",
-        category: "Özel Anlar",
-        title: "Şehir Turu",
-        style: "aspect-[4/3]",
-    },
-];
+// Tasarımın o asimetrik (masonry) yapısını korumak için kullanılacak boyut havuzu
+const MASONRY_STYLES = ["aspect-square", "aspect-[3/4]", "aspect-[4/3]", "aspect-video"];
 
-export function GallerySection() {
+export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
     const [activeCategory, setActiveCategory] = useState("Tümü");
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const [direction, setDirection] = useState(0);
+
+    // Veritabanından gelen veriyi tasarımın beklediği formata dönüştürüyoruz
+    const galleryData = useMemo(() => {
+        return dbImages.map((img, index) => ({
+            id: img.id,
+            src: img.url,
+            category: CAT_MAP[img.category] || "Diğer",
+            title: "VIP Transfer Deneyimi", // İleride veritabanına eklenebilir, şimdilik şık bir varsayılan
+            style: MASONRY_STYLES[index % MASONRY_STYLES.length] // Kutular asimetrik görünsün diye sırayla stil atıyoruz
+        }));
+    }, [dbImages]);
 
     const filteredImages = galleryData.filter(
         (img) => activeCategory === "Tümü" || img.category === activeCategory
@@ -140,7 +101,7 @@ export function GallerySection() {
 
     return (
         <>
-            <section id="gallery" className="bg-[#0d0d0d] px-6 py-32 lg:px-8">
+            <section id="gallery" className="bg-[#0d0d0d] px-6 py-32 lg:px-8 min-h-screen">
                 <div className="mx-auto max-w-7xl">
 
                     <motion.div
@@ -159,7 +120,6 @@ export function GallerySection() {
                         </h2>
                     </motion.div>
 
-                    {/* Yenilenmiş Soft Filtre Alanı */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -193,54 +153,60 @@ export function GallerySection() {
 
                     {/* Premium Grid Alanı */}
                     <div className="mt-16">
-                        <div className="columns-1 gap-6 sm:columns-2 lg:columns-3">
-                            <AnimatePresence mode="popLayout">
-                                {filteredImages.map((img, index) => (
-                                    <motion.div
-                                        key={img.id}
-                                        layout
-                                        initial={{ opacity: 0, scale: 0.8 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.8 }}
-                                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                                        onClick={() => {
-                                            setDirection(0);
-                                            setSelectedIndex(index);
-                                        }}
-                                        className="relative mb-6 break-inside-avoid overflow-hidden rounded-3xl group cursor-pointer bg-white/[0.02]"
-                                    >
-                                        <div className={`relative w-full ${img.style} overflow-hidden rounded-3xl`}>
-                                            <img
-                                                src={img.src}
-                                                alt={img.title}
-                                                className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110"
-                                                loading="lazy"
-                                            />
+                        {filteredImages.length > 0 ? (
+                            <div className="columns-1 gap-6 sm:columns-2 lg:columns-3">
+                                <AnimatePresence mode="popLayout">
+                                    {filteredImages.map((img, index) => (
+                                        <motion.div
+                                            key={img.id}
+                                            layout
+                                            initial={{ opacity: 0, scale: 0.8 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.8 }}
+                                            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                                            onClick={() => {
+                                                setDirection(0);
+                                                setSelectedIndex(index);
+                                            }}
+                                            className="relative mb-6 break-inside-avoid overflow-hidden rounded-3xl group cursor-pointer bg-white/[0.02]"
+                                        >
+                                            <div className={`relative w-full ${img.style} overflow-hidden rounded-3xl`}>
+                                                <img
+                                                    src={img.src}
+                                                    alt={img.title}
+                                                    className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110"
+                                                    loading="lazy"
+                                                />
 
-                                            {/* Yumuşak Karartma Efekti (Dimming) */}
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-                                            {/* Hover Detayları */}
-                                            <div className="absolute inset-0 p-6 flex flex-col justify-end translate-y-4 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-                                                <div className="flex items-center justify-between">
-                                                    <div>
-                                                        <span className="inline-block px-3 py-1 mb-3 text-xs font-semibold text-white bg-white/20 backdrop-blur-md rounded-full uppercase tracking-wider">
-                                                            {img.category}
-                                                        </span>
-                                                        <h3 className="text-xl font-medium text-white">
-                                                            {img.title}
-                                                        </h3>
-                                                    </div>
-                                                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black shadow-xl transition-transform duration-300 hover:scale-110">
-                                                        <Maximize2 className="h-5 w-5" />
+                                                <div className="absolute inset-0 p-6 flex flex-col justify-end translate-y-4 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+                                                    <div className="flex items-center justify-between">
+                                                        <div>
+                                                            <span className="inline-block px-3 py-1 mb-3 text-xs font-semibold text-white bg-white/20 backdrop-blur-md rounded-full uppercase tracking-wider">
+                                                                {img.category}
+                                                            </span>
+                                                            <h3 className="text-xl font-medium text-white">
+                                                                {img.title}
+                                                            </h3>
+                                                        </div>
+                                                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black shadow-xl transition-transform duration-300 hover:scale-110">
+                                                            <Maximize2 className="h-5 w-5" />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </motion.div>
-                                ))}
-                            </AnimatePresence>
-                        </div>
+                                        </motion.div>
+                                    ))}
+                                </AnimatePresence>
+                            </div>
+                        ) : (
+                            <div className="py-24 flex flex-col items-center justify-center text-center">
+                                <ImageIcon size={48} className="text-white/20 mb-4" />
+                                <h3 className="text-xl font-medium text-white mb-2">Henüz Fotoğraf Yüklenmemiş</h3>
+                                <p className="text-white/50 text-sm">Yönetim panelinden bu kategoriye fotoğraf ekleyebilirsiniz.</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </section>
@@ -256,7 +222,6 @@ export function GallerySection() {
                         onClick={() => setSelectedIndex(null)}
                         className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0d0d0d]/90 p-4 md:p-8"
                     >
-                        {/* Navigasyon Okları */}
                         <button
                             onClick={(e) => { e.stopPropagation(); showPrev(); }}
                             className="absolute left-4 md:left-10 z-[110] flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:bg-white hover:text-black hover:scale-110"
@@ -271,7 +236,6 @@ export function GallerySection() {
                             <ChevronRight className="h-6 w-6 ml-1" />
                         </button>
 
-                        {/* Kapat Butonu */}
                         <button
                             onClick={() => setSelectedIndex(null)}
                             className="absolute right-6 top-6 md:right-10 md:top-10 z-[120] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md transition-all hover:bg-white hover:text-black hover:rotate-90"
@@ -279,7 +243,6 @@ export function GallerySection() {
                             <X className="h-5 w-5" />
                         </button>
 
-                        {/* Görsel Alanı */}
                         <div
                             onClick={(e) => e.stopPropagation()}
                             className="relative flex flex-col items-center max-h-full w-full max-w-5xl"
@@ -305,7 +268,6 @@ export function GallerySection() {
                                 </AnimatePresence>
                             </div>
 
-                            {/* Alt Bilgiler */}
                             <motion.div
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}

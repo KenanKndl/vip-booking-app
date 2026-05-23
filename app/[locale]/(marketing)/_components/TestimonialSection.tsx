@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Quote } from "lucide-react";
 
@@ -9,185 +9,148 @@ const testimonials = [
         name: "Ahmet Yılmaz",
         role: "İş İnsanı",
         image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=200&auto=format&fit=crop",
-        text: "Toplantılarım için gün boyu araç tahsisi istedim. Araç içi temizlik, Wi-Fi hızı ve kaptanın profesyonelliği dünya standartlarındaydı. Kesinlikle tekrar tercih edeceğim.",
+        text: "Toplantılarım için gün boyu araç tahsisi istedim. Araç içi temizlik, Wi-Fi hızı ve kaptanın profesyonelliği dünya standartlarındaydı.",
     },
     {
         name: "Selin Karaca",
         role: "Mimar",
         image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop",
-        text: "Gece geç saatteki uçuşumuz için Antalya Havalimanı'ndan alındık. Araç tam vaktinde oradaydı ve yolculuk o kadar sarsıntısızdı ki uyuyakalmışım. Harika bir deneyim.",
+        text: "Gece geç saatteki uçuşumuz için Antalya Havalimanı'ndan alındık. Araç tam vaktinde oradaydı ve yolculuk harikaydı.",
     },
     {
         name: "Caner & Cansu",
         role: "Balayı Çifti",
         image: "https://images.unsplash.com/photo-1517070208541-6ddc4d3efbcb?q=80&w=200&auto=format&fit=crop",
-        text: "Balayı tatilimiz için Maybach serisi bir araç kiraladık. Şampanya ikramı, yıldız tavan ve araç içi lüks detaylar tatilimize muazzam bir başlangıç yapmamızı sağladı.",
+        text: "Maybach serisi bir araç kiraladık. Yıldız tavan ve araç içi lüks detaylar tatilimize muazzam bir başlangıç yapmamızı sağladı.",
     },
     {
         name: "Murat Demir",
         role: "Turizm Acentesi",
         image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200&auto=format&fit=crop",
-        text: "VIP misafirlerimizi yıllardır gözümüz kapalı emanet ediyoruz. Operasyon ekibi çok hızlı, araçlar her zaman pırıl pırıl. Sektördeki en iyi partnerlerimizden biri.",
+        text: "VIP misafirlerimizi yıllardır gözümüz kapalı emanet ediyoruz. Operasyon ekibi çok hızlı, araçlar her zaman pırıl pırıl.",
     },
     {
         name: "Elena Petrova",
         role: "Turist",
         image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop",
-        text: "Şoförümüz Rusça biliyordu ve bize şehir hakkında harika ipuçları verdi. Ara bölmeli VIP tasarım sayesinde ailece tamamen izole ve güvende hissettik.",
+        text: "Şoförümüz Rusça biliyordu. Ara bölmeli VIP tasarım sayesinde ailece tamamen izole ve güvende hissettik.",
     },
     {
         name: "Ozan Tekin",
         role: "Girişimci",
         image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=200&auto=format&fit=crop",
-        text: "Sürpriz fiyat yok, geç kalma yok, stres yok. Uygulama üzerinden saniyeler içinde rezervasyon yapıp ödemeyi tamamladım. Kurumsal taşımacılıkta tek geçerim.",
+        text: "Sürpriz fiyat yok, geç kalma yok. Uygulama üzerinden saniyeler içinde rezervasyon yapıp ödemeyi tamamladım.",
     },
 ];
 
 export function TestimonialSection() {
     const targetRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const trackRef = useRef<HTMLDivElement>(null);
+
+    const [scrollRange, setScrollRange] = useState(0);
+
+    // Kayan şeridin gerçek genişliğini hesaplayıp, sınırları çiziyoruz
+    useEffect(() => {
+        const updateScrollRange = () => {
+            if (containerRef.current && trackRef.current) {
+                const trackWidth = trackRef.current.scrollWidth;
+                const containerWidth = containerRef.current.offsetWidth;
+                // Kaydırılması gereken net mesafe (Piksel cinsinden)
+                setScrollRange(trackWidth - containerWidth);
+            }
+        };
+
+        updateScrollRange();
+        window.addEventListener("resize", updateScrollRange);
+        return () => window.removeEventListener("resize", updateScrollRange);
+    }, []);
 
     const { scrollYProgress } = useScroll({
         target: targetRef,
         offset: ["start start", "end end"],
     });
 
-    const x = useTransform(scrollYProgress, [0, 1], ["0%", "-58%"]);
-    const titleOpacity = useTransform(scrollYProgress, [0, 0.08, 0.9, 1], [0, 1, 1, 0]);
-    const titleY = useTransform(scrollYProgress, [0, 0.12], [28, 0]);
+    // Artık string oranlar yok. 0'dan, hesaplanan net piksele kadar kayıyor. (%100 Pürüzsüz)
+    const x = useTransform(scrollYProgress, [0, 1], [0, -scrollRange]);
 
     return (
         <section
             ref={targetRef}
-            className="relative h-[260vh] rounded-t-[2.5rem] bg-[#0d0d0d] md:rounded-t-[4rem]"
+            // Dinamik Yükseklik: Sabit vh yerine, ekranda kapladığı alan + kayma mesafesi.
+            // Bu, 1px dikey scroll = 1px yatay scroll olmasını sağlar.
+            style={{ height: scrollRange > 0 ? `calc(100vh + ${scrollRange}px)` : "250vh" }}
+            className="relative rounded-t-[2.5rem] bg-[#0d0d0d] md:rounded-t-[4rem]"
         >
-            <div className="sticky top-0 flex h-screen items-center overflow-hidden px-6 py-24 lg:px-8">
-                <div className="mx-auto grid w-full max-w-7xl gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-                    <div className="relative min-w-0 overflow-visible">
-                        <motion.div
-                            style={{ x }}
-                            className="flex w-max gap-5 pr-[20vw]"
-                        >
-                            {testimonials.map((testimonial, index) => (
-                                <motion.div
-                                    key={`${testimonial.name}-${index}`}
-                                    initial={{ opacity: 0, y: 26, scale: 0.98 }}
-                                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                                    viewport={{ once: true, amount: 0.35 }}
-                                    transition={{
-                                        duration: 0.75,
-                                        ease: "easeOut",
-                                        delay: index * 0.04,
-                                    }}
-                                    className={[
-                                        "w-[300px] shrink-0 sm:w-[360px] lg:w-[390px]",
-                                        index % 2 === 1 ? "lg:translate-y-10" : "",
-                                    ].join(" ")}
-                                >
-                                    <TestimonialCard data={testimonial} featured={index === 0} />
-                                </motion.div>
-                            ))}
-                        </motion.div>
-                    </div>
+            <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden py-16 md:py-24">
 
-                    <motion.div
-                        style={{ opacity: titleOpacity, y: titleY }}
-                        className="hidden text-right lg:block lg:pt-6"
-                    >
-                        <h2 className="text-4xl font-semibold tracking-tight text-white md:text-5xl lg:text-6xl">
+                {/* ÜST SATIR: Başlık */}
+                <div className="mx-auto w-full max-w-7xl px-6 lg:px-8 mb-12 md:mb-16">
+                    <div className="flex flex-col items-start lg:items-end text-left lg:text-right">
+                        <h2 className="max-w-2xl text-4xl font-semibold tracking-tight text-white md:text-5xl lg:text-6xl">
                             Misafirlerimizin{" "}
                             <span className="text-white/45">VIP deneyimleri.</span>
                         </h2>
-
-                        <p className="ml-auto mt-6 max-w-lg text-base leading-8 text-white/45 md:text-lg">
+                        <p className="mt-5 max-w-xl text-base leading-8 text-white/45 md:text-lg">
                             Havalimanı transferlerinden özel etkinliklere kadar farklı
-                            yolculuklarda bizi tercih eden misafirlerimizin deneyimlerine göz atın.
+                            yolculuklarda bizi tercih eden misafirlerimizin gerçek deneyimlerine göz atın.
                         </p>
+                    </div>
+                </div>
 
-                        <div className="ml-auto mt-8 flex w-fit items-center gap-3 rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-white/35">
-                            <span className="h-1.5 w-1.5 rounded-full bg-white/35" />
-                            Kaydırdıkça yorumları keşfedin
-                        </div>
+                {/* ALT SATIR: Bağımsız Kayan Kartlar Pisti */}
+                <div
+                    ref={containerRef}
+                    // Container genişliği üstteki yazıyla birebir aynı. (max-w-7xl px-6)
+                    // overflow-visible sayesinde kartlar bu alanın dışına ekran sonuna kadar taşabiliyor.
+                    className="mx-auto w-full max-w-7xl px-6 lg:px-8 overflow-visible"
+                >
+                    <motion.div
+                        ref={trackRef}
+                        style={{ x }}
+                        className="flex w-max gap-5"
+                    >
+                        {testimonials.map((testimonial, index) => (
+                            <div
+                                key={`${testimonial.name}-${index}`}
+                                className="w-[280px] shrink-0 sm:w-[310px]"
+                            >
+                                <TestimonialCard data={testimonial} />
+                            </div>
+                        ))}
                     </motion.div>
                 </div>
 
-                <motion.div
-                    style={{ opacity: titleOpacity, y: titleY }}
-                    className="absolute left-6 right-6 top-24 block lg:hidden"
-                >
-                    <h2 className="max-w-2xl text-4xl font-semibold tracking-tight text-white md:text-5xl">
-                        Misafirlerimizin{" "}
-                        <span className="text-white/45">VIP deneyimleri.</span>
-                    </h2>
-
-                    <p className="mt-5 max-w-xl text-base leading-8 text-white/45">
-                        Havalimanı transferlerinden özel etkinliklere kadar farklı
-                        yolculuklarda bizi tercih eden misafirlerimizin deneyimlerine göz atın.
-                    </p>
-                </motion.div>
             </div>
         </section>
     );
 }
 
-function TestimonialCard({
-                             data,
-                             featured = false,
-                         }: {
-    data: (typeof testimonials)[0];
-    featured?: boolean;
-}) {
+function TestimonialCard({ data }: { data: (typeof testimonials)[0] }) {
     return (
-        <article
-            className={[
-                "group flex h-full flex-col justify-between border border-white/8 bg-white/[0.03] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-white/14 hover:bg-white/[0.05]",
-                featured
-                    ? "min-h-[390px] rounded-[2rem] p-8"
-                    : "min-h-[330px] rounded-[1.75rem] p-6",
-            ].join(" ")}
-        >
+        <article className="group flex h-[260px] flex-col justify-between rounded-[1.75rem] border border-white/10 bg-white/[0.02] p-6 transition-all duration-300 hover:border-white/20 hover:bg-white/[0.04]">
             <div>
-                <div
-                    className={[
-                        "flex items-center justify-center bg-white/[0.06] text-white/25 transition-colors duration-300 group-hover:text-white/45",
-                        featured
-                            ? "h-12 w-12 rounded-[1.2rem]"
-                            : "h-10 w-10 rounded-[1.1rem]",
-                    ].join(" ")}
-                >
-                    <Quote className={featured ? "h-6 w-6" : "h-5 w-5"} />
+                <div className="flex h-9 w-9 items-center justify-center rounded-[0.9rem] bg-white/[0.06] text-white/25 transition-colors duration-300 group-hover:text-white/45">
+                    <Quote className="h-4 w-4" />
                 </div>
 
-                <p
-                    className={[
-                        "mt-6 leading-relaxed text-white/58 transition-colors duration-300 group-hover:text-white/75",
-                        featured ? "text-lg md:text-xl md:leading-9" : "text-sm",
-                    ].join(" ")}
-                >
+                <p className="mt-4 text-sm leading-relaxed text-white/60 transition-colors duration-300 group-hover:text-white/80">
                     “{data.text}”
                 </p>
             </div>
 
-            <div className="mt-8 flex items-center gap-4">
+            <div className="mt-6 flex items-center gap-3">
                 <img
                     src={data.image}
                     alt={data.name}
-                    className={[
-                        "shrink-0 rounded-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0",
-                        featured ? "h-14 w-14" : "h-11 w-11",
-                    ].join(" ")}
+                    className="h-10 w-10 shrink-0 rounded-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
                 />
 
-                <div>
-                    <h4
-                        className={[
-                            "font-semibold tracking-tight text-white",
-                            featured ? "text-lg" : "text-base",
-                        ].join(" ")}
-                    >
+                <div className="min-w-0">
+                    <h4 className="truncate text-sm font-semibold tracking-tight text-white">
                         {data.name}
                     </h4>
-
-                    <p className="mt-1 text-xs font-medium uppercase tracking-[0.18em] text-white/35">
+                    <p className="mt-0.5 truncate text-[10px] font-medium uppercase tracking-[0.18em] text-white/35">
                         {data.role}
                     </p>
                 </div>

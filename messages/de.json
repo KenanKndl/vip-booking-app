@@ -1,6 +1,319 @@
 {
-  "Hero": {
-    "title": "Antalya'nın En Güvenilir VIP Transferi",
-    "subtitle": "Havalimanından otelinize lüks, konforlu ve tam zamanında ulaşım sağlayın. Hemen rotanızı seçin ve aracınızı ayırtın."
+  "AboutSection": {
+    "openingSub": "Lernen Sie uns kennen, bevor Ihre Reise beginnt.",
+    "openingTitle1": "WER",
+    "openingTitle2": "SIND WIR?",
+    "sectionHeader": "Wer sind wir?",
+    "feature1": {
+      "stat": "10+ Jahre",
+      "title": "Premium-Erfahrung in der Branche",
+      "description": "Als VIP Booking haben wir in unserer über zehnjährigen Geschichte in der Branche stets das Ziel verfolgt, über einen gewöhnlichen Transportservice hinauszugehen. Wir bringen unsere Gäste nicht nur von einem Ort zum anderen; wir lassen sie Luxus, Eleganz und absolute Exklusivität in ihrer reinsten Form spüren – von der Planungsphase bis zur Ankunft. Mit unserem visionären Serviceansatz, der auf Details achtet, behandeln wir jede Route wie ein Kunstwerk, setzen neue Maßstäbe im modernen Reisen und bieten Ihnen standardmäßig ein Erlebnis, das Ihre Erwartungen jedes Mal übertrifft."
+    },
+    "feature2": {
+      "stat": "24/7",
+      "title": "Unterbrechungsfreier VIP-Service",
+      "description": "Wir agieren nach kompromisslosem Zeitmanagement, absoluter Pünktlichkeit und Prinzipien der einwandfreien logistischen Planung auf globalem Standard. Unabhängig von der Tageszeit, der Verspätung Ihres Fluges oder Ihrem Standort weltweit, ist unser 24/7 aktives Operationszentrum mit modernster Technologie für Sie da. Unser professionelles Fahrerteam, das in fortgeschrittener Fahrtechnik, Krisenmanagement und Protokoll geschult ist, steht Ihnen zur Verfügung. Von Flughafen-Abholungen bis hin zu wichtigen Geschäftstreffen und internationalen Veranstaltungen planen wir jedes Detail und jedes mögliche Szenario Ihrer Reise professionell für Sie."
+    },
+    "feature3": {
+      "stat": "100%",
+      "title": "Sicherheit und Zufriedenheit",
+      "description": "Die Sicherheit und das unerschütterliche Wohlbefinden von Ihnen, Ihrer Familie und Ihren geschätzten Geschäftspartnern haben für uns höchste, unantastbare Priorität. Alle Fahrzeuge unserer umfangreichen Ultra-Luxus-Flotte sind mit internationalen Sicherheitsstandards der höchsten Stufe ausgestattet. Jede Reise wird absolut vertraulich und sicher durchgeführt. Dank der Multimedia-Systeme, exklusiven Erfrischungen und der isolierten Innenraumstruktur, die speziell für Ihren Komfort konzipiert wurden, können Sie den Trubel der Außenwelt hinter sich lassen, sich zurücklehnen und den Luxus sowie die sichere Reise in vollen Zügen genießen."
+    }
+  },
+  "ContactSection": {
+    "subTitle": "Kontakt",
+    "titlePart1": "Kontaktieren ",
+    "titlePart2": "Sie uns.",
+    "description": "Sie können unser professionelles Team jederzeit für Transferanfragen, spezielle Veranstaltungen oder Fragen kontaktieren.",
+    "info": {
+      "companyLabel": "Firmenname",
+      "companyName": "VIP Booking Turizm Taşımacılık Sanayi Ve Tic.Ltd.Şti",
+      "addressLabel": "Adresse",
+      "addressValue": "Güzelyurt Mah. 26065 sokak No:6, Aksu / Antalya",
+      "phoneLabel": "Telefon",
+      "emailLabel": "E-Mail"
+    },
+    "form": {
+      "nameLabel": "Vollständiger Name",
+      "namePlaceholder": "Ihr Vor- und Nachname",
+      "emailLabel": "E-Mail",
+      "emailPlaceholder": "beispiel@mail.com",
+      "phoneLabel": "Telefon",
+      "phonePlaceholder": "555 000 00 00",
+      "messageLabel": "Nachricht",
+      "messagePlaceholder": "Sie können Ihre Nachricht hier schreiben...",
+      "submitButton": "Nachricht senden"
+    }
+  },
+  "CookieConsentBanner": {
+    "bannerTitle": "Cookie-Einstellungen",
+    "bannerDescription": "Wir verwenden Cookies, um Ihre Sprachpräferenz zu speichern und Ihr Erlebnis zu verbessern.",
+    "rejectAll": "Nur notwendig",
+    "manage": "Verwalten",
+    "acceptAll": "Alle akzeptieren",
+    "dialogTitle": "Cookie-Einstellungen",
+    "dialogDescription": "Hier können Sie verwalten, welche Cookies verwendet werden dürfen.",
+    "essentialTitle": "Notwendige Cookies",
+    "essentialDescription": "Erforderlich für die Sicherheit der Website, grundlegende Funktionen und die Speicherung Ihrer Cookie-Präferenzen.",
+    "preferencesTitle": "Sprachpräferenz-Cookies",
+    "preferencesDescription": "Ermöglicht es uns, die von Ihnen gewählte Sprache zu speichern. Wenn deaktiviert, gilt Ihre Sprachwahl nur für die aktuelle Sitzung.",
+    "savePreferences": "Einstellungen speichern"
+  },
+  "CookieSettingsTrigger": {
+    "label": "Cookie-Einstellungen"
+  },
+  "ExploreSection": {
+    "titlePart1": "Lernen Sie uns kennen, ",
+    "titlePart2": "bevor Ihre Reise beginnt.",
+    "description": "Entdecken Sie unsere Fahrzeuge, Referenzen und aktuellen Updates an einem Ort. Erhalten Sie vor der Buchung ein klareres Bild von unserer Marke, unserer Arbeitsweise und unserem Serviceansatz.",
+    "chips": {
+      "chip1": "Premium-Flotte",
+      "chip2": "Unternehmensreferenzen",
+      "chip3": "Aktuelle Beiträge"
+    },
+    "vehicles": {
+      "title": "Unsere Fahrzeuge",
+      "description": "Werfen Sie einen genaueren Blick auf unsere komfortablen, gepflegten Fahrzeuge, die für private Transfererlebnisse geeignet sind.",
+      "action": "Flotte ansehen",
+      "details": {
+        "detail1": "Mercedes Vito & V-Class",
+        "detail2": "Flughafen- und Stadttransfers",
+        "detail3": "Komfortorientierte Fahrzeugauswahl"
+      }
+    },
+    "references": {
+      "title": "Unsere Partner",
+      "description": "Sehen Sie unsere Zusammenarbeit mit Hotels, Eventagenturen und Firmenkunden.",
+      "action": "Referenzen ansehen",
+      "details": {
+        "detail1": "Hotels und Tourismusmarken",
+        "detail2": "Eventagenturen",
+        "detail3": "Unternehmenslösungen für Transport"
+      }
+    },
+    "social": {
+      "title": "Folgen Sie uns.",
+      "badge": "Aktuell",
+      "description": "Sie können unsere Fahrzeuge, Transfererlebnisse und Ankündigungen über unsere Social-Media-Konten verfolgen.",
+      "details": {
+        "detail1": "Beiträge über Fahrzeuge und Transfers",
+        "detail2": "Aktuelle Ankündigungen",
+        "detail3": "Inhalte zu Veranstaltungen und Reisen"
+      }
+    }
+  },
+  "FloatingWhatsAppButton": {
+    "ariaLabel": "Kontakt per WhatsApp"
+  },
+  "Footer": {
+    "brandName": "VIP BOOKING",
+    "description": "Zuverlässiges, komfortables und professionelles VIP-Transporterlebnis für Ihre Flughafen-, Stadt- und Event-Transfers.",
+    "quickLinksTitle": "Schnellzugriff",
+    "contactTitle": "Kontaktinformationen",
+    "address": "Flughafen Antalya, Lara, Belek, Kemer und VIP-Transferservice in der Stadt",
+    "copyright": "© 2026 VIP Booking. Alle Rechte vorbehalten.",
+    "privacyPolicy": "Datenschutzerklärung",
+    "termsOfUse": "Nutzungsbedingungen",
+    "links": {
+      "about": "Über uns",
+      "vehicles": "Unsere Fahrzeuge",
+      "gallery": "Galerie",
+      "reservations": "Reservierungen",
+      "contact": "Kontakt"
+    }
+  },
+  "GallerySection": {
+    "subtitle": "Visuelles Erlebnis",
+    "titlePart1": "Entdecken Sie den Komfort, ",
+    "titlePart2": "der auf Sie wartet.",
+    "defaultImageTitle": "VIP-Transferelebnis",
+    "emptyTitle": "Keine Fotos hochgeladen",
+    "emptyDescription": "Sie können im Admin-Panel Fotos zu dieser Kategorie hinzufügen.",
+    "categories": {
+      "all": "Alle",
+      "interior": "Interieur",
+      "exterior": "Exterieur",
+      "special": "Besondere Momente",
+      "other": "Sonstiges"
+    }
+  },
+  "HeroSection": {
+    "desktopTitlePrefix": "Sicher, komfortabel und",
+    "mobileTitlePrefix": "Sicher und komfortabel",
+    "description": "Buchen Sie einfach Ihre Flughafen-, Stadt- und Event-Transfers mit Luxusfahrzeugen, professionellen Fahrern und pünktlichem Service.",
+    "buttons": {
+      "book": "Jetzt buchen",
+      "fleet": "Flotte ansehen"
+    },
+    "trusted": {
+      "prefix": "Vertrauen von ",
+      "highlight": "hunderten",
+      "suffix": " Marken und Geschäftspartnern"
+    },
+    "animatedPhrases": {
+      "phrase1": {
+        "highlight": "maßgeschneiderte",
+        "suffix": " Transfers."
+      },
+      "phrase2": {
+        "highlight": "Premium-",
+        "suffix": " Fahrten."
+      },
+      "phrase3": {
+        "highlight": "makellose",
+        "suffix": " Erlebnisse."
+      }
+    }
+  },
+  "Navbar": {
+    "brandName": "MATILDA",
+    "brandSub": "VIP Transfer",
+    "nav": {
+      "about": "Über uns",
+      "gallery": "Galerie",
+      "contact": "Kontakt"
+    },
+    "buttons": {
+      "book": "Jetzt buchen"
+    },
+    "mobile": {
+      "openMenu": "Menü öffnen",
+      "closeMenu": "Menü schließen",
+      "languageSelection": "Sprachauswahl",
+      "currencySelection": "Währung"
+    }
+  },
+  "PricingSection": {
+    "subtitle": "Transparente Preise",
+    "titlePart1": "Exklusive Routen,",
+    "titlePart2": "klare Preise.",
+    "description": "Keine Überraschungen oder versteckten Kosten. Entdecken Sie unsere festen VIP Vito-Transferpreise für beliebte Routen.",
+    "tabs": {
+      "IST": "Flughafen Istanbul",
+      "SAW": "Sabiha Gökçen",
+      "CITY": "Stadtzentrum"
+    },
+    "destinationLabel": "Zielort",
+    "infoText": "Unsere Preise beinhalten Autobahn-, Brücken- und Tunnelgebühren. Für andere Orte oder private Touren, die nicht gelistet sind, erhalten Sie ein sofortiges Angebot.",
+    "quoteButton": "Individuelles Angebot"
+  },
+  "ReservationSection": {
+    "alerts": {
+      "missingFieldsStep1": "Bitte füllen Sie Startort, Zielort, Datum und Uhrzeit vollständig aus.",
+      "noRoute": "Für Ihre Auswahl ist keine Route aktiv.",
+      "missingFieldsStep3": "Bitte geben Sie Ihren Namen und Ihre Telefonnummer ein.",
+      "success": "Ihre Reservierung wurde erfolgreich abgeschlossen! Ihr PNR-Code: {pnr}",
+      "error": "Bei der Reservierung ist ein Fehler aufgetreten.",
+      "networkError": "Verbindung zum Server fehlgeschlagen."
+    },
+    "steps": {
+      "step1": "Route & Datum",
+      "step2": "Fahrzeugwahl",
+      "step3": "Zahlung"
+    },
+    "step1": {
+      "title": "Planen Sie Ihre Reise",
+      "fromLabel": "Von",
+      "fromPlaceholder": "Abholort wählen",
+      "toLabel": "Nach",
+      "toPlaceholder": "Zielort wählen",
+      "dateLabel": "Datum",
+      "timeLabel": "Uhrzeit",
+      "adultsLabel": "Erwachsene",
+      "adultsSuffix": "Erw.",
+      "childrenLabel": "Kinder",
+      "childrenSuffix": "Kinder",
+      "findButton": "Verfügbare Fahrzeuge finden"
+    },
+    "step2": {
+      "title": "Passende Fahrzeuge",
+      "passengerSuffix": "Passagiere",
+      "goBack": "Zurück",
+      "paxSuffix": "Pers.",
+      "luggageSuffix": "Gepäck",
+      "featuresLabel": "Fahrzeugdetails",
+      "priceLabel": "Preis für eine Strecke",
+      "selectButton": "Auswählen & Weiter",
+      "capacityErrorTitle": "Kapazität überschritten",
+      "capacityErrorDesc": "Wir haben keine ausreichende Kapazität in einem Fahrzeug für {total} Passagiere. Bitte reduzieren Sie die Passagierzahl oder kontaktieren Sie uns direkt."
+    },
+    "step3": {
+      "title": "Letzter Schritt: Kontaktdaten",
+      "goBack": "Zurück",
+      "contactInfoTitle": "Ihre Kontaktdaten",
+      "namePlaceholder": "Vollständiger Name",
+      "phonePlaceholder": "Telefonnummer",
+      "emailPlaceholder": "E-Mail-Adresse",
+      "summaryTitle": "Zusammenfassung",
+      "loadingButton": "Bitte warten...",
+      "submitButton": "Reservierung abschließen"
+    }
+  },
+  "TestimonialSection": {
+    "titlePart1": "VIP-Erlebnisse ",
+    "titlePart2": "unserer Gäste.",
+    "description": "Erfahren Sie mehr über die Erfahrungen unserer Gäste, die uns für verschiedene Reisen gewählt haben, von Flughafentransfers bis hin zu Events.",
+    "scrollHint": "Scrollen, um Bewertungen zu lesen",
+    "testimonials": {
+      "t1": {
+        "name": "Ahmet Yılmaz",
+        "role": "Geschäftsmann",
+        "text": "Ich habe einen Wagen für meine Geschäftstermine den ganzen Tag angefordert. Die Sauberkeit, WLAN-Geschwindigkeit und die Professionalität des Fahrers waren Weltklasse. Werde ich definitiv wieder wählen."
+      },
+      "t2": {
+        "name": "Selin Karaca",
+        "role": "Architektin",
+        "text": "Wir wurden für unseren späten Flug am Flughafen Antalya abgeholt. Das Fahrzeug war pünktlich und die Fahrt war so angenehm, dass ich eingeschlafen bin. Wunderbare Erfahrung."
+      },
+      "t3": {
+        "name": "Caner & Cansu",
+        "role": "Hochzeitspaar",
+        "text": "Wir haben für unsere Flitterwochen einen Maybach gemietet. Champagner-Service, Sternenhimmel und Luxusdetails machten unseren Urlaub zu einem fantastischen Erlebnis."
+      },
+      "t4": {
+        "name": "Murat Demir",
+        "role": "Reisebüro",
+        "text": "Wir vertrauen unsere VIP-Gäste seit Jahren blind an. Das Operationsteam ist sehr schnell, die Fahrzeuge sind immer perfekt. Einer unserer besten Partner in der Branche."
+      },
+      "t5": {
+        "name": "Elena Petrova",
+        "role": "Tourist",
+        "text": "Unser Fahrer sprach Russisch und gab uns tolle Tipps für die Stadt. Dank des VIP-Designs mit Trennwand fühlten wir uns als Familie absolut sicher und isoliert."
+      },
+      "t6": {
+        "name": "Ozan Tekin",
+        "role": "Unternehmer",
+        "text": "Keine Preisüberraschungen, keine Verspätungen, kein Stress. Ich habe über die App in Sekunden gebucht und bezahlt. Meine einzige Wahl für Unternehmenstransfers."
+      }
+    }
+  },
+  "VehicleGalleryModal": {
+    "subtitle": "Fahrzeugdetails",
+    "imageAlt": "{vehicleName} - Bild {index}",
+    "enlargedAlt": "{vehicleName} - Vergrößert"
+  },
+  "GalleryPage": {
+    "title": "Galerie | VIP Booking",
+    "description": "Premium Interieur und Exterieur Ansichten unserer VIP-Fahrzeuge für ein luxuriöses Reiseerlebnis."
+  },
+  "AboutPage": {
+    "title": "Über uns | VIP Booking",
+    "description": "Die professionelle Vision, erfahrenes Personal und Luxus-Transportprinzipien hinter unseren Premium-VIP-Transfers."
+  },
+  "ContactPage": {
+    "title": "Kontakt | VIP Booking",
+    "description": "Kontaktieren Sie uns für Transferanfragen und Fragen. 24/7 VIP-Kundensupport."
+  },
+  "ReservationPage": {
+    "title": "Reservierung | VIP Booking",
+    "description": "Buchen Sie jetzt unsere Premium VIP-Transfers. Genießen Sie eine exklusive Reise mit unseren Luxusfahrzeugen."
+  },
+  "HomePage": {
+    "title": "VIP Booking | Luxustransfer und Chauffeurservice",
+    "description": "Zuverlässige, komfortable und professionelle VIP-Transferdienste in Antalya und Istanbul. Buchen Sie jetzt für private Anlässe und Flughafentransfers."
+  },
+  "RootLayout": {
+    "title": "VIP Booking App",
+    "description": "Premium-Reservierungs- und Reiseerlebnis."
   }
 }

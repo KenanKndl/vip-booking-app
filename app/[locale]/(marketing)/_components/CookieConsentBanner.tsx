@@ -11,9 +11,11 @@ import {
 } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { useCookieConsent } from "./CookieConsentProvider";
+import { useTranslations } from "next-intl";
 
 const FORCE_COOKIE_BANNER = false;
 export function CookieConsentBanner() {
+    const t = useTranslations("CookieConsentBanner");
     const {
         consent,
         hasAnswered,
@@ -42,12 +44,11 @@ export function CookieConsentBanner() {
                     <div className="rounded-3xl border border-white/10 bg-[#111111] p-5 text-white">
                         <div>
                             <h2 className="text-sm font-semibold text-white">
-                                Çerez tercihleri
+                                {t("bannerTitle")}
                             </h2>
 
                             <p className="mt-2 text-sm leading-6 text-white/50">
-                                Dil tercihinizi hatırlamak ve deneyiminizi iyileştirmek için
-                                çerezler kullanıyoruz.
+                                {t("bannerDescription")}
                             </p>
                         </div>
 
@@ -59,7 +60,7 @@ export function CookieConsentBanner() {
                                     onClick={rejectAll}
                                     className="h-10 rounded-full text-sm text-white/65 hover:bg-white/10 hover:text-white"
                                 >
-                                    Sadece zorunlu
+                                    {t("rejectAll")}
                                 </Button>
 
                                 <Button
@@ -68,7 +69,7 @@ export function CookieConsentBanner() {
                                     onClick={openSettings}
                                     className="h-10 rounded-full text-sm text-white/65 hover:bg-white/10 hover:text-white"
                                 >
-                                    Yönet
+                                    {t("manage")}
                                 </Button>
                             </div>
 
@@ -77,7 +78,7 @@ export function CookieConsentBanner() {
                                 onClick={acceptAll}
                                 className="h-10 rounded-full bg-white text-sm font-semibold text-black hover:bg-white/90"
                             >
-                                Tümünü kabul et
+                                {t("acceptAll")}
                             </Button>
                         </div>
                     </div>
@@ -87,10 +88,9 @@ export function CookieConsentBanner() {
             <Dialog open={isSettingsOpen} onOpenChange={closeSettings}>
                 <DialogContent className="border-white/10 bg-[#111111] text-white sm:max-w-lg">
                     <DialogHeader>
-                        <DialogTitle>Çerez Tercihleri</DialogTitle>
+                        <DialogTitle>{t("dialogTitle")}</DialogTitle>
                         <DialogDescription className="text-white/45">
-                            Hangi çerezlerin kullanılmasına izin vereceğinizi buradan
-                            yönetebilirsiniz.
+                            {t("dialogDescription")}
                         </DialogDescription>
                     </DialogHeader>
 
@@ -99,12 +99,11 @@ export function CookieConsentBanner() {
                             <div className="flex items-center justify-between gap-4">
                                 <div>
                                     <h3 className="text-sm font-semibold text-white">
-                                        Zorunlu çerezler
+                                        {t("essentialTitle")}
                                     </h3>
 
                                     <p className="mt-1 text-sm leading-6 text-white/45">
-                                        Site güvenliği, temel çalışma mantığı ve çerez
-                                        tercihlerinizi saklamak için gereklidir.
+                                        {t("essentialDescription")}
                                     </p>
                                 </div>
 
@@ -116,12 +115,11 @@ export function CookieConsentBanner() {
                             <div className="flex items-center justify-between gap-4">
                                 <div>
                                     <h3 className="text-sm font-semibold text-white">
-                                        Dil tercihi çerezleri
+                                        {t("preferencesTitle")}
                                     </h3>
 
                                     <p className="mt-1 text-sm leading-6 text-white/45">
-                                        Seçtiğiniz dili hatırlamamızı sağlar. Kapalı olursa
-                                        dil seçiminiz yalnızca mevcut oturumda uygulanır.
+                                        {t("preferencesDescription")}
                                     </p>
                                 </div>
 
@@ -140,7 +138,7 @@ export function CookieConsentBanner() {
                             onClick={rejectAll}
                             className="rounded-full text-white/65 hover:bg-white/10 hover:text-white"
                         >
-                            Sadece zorunlu
+                            {t("rejectAll")}
                         </Button>
 
                         <Button
@@ -148,7 +146,7 @@ export function CookieConsentBanner() {
                             onClick={() => savePreferences(preferencesEnabled)}
                             className="rounded-full bg-white text-black hover:bg-white/90"
                         >
-                            Tercihleri kaydet
+                            {t("savePreferences")}
                         </Button>
                     </div>
                 </DialogContent>

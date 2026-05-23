@@ -1,10 +1,16 @@
 ﻿import { GallerySection } from "../_components/GallerySection";
 import { prisma } from "@/lib/prisma";
+import { getTranslations } from "next-intl/server";
 
-export const metadata = {
-    title: "Galeri | VIP Booking",
-    description: "VIP transfer araçlarımızın premium iç ve dış görünümleri, lüks yolculuk deneyimi.",
-};
+// Next.js App Router'da dinamik dil bazlı metadata oluşturma
+export async function generateMetadata({ params: { locale } }: { params: { locale: string } }) {
+    const t = await getTranslations({ locale, namespace: "GalleryPage" });
+
+    return {
+        title: t("title"),
+        description: t("description"),
+    };
+}
 
 // Sayfanın her zaman en güncel veriyi çekmesini sağlar
 export const dynamic = "force-dynamic";

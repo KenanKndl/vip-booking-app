@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface VehicleGalleryModalProps {
     isOpen: boolean;
@@ -12,6 +13,7 @@ interface VehicleGalleryModalProps {
 }
 
 export function VehicleGalleryModal({ isOpen, onClose, images, vehicleName }: VehicleGalleryModalProps) {
+    const t = useTranslations("VehicleGalleryModal");
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const [direction, setDirection] = useState(0);
 
@@ -73,7 +75,7 @@ export function VehicleGalleryModal({ isOpen, onClose, images, vehicleName }: Ve
 
                         {/* Üst Başlık */}
                         <div className="mb-8 border-b border-white/5 pb-4 max-w-[calc(100%-48px)]">
-                            <p className="text-xs font-semibold text-[#22D3EE] uppercase tracking-widest mb-1">Araç Detay Görselleri</p>
+                            <p className="text-xs font-semibold text-[#22D3EE] uppercase tracking-widest mb-1">{t("subtitle")}</p>
                             <h3 className="text-xl font-bold text-white uppercase md:text-2xl">{vehicleName}</h3>
                         </div>
 
@@ -90,7 +92,7 @@ export function VehicleGalleryModal({ isOpen, onClose, images, vehicleName }: Ve
                                 >
                                     <img
                                         src={src}
-                                        alt={`${vehicleName} - ${index + 1}`}
+                                        alt={t("imageAlt", { vehicleName, index: index + 1 })}
                                         className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                                     />
                                     {/* Hover Filtresi */}
@@ -145,7 +147,7 @@ export function VehicleGalleryModal({ isOpen, onClose, images, vehicleName }: Ve
                                         <motion.img
                                             key={lightboxIndex}
                                             src={images[lightboxIndex]}
-                                            alt={`${vehicleName} - Büyütülmüş`}
+                                            alt={t("enlargedAlt", { vehicleName })}
                                             custom={direction}
                                             variants={imageVariants}
                                             initial="enter"

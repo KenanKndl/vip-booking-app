@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence, Variants } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 const trustedNames = [
     "Royal Transfer",
@@ -16,10 +17,11 @@ const trustedNames = [
     "MICE Travel",
 ];
 
-const animatedPhrases = [
-    { highlight: "size özel", suffix: " transfer.", color: "text-[#FACC15]" },
-    { highlight: "premium", suffix: " yolculuk.", color: "text-[#C084FC]" },
-    { highlight: "kusursuz", suffix: " deneyim.", color: "text-[#22D3EE]" },
+// Metinleri JSON'a taşıdığımız için burada sadece anahtar ve renk yapılandırması tutuyoruz.
+const animatedPhrasesConfig = [
+    { key: "phrase1", color: "text-[#FACC15]" },
+    { key: "phrase2", color: "text-[#C084FC]" },
+    { key: "phrase3", color: "text-[#22D3EE]" },
 ];
 
 const containerVariants: Variants = {
@@ -40,15 +42,18 @@ const itemVariants: Variants = {
 };
 
 export function HeroSection() {
+    const t = useTranslations("HeroSection");
     const [index, setIndex] = useState(0);
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setIndex((prevIndex) => (prevIndex + 1) % animatedPhrases.length);
+            setIndex((prevIndex) => (prevIndex + 1) % animatedPhrasesConfig.length);
         }, 2500);
 
         return () => clearInterval(interval);
     }, []);
+
+    const currentPhrase = animatedPhrasesConfig[index];
 
     return (
         <section className="min-h-[100svh] overflow-hidden bg-[#0d0d0d]">
@@ -66,7 +71,7 @@ export function HeroSection() {
                                 variants={itemVariants}
                                 className="hidden max-w-4xl text-5xl font-bold leading-[1.05] tracking-tight text-white sm:block md:text-7xl lg:text-8xl"
                             >
-                                Güvenli, konforlu ve
+                                {t("desktopTitlePrefix")}
 
                                 <div className="relative mx-auto flex h-[1.15em] w-full justify-center overflow-hidden">
                                     <AnimatePresence mode="popLayout">
@@ -82,12 +87,12 @@ export function HeroSection() {
                                             }}
                                             className="block whitespace-nowrap text-center"
                                         >
-                <span className={animatedPhrases[index].color}>
-                    {animatedPhrases[index].highlight}
-                </span>
+                                            <span className={currentPhrase.color}>
+                                                {t(`animatedPhrases.${currentPhrase.key}.highlight`)}
+                                            </span>
                                             <span className="text-white">
-                    {animatedPhrases[index].suffix}
-                </span>
+                                                {t(`animatedPhrases.${currentPhrase.key}.suffix`)}
+                                            </span>
                                         </motion.span>
                                     </AnimatePresence>
                                 </div>
@@ -98,9 +103,9 @@ export function HeroSection() {
                                 variants={itemVariants}
                                 className="block max-w-[22rem] text-[2.45rem] font-bold leading-[1.05] tracking-tight text-white sm:hidden"
                             >
-    <span className="block">
-        Güvenli ve konforlu
-    </span>
+                                <span className="block">
+                                    {t("mobileTitlePrefix")}
+                                </span>
 
                                 <div className="relative mx-auto flex h-[1.15em] w-full justify-center overflow-hidden">
                                     <AnimatePresence mode="popLayout">
@@ -116,12 +121,12 @@ export function HeroSection() {
                                             }}
                                             className="block whitespace-nowrap text-center"
                                         >
-                <span className={animatedPhrases[index].color}>
-                    {animatedPhrases[index].highlight}
-                </span>
+                                            <span className={currentPhrase.color}>
+                                                {t(`animatedPhrases.${currentPhrase.key}.highlight`)}
+                                            </span>
                                             <span className="text-white">
-                    {animatedPhrases[index].suffix}
-                </span>
+                                                {t(`animatedPhrases.${currentPhrase.key}.suffix`)}
+                                            </span>
                                         </motion.span>
                                     </AnimatePresence>
                                 </div>
@@ -131,9 +136,7 @@ export function HeroSection() {
                                 variants={itemVariants}
                                 className="mt-5 max-w-[21rem] text-sm leading-7 text-white/55 sm:max-w-2xl sm:text-base md:text-lg"
                             >
-                                Havalimanı, şehir içi ve özel etkinlik transferleriniz için lüks
-                                araçlar, profesyonel sürücüler ve zamanında ulaşım anlayışıyla
-                                rezervasyonunuzu kolayca oluşturun.
+                                {t("description")}
                             </motion.p>
 
                             <motion.div
@@ -144,7 +147,7 @@ export function HeroSection() {
                                     asChild
                                     className="h-12 w-full rounded-full bg-white px-7 text-sm font-semibold text-black hover:bg-white/90 sm:w-auto"
                                 >
-                                    <Link href="#booking">Rezervasyon Yap</Link>
+                                    <Link href="#booking">{t("buttons.book")}</Link>
                                 </Button>
 
                                 <Button
@@ -152,18 +155,18 @@ export function HeroSection() {
                                     variant="ghost"
                                     className="h-12 w-full rounded-full px-7 text-sm font-semibold text-white/75 hover:bg-white/10 hover:text-white sm:w-auto"
                                 >
-                                    <Link href="#gallery">Araçları İncele</Link>
+                                    <Link href="#gallery">{t("buttons.fleet")}</Link>
                                 </Button>
                             </motion.div>
                         </motion.div>
 
                         <div className="mt-10 w-full max-w-3xl sm:mt-12">
                             <p className="mb-6 text-[10px] font-medium tracking-[0.22em] text-white/50 uppercase sm:mb-8 sm:text-xs sm:tracking-[0.25em]">
-                                Bize güvenen{" "}
+                                {t("trusted.prefix")}
                                 <span className="bg-[#C084FC]/60 px-2 py-0.5 font-bold text-white">
-                                    yüzlerce
+                                    {t("trusted.highlight")}
                                 </span>{" "}
-                                marka ve iş ortağı
+                                {t("trusted.suffix")}
                             </p>
 
                             <div className="relative overflow-hidden">

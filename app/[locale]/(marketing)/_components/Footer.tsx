@@ -2,26 +2,27 @@
 import { Mail, MapPin, Phone } from "lucide-react";
 import { FaInstagram, FaLinkedinIn, FaWhatsapp } from "react-icons/fa";
 import { CookieSettingsTrigger } from "./CookieSettingsTrigger";
+import { useTranslations } from "next-intl";
 
 const footerLinks = [
     {
-        label: "Hakkımızda",
+        key: "about",
         href: "#about",
     },
     {
-        label: "Araçlarımız",
+        key: "vehicles",
         href: "/araclarimiz",
     },
     {
-        label: "Galeri",
+        key: "gallery",
         href: "#gallery",
     },
     {
-        label: "Rezervasyonlar",
+        key: "reservations",
         href: "#reservations",
     },
     {
-        label: "İletişim",
+        key: "contact",
         href: "#contact",
     },
 ];
@@ -45,6 +46,8 @@ const socialLinks = [
 ];
 
 export function Footer() {
+    const t = useTranslations("Footer");
+
     return (
         <>
             <footer className="border-t border-white/10 bg-[#0d0d0d] px-6 py-16 lg:px-8">
@@ -55,12 +58,11 @@ export function Footer() {
                                 href="/"
                                 className="text-sm font-semibold tracking-[0.35em] text-white uppercase"
                             >
-                                VIP BOOKING
+                                {t("brandName")}
                             </Link>
 
                             <p className="mt-5 max-w-md text-sm leading-7 text-white/45">
-                                Havalimanı, şehir içi ve özel etkinlik transferleriniz için
-                                güvenilir, konforlu ve profesyonel VIP ulaşım deneyimi.
+                                {t("description")}
                             </p>
 
                             <div className="mt-7 flex items-center gap-3">
@@ -85,7 +87,7 @@ export function Footer() {
 
                         <div>
                             <h3 className="text-sm font-semibold text-white">
-                                Hızlı Linkler
+                                {t("quickLinksTitle")}
                             </h3>
 
                             <nav className="mt-5 flex flex-col gap-3">
@@ -95,7 +97,7 @@ export function Footer() {
                                         href={item.href}
                                         className="text-sm text-white/45 transition-colors hover:text-white"
                                     >
-                                        {item.label}
+                                        {t(`links.${item.key}`)}
                                     </Link>
                                 ))}
                             </nav>
@@ -103,16 +105,15 @@ export function Footer() {
 
                         <div id="contact">
                             <h3 className="text-sm font-semibold text-white">
-                                İletişim Bilgileri
+                                {t("contactTitle")}
                             </h3>
 
                             <div className="mt-5 space-y-4">
                                 <div className="flex gap-3 text-sm leading-6 text-white/45">
                                     <MapPin className="mt-1 h-4 w-4 shrink-0 text-white/35" />
                                     <span>
-                    Antalya Havalimanı, Lara, Belek, Kemer ve şehir içi VIP
-                    transfer hizmetleri
-                  </span>
+                                        {t("address")}
+                                    </span>
                                 </div>
 
                                 <Link
@@ -135,14 +136,14 @@ export function Footer() {
                     </div>
 
                     <div className="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-white/30 md:flex-row md:items-center md:justify-between">
-                        <p>© 2026 VIP Booking. Tüm hakları saklıdır.</p>
+                        <p>{t("copyright")}</p>
 
                         <div className="flex gap-5">
                             <Link href="#" className="transition-colors hover:text-white/60">
-                                Gizlilik Politikası
+                                {t("privacyPolicy")}
                             </Link>
                             <Link href="#" className="transition-colors hover:text-white/60">
-                                Kullanım Şartları
+                                {t("termsOfUse")}
                             </Link>
 
                             <CookieSettingsTrigger />

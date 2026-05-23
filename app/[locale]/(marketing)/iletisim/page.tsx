@@ -1,9 +1,15 @@
 ﻿import { ContactSection } from "../_components/ContactSection";
+import { getTranslations } from "next-intl/server";
 
-export const metadata = {
-    title: "İletişim | VIP Booking",
-    description: "Transfer talepleriniz ve sorularınız için bizimle iletişime geçin. 7/24 VIP müşteri desteği.",
-};
+// Next.js App Router'da dinamik dil bazlı metadata oluşturma
+export async function generateMetadata({ params: { locale } }: { params: { locale: string } }) {
+    const t = await getTranslations({ locale, namespace: "ContactPage" });
+
+    return {
+        title: t("title"),
+        description: t("description"),
+    };
+}
 
 export default function ContactPage() {
     return (

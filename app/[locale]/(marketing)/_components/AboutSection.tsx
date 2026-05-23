@@ -2,35 +2,33 @@
 
 import { useRef, useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { useTranslations } from "next-intl";
 
-const aboutFeatures = [
+// Sadece statik olan stil ve görsel verilerini tutuyoruz.
+// Metinler next-intl ile çekilecek.
+const featuresData = [
     {
         id: 0,
-        stat: "10+ Yıl",
-        title: "Sektörde Premium Deneyim",
-        description: "VIP Booking olarak, sektördeki on yılı aşkın köklü geçmişimiz boyunca her zaman sıradan bir taşımacılık hizmetinin ötesine geçmeyi hedefledik. Misafirlerimize sadece bir noktadan diğerine ulaşım sağlamakla kalmıyor, yolculuğun planlama aşamasından varış anına kadar geçen her saniyede lüksü, zarafeti ve mutlak ayrıcalığı en saf haliyle hissettiriyoruz. Detaylara önem veren vizyoner hizmet anlayışımızla her rotayı adeta bir sanat eseri gibi titizlikle işliyor, modern seyahat standartlarını yeniden tanımlayarak her defasında beklentilerinizin çok daha ötesine geçmeyi bir standart olarak sunuyoruz.",
+        key: "feature1",
         color: "text-[#FACC15]",
         image: "https://images.unsplash.com/photo-1609521263047-f8f205293f24?q=80&w=800&auto=format&fit=crop",
     },
     {
         id: 1,
-        stat: "7/24",
-        title: "Kesintisiz VIP Hizmet",
-        description: "Küresel standartlarda ödün vermeyen bir zaman yönetimi, mutlak dakiklik ve kusursuz lojistik planlama prensipleriyle hareket ediyoruz. Günün hangi saatinde, uçuşunuzun ne kadar geciktiğinden veya dünyanın hangi köşesinde olduğunuzdan bağımsız olarak, üstün teknolojik donanıma sahip 7/24 aktif operasyon merkezimiz; her biri ileri sürüş teknikleri, kriz yönetimi ve protokol eğitimi almış profesyonel sürücü kadromuzla hizmetinizdeyiz. Havalimanı karşılamalarından, kritik iş toplantılarına ve uluslararası özel etkinliklere kadar seyahatinizin her bir detayını ve olası senaryosunu sizin yerinize büyük bir profesyonellikle kurguluyoruz.",
+        key: "feature2",
         color: "text-[#C084FC]",
         image: "https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=800&auto=format&fit=crop",
     },
     {
         id: 2,
-        stat: "%100",
-        title: "Güvenlik ve Memnuniyet",
-        description: "Sizin, ailenizin ve değerli iş ortaklarınızın güvenliği ile sarsılmaz huzuru, bizim en tavizsiz ve en kutsal önceliğimizdir. Ultra lüks segmentteki geniş filomuzda yer alan tüm araçlar, en üst düzey uluslararası aktif ve pasif güvenlik protokolleriyle donatılmış olup, her seyahat tam gizlilik ve yüksek emniyet esasına göre kusursuzca gerçekleştirilir. Tamamen sizin konforunuz için özel olarak kurgulanan multimedya sistemleri, premium ikramlar ve izole edilmiş iç mekan yapısı sayesinde, dış dünyanın tüm karmaşasından uzaklaşarak sadece arkanıza yaslanıp anın, lüksün ve güvenli yolculuğun tadını çıkarabilirsiniz.",
+        key: "feature3",
         color: "text-[#22D3EE]",
         image: "https://images.unsplash.com/photo-1549317336-206569e8475c?q=80&w=800&auto=format&fit=crop",
     },
 ];
 
 export function AboutSection() {
+    const t = useTranslations("AboutSection");
     const containerRef = useRef<HTMLDivElement>(null);
     const [activeIndex, setActiveIndex] = useState(-1);
 
@@ -67,12 +65,12 @@ export function AboutSection() {
                     transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 >
                     <p className="mb-6 max-w-md text-center text-sm font-medium tracking-[0.24em] text-white/40 uppercase">
-                        Yolculuğunuz başlamadan önce bizi yakından tanıyın.
+                        {t("openingSub")}
                     </p>
 
                     <h2 className="flex flex-col items-center justify-center gap-4 text-center font-bold tracking-tighter uppercase select-none md:gap-6">
-                        <span className="text-7xl leading-none text-white md:text-[9rem]">BİZ</span>
-                        <span className="text-7xl leading-none text-white/40 md:text-[9rem]">KİMİZ?</span>
+                        <span className="text-7xl leading-none text-white md:text-[9rem]">{t("openingTitle1")}</span>
+                        <span className="text-7xl leading-none text-white/40 md:text-[9rem]">{t("openingTitle2")}</span>
                     </h2>
                 </motion.div>
 
@@ -91,11 +89,11 @@ export function AboutSection() {
                     {/* SOL TARAF: Metin Blokları */}
                     <div className="relative flex h-[450px] flex-col justify-center" style={{ perspective: "1000px" }}>
                         <p className="absolute top-0 left-0 text-xs font-medium tracking-[0.4em] text-white/35 uppercase mb-8">
-                            Biz Kimiz?
+                            {t("sectionHeader")}
                         </p>
 
                         <div className="relative mt-12 h-full w-full">
-                            {aboutFeatures.map((feature, index) => {
+                            {featuresData.map((feature, index) => {
                                 const isActive = activeIndex === index;
                                 const isPast = index < activeIndex;
 
@@ -121,17 +119,18 @@ export function AboutSection() {
                                             animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 20 }}
                                             transition={{ duration: 0.5, delay: isActive ? 0.05 : 0 }}
                                         >
-                                            <span className={`${feature.color} block text-lg font-semibold mb-1`}>{feature.stat}</span>
-                                            {feature.title}
+                                            <span className={`${feature.color} block text-lg font-semibold mb-1`}>
+                                                {t(`${feature.key}.stat`)}
+                                            </span>
+                                            {t(`${feature.key}.title`)}
                                         </motion.h3>
 
-                                        {/* Metinlerin şık durması için text-justify ve leading-relaxed eklendi */}
                                         <motion.p
                                             className="max-w-xl text-xs md:text-sm leading-relaxed text-white/55 text-justify"
                                             animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 20 }}
                                             transition={{ duration: 0.5, delay: isActive ? 0.15 : 0 }}
                                         >
-                                            {feature.description}
+                                            {t(`${feature.key}.description`)}
                                         </motion.p>
                                     </motion.div>
                                 );
@@ -141,7 +140,7 @@ export function AboutSection() {
 
                     {/* SAĞ TARAF: Sinematik Derinlikli Görseller */}
                     <div className="relative flex h-[480px] w-full items-center justify-center">
-                        {aboutFeatures.map((feature, index) => {
+                        {featuresData.map((feature, index) => {
                             const isActive = activeIndex === index;
                             const isPast = index < activeIndex;
                             const isFuture = index > activeIndex;
@@ -164,7 +163,7 @@ export function AboutSection() {
                                 >
                                     <motion.img
                                         src={feature.image}
-                                        alt={feature.title}
+                                        alt={t(`${feature.key}.title`)}
                                         className="h-full w-full object-cover"
                                         animate={{
                                             scale: isActive ? 1.05 : 1

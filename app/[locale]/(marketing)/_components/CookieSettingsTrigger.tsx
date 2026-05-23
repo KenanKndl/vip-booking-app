@@ -1,8 +1,10 @@
 ﻿"use client";
 
 import { useCookieConsent } from "./CookieConsentProvider";
+import { useTranslations } from "next-intl";
 
 export function CookieSettingsTrigger() {
+    const t = useTranslations("CookieSettingsTrigger");
     const { openSettings } = useCookieConsent();
 
     return (
@@ -11,7 +13,7 @@ export function CookieSettingsTrigger() {
             onClick={openSettings}
             className="transition-colors hover:text-white/60"
         >
-            Çerez Tercihleri
+            {t("label")}
         </button>
     );
 }

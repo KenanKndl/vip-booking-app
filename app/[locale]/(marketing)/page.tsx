@@ -2,6 +2,18 @@
 import { PricingSection } from "./_components/PricingSection";
 import { ExploreSection } from "./_components/ExploreSection";
 import { TestimonialSection } from "./_components/TestimonialSection";
+import { getTranslations } from "next-intl/server";
+
+// ÇÖZÜM 2: params artık bir Promise, bu yüzden önce await ile çözümlüyoruz
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: "HomePage" });
+
+    return {
+        title: t("title"),
+        description: t("description"),
+    };
+}
 
 export default function MarketingHomePage() {
     return (

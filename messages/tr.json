@@ -1,6 +1,319 @@
 {
-  "Hero": {
-    "title": "Antalya'nın En Güvenilir VIP Transferi",
-    "subtitle": "Havalimanından otelinize lüks, konforlu ve tam zamanında ulaşım sağlayın. Hemen rotanızı seçin ve aracınızı ayırtın."
+  "AboutSection": {
+    "openingSub": "Yolculuğunuz başlamadan önce bizi yakından tanıyın.",
+    "openingTitle1": "BİZ",
+    "openingTitle2": "KİMİZ?",
+    "sectionHeader": "Biz Kimiz?",
+    "feature1": {
+      "stat": "10+ Yıl",
+      "title": "Sektörde Premium Deneyim",
+      "description": "VIP Booking olarak, sektördeki on yılı aşkın köklü geçmişimiz boyunca her zaman sıradan bir taşımacılık hizmetinin ötesine geçmeyi hedefledik. Misafirlerimize sadece bir noktadan diğerine ulaşım sağlamakla kalmıyor, yolculuğun planlama aşamasından varış anına kadar geçen her saniyede lüksü, zarafeti ve mutlak ayrıcalığı en saf haliyle hissettiriyoruz. Detaylara önem veren vizyoner hizmet anlayışımızla her rotayı adeta bir sanat eseri gibi titizlikle işliyor, modern seyahat standartlarını yeniden tanımlayarak her defasında beklentilerinizin çok daha ötesine geçmeyi bir standart olarak sunuyoruz."
+    },
+    "feature2": {
+      "stat": "7/24",
+      "title": "Kesintisiz VIP Hizmet",
+      "description": "Küresel standartlarda ödün vermeyen bir zaman yönetimi, mutlak dakiklik ve kusursuz lojistik planlama prensipleriyle hareket ediyoruz. Günün hangi saatinde, uçuşunuzun ne kadar geciktiğinden veya dünyanın hangi köşesinde olduğunuzdan bağımsız olarak, üstün teknolojik donanıma sahip 7/24 aktif operasyon merkezimiz; her biri ileri sürüş teknikleri, kriz yönetimi ve protokol eğitimi almış profesyonel sürücü kadromuzla hizmetinizdeyiz. Havalimanı karşılamalarından, kritik iş toplantılarına ve uluslararası özel etkinliklere kadar seyahatinizin her bir detayını ve olası senaryosunu sizin yerinize büyük bir profesyonellikle kurguluyoruz."
+    },
+    "feature3": {
+      "stat": "%100",
+      "title": "Güvenlik ve Memnuniyet",
+      "description": "Sizin, ailenizin ve değerli iş ortaklarınızın güvenliği ile sarsılmaz huzuru, bizim en tavizsiz ve en kutsal önceliğimizdir. Ultra lüks segmentteki geniş filomuzda yer alan tüm araçlar, en üst düzey uluslararası aktif ve pasif güvenlik protokolleriyle donatılmış olup, her seyahat tam gizlilik ve yüksek emniyet esasına göre kusursuzca gerçekleştirilir. Tamamen sizin konforunuz için özel olarak kurgulanan multimedya sistemleri, premium ikramlar ve izole edilmiş iç mekan yapısı sayesinde, dış dünyanın tüm karmaşasından uzaklaşarak sadece arkanıza yaslanıp anın, lüksün ve güvenli yolculuğun tadını çıkarabilirsiniz."
+    }
+  },
+  "ContactSection": {
+    "subTitle": "İletişim",
+    "titlePart1": "Bize ",
+    "titlePart2": "ulaşın.",
+    "description": "Transfer talepleriniz, özel organizasyonlarınız veya sorularınız için profesyonel ekibimizle dilediğiniz an iletişime geçebilirsiniz.",
+    "info": {
+      "companyLabel": "Şirket Ünvanı",
+      "companyName": "VIP Booking Turizm Taşımacılık Sanayi Ve Tic.Ltd.Şti",
+      "addressLabel": "Adres",
+      "addressValue": "Güzelyurt Mah. 26065 sokak No:6, Aksu / Antalya",
+      "phoneLabel": "Telefon",
+      "emailLabel": "E-Posta"
+    },
+    "form": {
+      "nameLabel": "Ad Soyad",
+      "namePlaceholder": "Adınız Soyadınız",
+      "emailLabel": "E-Mail",
+      "emailPlaceholder": "ornek@mail.com",
+      "phoneLabel": "Telefon",
+      "phonePlaceholder": "555 000 00 00",
+      "messageLabel": "Mesaj",
+      "messagePlaceholder": "Mesajınızı buraya yazabilirsiniz...",
+      "submitButton": "Mesajı Gönder"
+    }
+  },
+  "CookieConsentBanner": {
+    "bannerTitle": "Çerez tercihleri",
+    "bannerDescription": "Dil tercihinizi hatırlamak ve deneyiminizi iyileştirmek için çerezler kullanıyoruz.",
+    "rejectAll": "Sadece zorunlu",
+    "manage": "Yönet",
+    "acceptAll": "Tümünü kabul et",
+    "dialogTitle": "Çerez Tercihleri",
+    "dialogDescription": "Hangi çerezlerin kullanılmasına izin vereceğinizi buradan yönetebilirsiniz.",
+    "essentialTitle": "Zorunlu çerezler",
+    "essentialDescription": "Site güvenliği, temel çalışma mantığı ve çerez tercihlerinizi saklamak için gereklidir.",
+    "preferencesTitle": "Dil tercihi çerezleri",
+    "preferencesDescription": "Seçtiğiniz dili hatırlamamızı sağlar. Kapalı olursa dil seçiminiz yalnızca mevcut oturumda uygulanır.",
+    "savePreferences": "Tercihleri kaydet"
+  },
+  "CookieSettingsTrigger": {
+    "label": "Çerez Tercihleri"
+  },
+  "ExploreSection": {
+    "titlePart1": "Yolculuğunuz başlamadan önce ",
+    "titlePart2": "bizi yakından tanıyın.",
+    "description": "Araçlarımızı, referanslarımızı ve güncel paylaşımlarımızı tek bir alanda keşfedin. Rezervasyon öncesinde markamızı, çalışma şeklimizi ve deneyim anlayışımızı daha net görün.",
+    "chips": {
+      "chip1": "Premium filo",
+      "chip2": "Kurumsal referanslar",
+      "chip3": "Güncel paylaşımlar"
+    },
+    "vehicles": {
+      "title": "Araçlarımız",
+      "description": "Konforlu, bakımlı ve özel transfer deneyimine uygun araçlarımızı yakından inceleyin.",
+      "action": "Filoyu incele",
+      "details": {
+        "detail1": "Mercedes Vito & V-Class",
+        "detail2": "Havalimanı ve şehir içi transfer",
+        "detail3": "Konfor odaklı araç seçimi"
+      }
+    },
+    "references": {
+      "title": "Kimlerle Çalıştık",
+      "description": "Oteller, organizasyon firmaları ve kurumsal iş ortaklarımızla yürüttüğümüz çalışmaları görün.",
+      "action": "Referansları gör",
+      "details": {
+        "detail1": "Oteller ve turizm markaları",
+        "detail2": "Organizasyon firmaları",
+        "detail3": "Kurumsal ulaşım çözümleri"
+      }
+    },
+    "social": {
+      "title": "Bizi takip edin.",
+      "badge": "Güncel",
+      "description": "Araçlarımızı, transfer deneyimlerini ve duyurularımızı sosyal medya hesaplarımızdan takip edebilirsiniz.",
+      "details": {
+        "detail1": "Araç ve transfer paylaşımları",
+        "detail2": "Güncel duyurular",
+        "detail3": "Etkinlik ve yolculuk içerikleri"
+      }
+    }
+  },
+  "FloatingWhatsAppButton": {
+    "ariaLabel": "WhatsApp ile iletişime geç"
+  },
+  "Footer": {
+    "brandName": "VIP BOOKING",
+    "description": "Havalimanı, şehir içi ve özel etkinlik transferleriniz için güvenilir, konforlu ve profesyonel VIP ulaşım deneyimi.",
+    "quickLinksTitle": "Hızlı Linkler",
+    "contactTitle": "İletişim Bilgileri",
+    "address": "Antalya Havalimanı, Lara, Belek, Kemer ve şehir içi VIP transfer hizmetleri",
+    "copyright": "© 2026 VIP Booking. Tüm hakları saklıdır.",
+    "privacyPolicy": "Gizlilik Politikası",
+    "termsOfUse": "Kullanım Şartları",
+    "links": {
+      "about": "Hakkımızda",
+      "vehicles": "Araçlarımız",
+      "gallery": "Galeri",
+      "reservations": "Rezervasyonlar",
+      "contact": "İletişim"
+    }
+  },
+  "GallerySection": {
+    "subtitle": "Görsel Deneyim",
+    "titlePart1": "Sizi bekleyen",
+    "titlePart2": "konforu keşfedin.",
+    "defaultImageTitle": "VIP Transfer Deneyimi",
+    "emptyTitle": "Henüz Fotoğraf Yüklenmemiş",
+    "emptyDescription": "Yönetim panelinden bu kategoriye fotoğraf ekleyebilirsiniz.",
+    "categories": {
+      "all": "Tümü",
+      "interior": "İç Mekan",
+      "exterior": "Dış Görünüm",
+      "special": "Özel Anlar",
+      "other": "Diğer"
+    }
+  },
+  "HeroSection": {
+    "desktopTitlePrefix": "Güvenli, konforlu ve",
+    "mobileTitlePrefix": "Güvenli ve konforlu",
+    "description": "Havalimanı, şehir içi ve özel etkinlik transferleriniz için lüks araçlar, profesyonel sürücüler ve zamanında ulaşım anlayışıyla rezervasyonunuzu kolayca oluşturun.",
+    "buttons": {
+      "book": "Rezervasyon Yap",
+      "fleet": "Araçları İncele"
+    },
+    "trusted": {
+      "prefix": "Bize güvenen ",
+      "highlight": "yüzlerce",
+      "suffix": " marka ve iş ortağı"
+    },
+    "animatedPhrases": {
+      "phrase1": {
+        "highlight": "size özel",
+        "suffix": " transfer."
+      },
+      "phrase2": {
+        "highlight": "premium",
+        "suffix": " yolculuk."
+      },
+      "phrase3": {
+        "highlight": "kusursuz",
+        "suffix": " deneyim."
+      }
+    }
+  },
+  "Navbar": {
+    "brandName": "MATILDA",
+    "brandSub": "VIP Transfer",
+    "nav": {
+      "about": "Hakkımızda",
+      "gallery": "Galeri",
+      "contact": "İletişim"
+    },
+    "buttons": {
+      "book": "Rezervasyon Yap"
+    },
+    "mobile": {
+      "openMenu": "Menüyü aç",
+      "closeMenu": "Menüyü kapat",
+      "languageSelection": "Dil Seçimi",
+      "currencySelection": "Para Birimi"
+    }
+  },
+  "PricingSection": {
+    "subtitle": "Şeffaf Fiyatlandırma",
+    "titlePart1": "Ayrıcalıklı rotalar,",
+    "titlePart2": "net fiyatlar.",
+    "description": "Sürpriz veya ek ücretler yok. Sık tercih edilen rotalarımız için belirlenmiş VIP Vito transfer ücretlerimizi inceleyin.",
+    "tabs": {
+      "IST": "İstanbul Hvl.",
+      "SAW": "Sabiha Gökçen",
+      "CITY": "Şehir İçi"
+    },
+    "destinationLabel": "Varış Noktası",
+    "infoText": "Fiyatlarımıza otoyol, köprü geçişleri ve tünel ücretleri dahildir. Listede olmayan farklı bir lokasyon veya özel turlarınız için anında özel teklif alabilirsiniz.",
+    "quoteButton": "Özel Teklif Al"
+  },
+  "ReservationSection": {
+    "alerts": {
+      "missingFieldsStep1": "Lütfen nereden, nereye, tarih ve saat alanlarını eksiksiz doldurun.",
+      "noRoute": "Seçtiğiniz güzergah için aktif bir güzergah bulunmamaktadır.",
+      "missingFieldsStep3": "Lütfen ad soyad ve telefon bilgilerinizi giriniz.",
+      "success": "Rezervasyonunuz Başarıyla Tamamlandı! PNR Kodunuz: {pnr}",
+      "error": "Rezervasyon sırasında bir hata oluştu.",
+      "networkError": "Sunucu ile iletişim kurulamadı."
+    },
+    "steps": {
+      "step1": "Rota & Tarih",
+      "step2": "Araç Seçimi",
+      "step3": "Ödeme"
+    },
+    "step1": {
+      "title": "Yolculuğunuzu Planlayın",
+      "fromLabel": "Nereden",
+      "fromPlaceholder": "Alınış noktası seçin",
+      "toLabel": "Nereye",
+      "toPlaceholder": "Varış noktası seçin",
+      "dateLabel": "Tarih",
+      "timeLabel": "Saat",
+      "adultsLabel": "Yetişkin",
+      "adultsSuffix": "Yetişkin",
+      "childrenLabel": "Çocuk",
+      "childrenSuffix": "Çocuk",
+      "findButton": "Uygun Araçları Bul"
+    },
+    "step2": {
+      "title": "Size Uygun Araçlar",
+      "passengerSuffix": "Yolcu",
+      "goBack": "Geri Dön",
+      "paxSuffix": "Kişi",
+      "luggageSuffix": "Bagaj",
+      "featuresLabel": "Araç Özellikleri",
+      "priceLabel": "Tek Yön Fiyatı",
+      "selectButton": "Seç ve İlerle",
+      "capacityErrorTitle": "Kapasite Aşımı",
+      "capacityErrorDesc": "Seçtiğiniz toplam {total} yolcu için tek bir araçta uygun kapasitemiz bulunmamaktadır. Lütfen yolcu sayısını azaltın veya bizimle doğrudan iletişime geçin."
+    },
+    "step3": {
+      "title": "Son Adım: İletişim Bilgileri",
+      "goBack": "Geri Dön",
+      "contactInfoTitle": "İletişim Bilgileriniz",
+      "namePlaceholder": "Ad Soyad",
+      "phonePlaceholder": "Telefon Numarası",
+      "emailPlaceholder": "E-Posta Adresi",
+      "summaryTitle": "Özet",
+      "loadingButton": "Lütfen Bekleyin...",
+      "submitButton": "Rezervasyonu Tamamla"
+    }
+  },
+  "TestimonialSection": {
+    "titlePart1": "Misafirlerimizin ",
+    "titlePart2": "VIP deneyimleri.",
+    "description": "Havalimanı transferlerinden özel etkinliklere kadar farklı yolculuklarda bizi tercih eden misafirlerimizin deneyimlerine göz atın.",
+    "scrollHint": "Kaydırdıkça yorumları keşfedin",
+    "testimonials": {
+      "t1": {
+        "name": "Ahmet Yılmaz",
+        "role": "İş İnsanı",
+        "text": "Toplantılarım için gün boyu araç tahsisi istedim. Araç içi temizlik, Wi-Fi hızı ve kaptanın profesyonelliği dünya standartlarındaydı. Kesinlikle tekrar tercih edeceğim."
+      },
+      "t2": {
+        "name": "Selin Karaca",
+        "role": "Mimar",
+        "text": "Gece geç saatteki uçuşumuz için Antalya Havalimanı'ndan alındık. Araç tam vaktinde oradaydı ve yolculuk o kadar sarsıntısızdı ki uyuyakalmışım. Harika bir deneyim."
+      },
+      "t3": {
+        "name": "Caner & Cansu",
+        "role": "Balayı Çifti",
+        "text": "Balayı tatilimiz için Maybach serisi bir araç kiraladık. Şampanya ikramı, yıldız tavan ve araç içi lüks detaylar tatilimize muazzam bir başlangıç yapmamızı sağladı."
+      },
+      "t4": {
+        "name": "Murat Demir",
+        "role": "Turizm Acentesi",
+        "text": "VIP misafirlerimizi yıllardır gözümüz kapalı emanet ediyoruz. Operasyon ekibi çok hızlı, araçlar her zaman pırıl pırıl. Sektördeki en iyi partnerlerimizden biri."
+      },
+      "t5": {
+        "name": "Elena Petrova",
+        "role": "Turist",
+        "text": "Şoförümüz Rusça biliyordu ve bize şehir hakkında harika ipuçları verdi. Ara bölmeli VIP tasarım sayesinde ailece tamamen izole ve güvende hissettik."
+      },
+      "t6": {
+        "name": "Ozan Tekin",
+        "role": "Girişimci",
+        "text": "Sürpriz fiyat yok, geç kalma yok, stres yok. Uygulama üzerinden saniyeler içinde rezervasyon yapıp ödemeyi tamamladım. Kurumsal taşımacılıkta tek geçerim."
+      }
+    }
+  },
+  "VehicleGalleryModal": {
+    "subtitle": "Araç Detay Görselleri",
+    "imageAlt": "{vehicleName} - Görsel {index}",
+    "enlargedAlt": "{vehicleName} - Büyütülmüş"
+  },
+  "GalleryPage": {
+    "title": "Galeri | VIP Booking",
+    "description": "VIP transfer araçlarımızın premium iç ve dış görünümleri, lüks yolculuk deneyimi."
+  },
+  "AboutPage": {
+    "title": "Hakkımızda | VIP Booking",
+    "description": "Premium VIP transfer hizmetlerimizin arkasındaki profesyonel vizyon, deneyimli kadromuz ve lüks ulaşım ilkelerimiz."
+  },
+  "ContactPage": {
+    "title": "İletişim | VIP Booking",
+    "description": "Transfer talepleriniz ve sorularınız için bizimle iletişime geçin. 7/24 VIP müşteri desteği."
+  },
+  "ReservationPage": {
+    "title": "Rezervasyon | VIP Booking",
+    "description": "Premium VIP transfer hizmetlerimiz için hemen rezervasyon yapın. Lüks araçlarımız ve profesyonel ekibimizle ayrıcalıklı bir yolculuk deneyimi yaşayın."
+  },
+  "HomePage": {
+    "title": "VIP Booking | Lüks Transfer ve Şoförlü Araç Kiralama",
+    "description": "Antalya ve İstanbul'da güvenilir, konforlu ve profesyonel VIP transfer hizmetleri. Özel organizasyonlar ve havalimanı transferleri için hemen rezervasyon yapın."
+  },
+  "RootLayout": {
+    "title": "VIP Booking App",
+    "description": "Premium rezervasyon ve seyahat deneyimi."
   }
 }

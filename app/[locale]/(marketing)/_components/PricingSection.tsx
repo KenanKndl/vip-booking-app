@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 type Currency = "TRY" | "USD" | "EUR";
 type Location = "IST" | "SAW" | "CITY";
@@ -36,13 +37,14 @@ const routesData = {
     ],
 };
 
-const tabs: { id: Location; label: string; activeBg: string }[] = [
-    { id: "IST", label: "İstanbul Hvl.", activeBg: "bg-[#22D3EE]" },
-    { id: "SAW", label: "Sabiha Gökçen", activeBg: "bg-[#C084FC]" },
-    { id: "CITY", label: "Şehir İçi", activeBg: "bg-[#FACC15]" },
+const tabsConfig: { id: Location; activeBg: string }[] = [
+    { id: "IST", activeBg: "bg-[#22D3EE]" },
+    { id: "SAW", activeBg: "bg-[#C084FC]" },
+    { id: "CITY", activeBg: "bg-[#FACC15]" },
 ];
 
 export function PricingSection() {
+    const t = useTranslations("PricingSection");
     const [currency, setCurrency] = useState<Currency>("TRY");
     const [activeTab, setActiveTab] = useState<Location>("IST");
 
@@ -53,13 +55,13 @@ export function PricingSection() {
                 {/* Başlık Grubu */}
                 <div className="mx-auto max-w-3xl text-center">
                     <p className="text-xs font-medium tracking-[0.4em] text-white/35 uppercase">
-                        Şeffaf Fiyatlandırma
+                        {t("subtitle")}
                     </p>
                     <h2 className="mt-4 text-3xl font-semibold tracking-tight text-white md:text-5xl">
-                        Ayrıcalıklı rotalar, <span className="text-white/60">net fiyatlar.</span>
+                        {t("titlePart1")} <span className="text-white/60">{t("titlePart2")}</span>
                     </h2>
                     <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-white/45 md:text-lg">
-                        Sürpriz veya ek ücretler yok. Sık tercih edilen rotalarımız için belirlenmiş VIP Vito transfer ücretlerimizi inceleyin.
+                        {t("description")}
                     </p>
                 </div>
 
@@ -68,7 +70,7 @@ export function PricingSection() {
 
                     {/* Tablar */}
                     <div className="flex rounded-full bg-white/[0.03] p-1.5 border border-white/5 w-full md:w-auto overflow-x-auto hide-scrollbar">
-                        {tabs.map((tab) => (
+                        {tabsConfig.map((tab) => (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
@@ -83,7 +85,7 @@ export function PricingSection() {
                                         transition={{ type: "spring", stiffness: 400, damping: 30 }}
                                     />
                                 )}
-                                <span className="relative z-10">{tab.label}</span>
+                                <span className="relative z-10">{t(`tabs.${tab.id}`)}</span>
                             </button>
                         ))}
                     </div>
@@ -127,9 +129,7 @@ export function PricingSection() {
                                     key={idx}
                                     className="group flex items-center justify-between rounded-2xl border border-white/5 bg-white/[0.02] p-5 transition-all duration-300 hover:border-white/10 hover:bg-white/[0.04]"
                                 >
-                                    {/* gap-3 olan alan gap-4 yapılarak ikon ve metin arası açıldı */}
                                     <div className="flex items-center gap-4">
-                                        {/* pr-0.5 eklenerek ikon dairesel olarak mükemmel hizalandı */}
                                         <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-white/30 pr-0.5 transition-colors duration-300 
                                             ${activeTab === "IST" ? "group-hover:bg-[#22D3EE]/10 group-hover:text-[#22D3EE]" : ""}
                                             ${activeTab === "SAW" ? "group-hover:bg-[#C084FC]/10 group-hover:text-[#C084FC]" : ""}
@@ -138,8 +138,7 @@ export function PricingSection() {
                                             <MapPin className="h-4 w-4" />
                                         </div>
                                         <div>
-                                            {/* mb-0.5 yerine mb-1 yapılarak dikey hiyerarşi rahatlatıldı */}
-                                            <p className="text-sm font-medium text-white/40 mb-1">Varış Noktası</p>
+                                            <p className="text-sm font-medium text-white/40 mb-1">{t("destinationLabel")}</p>
                                             <p className="text-base font-semibold text-white">
                                                 {route.to}
                                             </p>
@@ -178,14 +177,14 @@ export function PricingSection() {
                     <div className="flex items-start gap-3">
                         <Info className="mt-0.5 h-5 w-5 flex-shrink-0 text-white/30" />
                         <p className="text-sm leading-relaxed text-white/45">
-                            Fiyatlarımıza otoyol, köprü geçişleri ve tünel ücretleri dahildir. Listede olmayan farklı bir lokasyon veya özel turlarınız için anında özel teklif alabilirsiniz.
+                            {t("infoText")}
                         </p>
                     </div>
                     <Button
                         asChild
                         className="w-full sm:w-auto h-11 rounded-full bg-white px-6 text-sm font-semibold text-black hover:bg-white/90 transition-all flex-shrink-0"
                     >
-                        <a href="#booking">Özel Teklif Al</a>
+                        <a href="#booking">{t("quoteButton")}</a>
                     </Button>
                 </div>
 

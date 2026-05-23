@@ -1,19 +1,30 @@
 import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
-import "../globals.css"; // [locale] klasörüne girdiğimiz için yol bir üst klasör oldu
+import "../globals.css";
 import { cn } from "@/lib/utils";
+import { getTranslations, getMessages } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
 
 const figtree = Figtree({
     subsets: ["latin"],
     variable: "--font-sans",
 });
 
-export const metadata: Metadata = {
-    title: "VIP Booking App",
-    description: "Premium reservation and booking experience.",
-};
+// ÇÖZÜM 2: params artık bir Promise, bu yüzden önce await ile çözümlüyoruz
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: "RootLayout" });
 
-// Çoklu dil için asenkron yapıya çevrildi
+    return {
+        title: t("title"),
+        description: t("description"),
+    };
+}
+
 export default async function RootLayout({
                                        children,
                                        params,
@@ -24,11 +35,17 @@ export default async function RootLayout({
     
     // URL'den dili yakalıyoruz
     const { locale } = await params;
+    
+    // ÇÖZÜM 1: Client bileşenleri için (Navbar vb.) çevirileri alıyoruz
+    const messages = await getMessages();
 
     return (
         <html lang={locale} className={cn("h-full antialiased scroll-smooth", figtree.variable)}>
         <body className="min-h-full bg-[#0d0d0d] font-sans text-foreground overflow-x-hidden">
-        {children}
+        {/* Tüm uygulamayı Provider ile sarmalıyoruz ki Client Component'lar çevirilere erişebilsin */}
+        <NextIntlClientProvider messages={messages}>
+            {children}
+        </NextIntlClientProvider>
         </body>
         </html>
     );

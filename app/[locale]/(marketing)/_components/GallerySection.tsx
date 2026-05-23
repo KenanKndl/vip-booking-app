@@ -3,37 +3,40 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Maximize2, X, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-const categories = ["Tümü", "İç Mekan", "Dış Görünüm", "Özel Anlar"];
+// Kategori anahtarları (Çeviri ve filtreleme için kullanılacak)
+const categoryKeys = ["all", "interior", "exterior", "special"];
 
-// Veritabanı İngilizce Enum -> Arayüz Türkçe Kategori Eşleştirmesi
+// Veritabanı İngilizce Enum -> Kategori Key Eşleştirmesi
 const CAT_MAP: Record<string, string> = {
-    'EXTERIOR': 'Dış Görünüm',
-    'INTERIOR': 'İç Mekan',
-    'SPECIAL': 'Özel Anlar'
+    'EXTERIOR': 'exterior',
+    'INTERIOR': 'interior',
+    'SPECIAL': 'special'
 };
 
-// Tasarımın o asimetrik (masonry) yapısını korumak için kullanılacak boyut havuzu
 const MASONRY_STYLES = ["aspect-square", "aspect-[3/4]", "aspect-[4/3]", "aspect-video"];
 
 export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
-    const [activeCategory, setActiveCategory] = useState("Tümü");
+    const t = useTranslations("GallerySection");
+    
+    // Artık Türkçe metinleri değil, kategori anahtarlarını state içinde tutuyoruz
+    const [activeCategoryKey, setActiveCategoryKey] = useState("all");
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const [direction, setDirection] = useState(0);
 
-    // Veritabanından gelen veriyi tasarımın beklediği formata dönüştürüyoruz
     const galleryData = useMemo(() => {
         return dbImages.map((img, index) => ({
             id: img.id,
             src: img.url,
-            category: CAT_MAP[img.category] || "Diğer",
-            title: "VIP Transfer Deneyimi", // İleride veritabanına eklenebilir, şimdilik şık bir varsayılan
-            style: MASONRY_STYLES[index % MASONRY_STYLES.length] // Kutular asimetrik görünsün diye sırayla stil atıyoruz
+            categoryKey: CAT_MAP[img.category] || "other",
+            title: t("defaultImageTitle"), 
+            style: MASONRY_STYLES[index % MASONRY_STYLES.length] 
         }));
-    }, [dbImages]);
+    }, [dbImages, t]);
 
     const filteredImages = galleryData.filter(
-        (img) => activeCategory === "Tümü" || img.category === activeCategory
+        (img) => activeCategoryKey === "all" || img.categoryKey === activeCategoryKey
     );
 
     const showNext = useCallback(() => {
@@ -112,11 +115,11 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
                         className="mx-auto max-w-3xl text-center"
                     >
                         <p className="text-xs font-medium tracking-[0.4em] text-white/35 uppercase mb-6">
-                            Görsel Deneyim
+                            {t("subtitle")}
                         </p>
                         <h2 className="text-3xl font-semibold tracking-tight text-white md:text-5xl leading-tight">
-                            Sizi bekleyen <br className="hidden md:block" />
-                            <span className="text-white/50">konforu keşfedin.</span>
+                            {t("titlePart1")} <br className="hidden md:block" />
+                            <span className="text-white/50">{t("titlePart2")}</span>
                         </h2>
                     </motion.div>
 
@@ -128,24 +131,24 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
                         className="mt-16 flex justify-center"
                     >
                         <div className="flex flex-wrap items-center justify-center gap-2 rounded-full bg-white/[0.02] p-1.5 border border-white/5 backdrop-blur-sm">
-                            {categories.map((cat) => (
+                            {categoryKeys.map((catKey) => (
                                 <button
-                                    key={cat}
-                                    onClick={() => setActiveCategory(cat)}
+                                    key={catKey}
+                                    onClick={() => setActiveCategoryKey(catKey)}
                                     className={`relative px-6 py-2.5 text-sm font-medium transition-colors duration-300 rounded-full ${
-                                        activeCategory === cat
+                                        activeCategoryKey === catKey
                                             ? "text-black"
                                             : "text-white/60 hover:text-white hover:bg-white/5"
                                     }`}
                                 >
-                                    {activeCategory === cat && (
+                                    {activeCategoryKey === catKey && (
                                         <motion.span
                                             layoutId="activeGalleryFilter"
                                             className="absolute inset-0 bg-white rounded-full shadow-lg"
                                             transition={{ type: "spring", stiffness: 400, damping: 30 }}
                                         />
                                     )}
-                                    <span className="relative z-10">{cat}</span>
+                                    <span className="relative z-10">{t(`categories.${catKey}`)}</span>
                                 </button>
                             ))}
                         </div>
@@ -184,7 +187,7 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
                                                     <div className="flex items-center justify-between">
                                                         <div>
                                                             <span className="inline-block px-3 py-1 mb-3 text-xs font-semibold text-white bg-white/20 backdrop-blur-md rounded-full uppercase tracking-wider">
-                                                                {img.category}
+                                                                {t(`categories.${img.categoryKey}`)}
                                                             </span>
                                                             <h3 className="text-xl font-medium text-white">
                                                                 {img.title}
@@ -203,8 +206,8 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
                         ) : (
                             <div className="py-24 flex flex-col items-center justify-center text-center">
                                 <ImageIcon size={48} className="text-white/20 mb-4" />
-                                <h3 className="text-xl font-medium text-white mb-2">Henüz Fotoğraf Yüklenmemiş</h3>
-                                <p className="text-white/50 text-sm">Yönetim panelinden bu kategoriye fotoğraf ekleyebilirsiniz.</p>
+                                <h3 className="text-xl font-medium text-white mb-2">{t("emptyTitle")}</h3>
+                                <p className="text-white/50 text-sm">{t("emptyDescription")}</p>
                             </div>
                         )}
                     </div>
@@ -276,7 +279,7 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
                             >
                                 <div className="flex flex-col">
                                     <span className="text-xs font-semibold text-white/50 uppercase tracking-widest mb-1">
-                                        {currentImage.category}
+                                        {t(`categories.${currentImage.categoryKey}`)}
                                     </span>
                                     <h3 className="text-xl font-medium text-white">
                                         {currentImage.title}

@@ -1,8 +1,8 @@
 ﻿import { AboutSection } from "../_components/AboutSection";
 import { getTranslations } from "next-intl/server";
 
-// Next.js App Router'da dinamik dil bazlı metadata oluşturma
-export async function generateMetadata({ params: { locale } }: { params: { locale: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
     const t = await getTranslations({ locale, namespace: "AboutPage" });
 
     return {
@@ -13,7 +13,6 @@ export async function generateMetadata({ params: { locale } }: { params: { local
 
 export default function AboutPage() {
     return (
-        // Navbar yüksekliğini kurtarmak ve içeriği ortalamak için üst boşluk eklendi
         <main className="min-h-screen bg-[#0d0d0d] pt-20">
             <AboutSection />
         </main>

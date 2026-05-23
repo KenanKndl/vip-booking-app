@@ -2,8 +2,8 @@
 import { prisma } from "@/lib/prisma";
 import { getTranslations } from "next-intl/server";
 
-// Next.js App Router'da dinamik dil bazlı metadata oluşturma
-export async function generateMetadata({ params: { locale } }: { params: { locale: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
     const t = await getTranslations({ locale, namespace: "ReservationPage" });
 
     return {
@@ -12,11 +12,9 @@ export async function generateMetadata({ params: { locale } }: { params: { local
     };
 }
 
-// Sayfanın her zaman en güncel veriyi çekmesini sağlar
 export const dynamic = "force-dynamic";
 
 export default async function RezervasyonPage() {
-    // Veritabanındaki rotaları, içindeki araç fiyatlandırmalarıyla birlikte çekiyoruz
     const routes = await prisma.route.findMany({
         include: {
             prices: {
@@ -29,7 +27,6 @@ export default async function RezervasyonPage() {
 
     return (
         <main className="min-h-screen bg-[#0d0d0d] pt-20">
-            {/* Veritabanından gelen rotaları forma aktarıyoruz */}
             <ReservationSection dbRoutes={routes} />
         </main>
     );

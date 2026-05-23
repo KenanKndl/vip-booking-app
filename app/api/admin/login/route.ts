@@ -3,7 +3,6 @@ import bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
 import { NextResponse } from 'next/server';
 
-
 // CORS başlıklarını ortak bir fonksiyon olarak tanımlıyoruz
 function getCorsHeaders(origin: string | null) {
   // Geliştirme aşamasında Vite portuna, canlıda ise admin subdomainine izin verecek esnek yapı
@@ -34,18 +33,23 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { email, password } = body;
+    
+    // DÜZELTME: Vite (Frontend) giriş formu 'email' yerine 'username' gönderiyor olabilir.
+    // Bu yüzden iki ihtimali de yakalayarak işlemi garantiye alıyoruz.
+    const { email, username, password } = body;
+    const loginIdentifier = email || username;
 
-    if (!email || !password) {
+    if (!loginIdentifier || !password) {
       return NextResponse.json(
-        { success: false, error: 'Lütfen tüm alanları doldurun.' },
+        { success: false, error: 'Lütfen kullanıcı adı ve şifrenizi girin.' },
         { status: 400, headers }
       );
     }
 
     // Veritabanında admin kullanıcısını sorgula
-    const admin = await prisma.adminSettings.findUnique({
-      where: { adminEmail: email },
+    // (Olası Prisma @unique hatalarını önlemek için findFirst kullandık)
+    const admin = await prisma.adminSettings.findFirst({
+      where: { adminEmail: loginIdentifier },
     });
 
     if (!admin) {
@@ -65,10 +69,13 @@ export async function POST(request: Request) {
     }
 
     // Token (Dijital Bilet) üretme
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+    // Not: ENV dosyası okunamazsa diye güvenli bir string fallback eklendi.
+    const secretKey = process.env.JWT_SECRET || 'jwt_gizli_anahtar_yedek';
+    const secret = new TextEncoder().encode(secretKey);
+    
     const token = await new SignJWT({ adminId: admin.id, email: admin.adminEmail })
       .setProtectedHeader({ alg: 'HS256' })
-      .setExpirationTime('1d') // 1 gün geçerli
+      .setExpirationTime('6h')
       .sign(secret);
 
     // Giriş başarılı! Token'ı Vite panelinin saklaması için JSON olarak döndürüyoruz

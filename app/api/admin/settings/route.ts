@@ -1,10 +1,12 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs'; // Şifreleme modülümüzü ekledik
+import bcrypt from 'bcryptjs';
 
+// CORS başlıkları (Vite admin panelinden gelen isteklere güvenli izin vermek için)
 function getCorsHeaders(origin: string | null) {
   const allowedOrigins = ['http://localhost:5173', 'https://admin.route26.com'];
   const currentOrigin = origin && allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+
   return {
     'Access-Control-Allow-Origin': currentOrigin,
     'Access-Control-Allow-Methods': 'GET, PUT, OPTIONS',
@@ -13,75 +15,134 @@ function getCorsHeaders(origin: string | null) {
   };
 }
 
+// 1. Tarayıcı Güvenlik Ön İsteği (Preflight)
 export async function OPTIONS(request: Request) {
   const origin = request.headers.get('origin');
-  return new NextResponse(null, { status: 204, headers: getCorsHeaders(origin) });
+  return new NextResponse(null, {
+    status: 204,
+    headers: getCorsHeaders(origin),
+  });
 }
 
-// 1. AYARLARI GETİR
+// 2. Ayarları ve Güncel Kurları Getir (GET)
 export async function GET(request: Request) {
   const origin = request.headers.get('origin');
-  try {
-    let settings = await prisma.adminSettings.findFirst();
-    
-    if (!settings) {
-      // Eğer hiç ayar yoksa, 'admin' şifresini hashleyerek varsayılan oluştur
-      const defaultHashedPassword = await bcrypt.hash('admin', 10);
-      settings = await prisma.adminSettings.create({
-        data: { adminEmail: 'admin', hashedPassword: defaultHashedPassword, whatsappNumber: '+905550000000' }
-      });
-    }
-    
-    const formattedData = {
-      username: settings.adminEmail,
-      whatsapp: settings.whatsappNumber,
-      // Şifreyi frontend'e göndermeye gerek yok, güvenlik için boş bırakabiliriz
-      password: '' 
-    };
+  const headers = getCorsHeaders(origin);
 
-    return NextResponse.json({ success: true, data: formattedData }, { status: 200, headers: getCorsHeaders(origin) });
+  try {
+    // Veritabanındaki ilk ayar kaydını çekiyoruz
+    const settings = await prisma.adminSettings.findFirst();
+
+    if (!settings) {
+      return NextResponse.json(
+        { success: false, error: 'Sistem ayarları bulunamadı.' },
+        { status: 404, headers }
+      );
+    }
+
+    // Ayarlar sayfasının beklediği şablonda verileri dönüyoruz
+    return NextResponse.json(
+      {
+        success: true,
+        data: {
+          username: settings.adminEmail,
+          whatsapp: settings.whatsappNumber,
+          eurToTl: settings.eurToTl,
+          eurToUsd: settings.eurToUsd
+        }
+      },
+      { status: 200, headers }
+    );
   } catch (error) {
-    return NextResponse.json({ success: false, error: 'Ayarlar çekilemedi.' }, { status: 500, headers: getCorsHeaders(origin) });
+    console.error('Ayarlar GET Hatası:', error);
+    return NextResponse.json(
+      { success: false, error: 'Ayarlar yüklenirken sunucu tarafında bir hata oluştu.' },
+      { status: 500, headers }
+    );
   }
 }
 
-// 2. AYARLARI GÜNCELLE
+// 3. Ayarları ve Kurları Güncelle (PUT)
 export async function PUT(request: Request) {
   const origin = request.headers.get('origin');
+  const headers = getCorsHeaders(origin);
+
   try {
     const body = await request.json();
-    const { username, whatsapp, currentPassword, newPassword } = body;
+    const { username, whatsapp, eurToTl, eurToUsd, currentPassword, newPassword } = body;
 
-    const settings = await prisma.adminSettings.findFirst();
-    if (!settings) return NextResponse.json({ success: false, error: 'Ayar bulunamadı.' }, { status: 404, headers: getCorsHeaders(origin) });
+    // Mevcut ayarları kontrol etmek için çekiyoruz
+    const currentSettings = await prisma.adminSettings.findFirst();
 
-    let finalPassword = settings.hashedPassword;
-
-    // EĞER KULLANICI ŞİFREYİ DEĞİŞTİRMEK İSTİYORSA
-    if (newPassword) {
-      // 1. Girdiği 'Mevcut Şifre' ile veritabanındaki Hash'li şifreyi kıyasla
-      const isMatch = await bcrypt.compare(currentPassword, settings.hashedPassword).catch(() => false);
-      
-      // Eğer ne düz metin ne de hash olarak eşleşmiyorsa hata fırlat
-      if (currentPassword !== settings.hashedPassword && !isMatch) {
-        return NextResponse.json({ success: false, error: 'Mevcut şifreniz hatalı!' }, { status: 400, headers: getCorsHeaders(origin) });
-      }
-
-      // 2. Eşleştiyse, yeni şifreyi güvenli bir şekilde Hash'le
-      finalPassword = await bcrypt.hash(newPassword, 10);
+    if (!currentSettings) {
+      return NextResponse.json(
+        { success: false, error: 'Güncellenecek ayar kaydı bulunamadı.' },
+        { status: 404, headers }
+      );
     }
 
-    const updatedSettings = await prisma.adminSettings.update({
-      where: { id: settings.id },
-      data: { 
-        adminEmail: username, 
-        whatsappNumber: whatsapp, 
-        hashedPassword: finalPassword 
+    let updatedPasswordHash = currentSettings.hashedPassword;
+
+    // Kullanıcı şifre değiştirmek istiyorsa validasyon adımları
+    if (newPassword) {
+      if (!currentPassword) {
+        return NextResponse.json(
+          { success: false, error: 'Şifrenizi değiştirmek için mevcut şifrenizi girmelisiniz.' },
+          { status: 400, headers }
+        );
       }
+
+      // Mevcut şifre veritabanındakiyle uyuşuyor mu?
+      const isPasswordValid = await bcrypt.compare(currentPassword, currentSettings.hashedPassword);
+      if (!isPasswordValid) {
+        return NextResponse.json(
+          { success: false, error: 'Mevcut şifreniz hatalı.' },
+          { status: 401, headers }
+        );
+      }
+
+      if (newPassword.length < 4) {
+        return NextResponse.json(
+          { success: false, error: 'Yeni şifre en az 4 karakter olmalıdır.' },
+          { status: 400, headers }
+        );
+      }
+
+      // Yeni şifreyi güvenli bir şekilde hash'liyoruz
+      updatedPasswordHash = await bcrypt.hash(newPassword, 10);
+    }
+
+    // Tüm verileri (kurlar dahil) tek seferde güvenle güncelliyoruz
+    const updatedSettings = await prisma.adminSettings.update({
+      where: { id: currentSettings.id },
+      data: {
+        adminEmail: username || currentSettings.adminEmail,
+        whatsappNumber: whatsapp || currentSettings.whatsappNumber,
+        eurToTl: eurToTl !== undefined ? eurToTl : currentSettings.eurToTl,
+        eurToUsd: eurToUsd !== undefined ? eurToUsd : currentSettings.eurToUsd,
+        hashedPassword: updatedPasswordHash,
+      },
     });
 
-    return NextResponse.json({ success: true }, { status: 200, headers: getCorsHeaders(origin) });
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Tüm değişiklikler başarıyla kaydedildi.',
+        data: {
+          username: updatedSettings.adminEmail,
+          whatsapp: updatedSettings.whatsappNumber,
+          eurToTl: updatedSettings.eurToTl,
+          eurToUsd: updatedSettings.eurToUsd
+        }
+      },
+      { status: 200, headers }
+    );
+
   } catch (error) {
-    return NextResponse.json({ success: false, error: 'Ayarlar güncellenemedi.' }, { status: 500, headers: getCorsHeaders(origin) });
+    console.error('Ayarlar PUT Hatası:', error);
+    return NextResponse.json(
+      { success: false, error: 'Veriler kaydedilirken sunucu tarafında bir hata oluştu.' },
+      { status: 500, headers }
+    );
   }
 }

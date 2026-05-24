@@ -13,6 +13,9 @@ import {
 import { useRouter, usePathname } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 
+// YENİ: Global Currency Store'umuzu içeri aktarıyoruz
+import { useCurrencyStore } from "@/store/useCurrencyStore"; 
+
 const navConfig = [
     { key: "about", href: "/hakkimizda" },
     { key: "gallery", href: "/galeri" },
@@ -29,7 +32,7 @@ const languages = [
 const currencies = [
     { code: "EUR", symbol: "€", label: "Euro" },
     { code: "USD", symbol: "$", label: "US Dollar" },
-    { code: "TRY", symbol: "₺", label: "Türk Lirası" },
+    { code: "TRY", symbol: "₺", label: "Türk Lirası" }, 
 ];
 
 export function Navbar() {
@@ -40,7 +43,10 @@ export function Navbar() {
 
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [selectedCurrency, setSelectedCurrency] = useState("EUR");
+    
+    // YENİ: Döviz türünü artık lokal useState ile değil, Global Zustand Store ile yönetiyoruz!
+    const selectedCurrency = useCurrencyStore((state) => state.currency);
+    const setSelectedCurrency = useCurrencyStore((state) => state.setCurrency);
 
     const selectedLanguageData =
         languages.find((l) => l.code === currentLocale) ?? languages[0];
@@ -140,7 +146,7 @@ export function Navbar() {
                             {currencies.map((currency) => (
                                 <DropdownMenuItem
                                     key={currency.code}
-                                    onSelect={() => setSelectedCurrency(currency.code)}
+                                    onSelect={() => setSelectedCurrency(currency.code as 'EUR' | 'USD' | 'TRY')} // Store tipine uygun atama
                                     className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 !text-white outline-none transition-colors hover:!bg-white/10 hover:!text-white focus:!bg-white/10 focus:!text-white data-[highlighted]:!bg-white/10 data-[highlighted]:!text-white [&_span]:!text-white"
                                 >
                                     <span className="text-base font-bold text-white/70 w-4 text-center">{currency.symbol}</span>
@@ -257,7 +263,7 @@ export function Navbar() {
                                                 <button
                                                     key={currency.code}
                                                     type="button"
-                                                    onClick={() => setSelectedCurrency(currency.code)}
+                                                    onClick={() => setSelectedCurrency(currency.code as 'EUR' | 'USD' | 'TRY')} // Store tipine uygun atama
                                                     className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors flex items-center gap-1 ${
                                                         isActive
                                                             ? "bg-white text-black"

@@ -29,31 +29,35 @@ model AdminSettings {
   adminEmail     String   @unique
   hashedPassword String
   whatsappNumber String
+  // Yeni Döviz Kurları
+  eurToTl        Decimal  @default(35.0)
+  eurToUsd       Decimal  @default(1.08)
   updatedAt      DateTime @updatedAt
 }
 
-// 4. Rotalar (Nereden -> Nereye - Frontend'deki yapıya uygun hale getirildi)
+// 4. Rotalar
 model Route {
   id        String   @id @default(uuid())
-  pickup    String   // Kalkış Noktası (Örn: Antalya Havalimanı)
-  dropoff   String   // Varış Noktası (Örn: Kemer)
+  pickup    String
+  dropoff   String
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
   prices       RoutePricing[]
   reservations Reservation[]
 
-  @@unique([pickup, dropoff]) // Aynı rotanın mükerrer eklenmesini önler
+  @@unique([pickup, dropoff])
 }
 
 // 5. Filo ve Araçlar
 model Vehicle {
   id            String   @id @default(uuid())
-  name          String   // Örn: Maybach Royal Class VIP
-  type          String   // Örn: Binek VIP
-  pax           Int      // Yolcu Kapasitesi
-  luggage       Int      // Bagaj Kapasitesi
-  features      String[] // Örn: ["Wifi", "Tv", "Atıştırmalık"]
+  name          String
+  type          String
+  pax           Int
+  luggage       Int
+  features      String[]
   imageUrl      String?
   isActive      Boolean  @default(true)
   
@@ -61,50 +65,45 @@ model Vehicle {
   reservations  Reservation[]
 }
 
-// 6. Fiyatlandırma (Hangi Rota, Hangi Araç, Ne Kadar?)
+// 6. Fiyatlandırma (Her zaman EURO bazlı)
 model RoutePricing {
   id        String   @id @default(uuid())
   routeId   String
   vehicleId String
-  price     Float
-  currency  String   @default("₺") // Enum yerine String yapıldı (₺, $, € kabul eder)
+  price     Float    // Bu değer artık her zaman EURO cinsindendir
+  currency  String   @default("EUR") 
 
   route     Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
   vehicle   Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
 
-  @@unique([routeId, vehicleId]) // Bir rotada aynı araca sadece tek bir fiyat tanımlanabilir
+  @@unique([routeId, vehicleId])
 }
 
-// 7. Rezervasyonlar (Sistemin Kalbi)
+// 7. Rezervasyonlar
 model Reservation {
   id              String   @id @default(uuid())
-  pnrCode         String   @unique // Örn: VIP7492
+  pnrCode         String   @unique
   
-  // Zaman ve Yolcu Bilgileri
   pickupDateTime  DateTime
   adultCount      Int
   childCount      Int      @default(0)
   
-  // Seçimler
   routeId         String
   vehicleId       String
   route           Route    @relation(fields: [routeId], references: [id])
   vehicle         Vehicle  @relation(fields: [vehicleId], references: [id])
 
-  // Müşteri İletişim Bilgileri
   customerName    String
   customerPhone   String
   customerEmail   String
 
-  // VIP Detayları
-  flightNumber    String?  // Uçuş Numarası
+  flightNumber    String?
   needsBabySeat   Boolean  @default(false)
-  welcomeSign     String?  // İsim Tabelası
-  extraNotes      String?  // Özel İstekler
+  welcomeSign     String?
+  extraNotes      String?
 
-  // Fiyat ve Durum Takibi
   totalPrice      Float
-  currency        String   @default("₺") // Fiyatlandırma ile uyumlu olması için String yapıldı
+  currency        String   @default("EUR")
   status          ReservationStatus @default(PENDING)
   
   createdAt       DateTime @default(now())
@@ -116,7 +115,7 @@ model Reservation {
 
 // 8. Galeri Sistemi
 model GalleryImage {
-  id        String          @id @default(uuid())
+  id        String        @id @default(uuid())
   url       String
   category  GalleryCategory
   createdAt DateTime        @default(now())

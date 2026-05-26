@@ -107,12 +107,6 @@ export function AboutSection() {
                                                 >
                                                     {t(`${feature.key}.title`)}
                                                 </span>
-
-                                                <span
-                                                    className={`mt-0.5 block text-xs font-medium ${feature.color}`}
-                                                >
-                                                    {t(`${feature.key}.stat`)}
-                                                </span>
                                             </span>
                                         </span>
 

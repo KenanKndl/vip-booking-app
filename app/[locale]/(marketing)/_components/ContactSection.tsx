@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { motion, Variants } from "framer-motion";
 import {
     MapPin,
@@ -14,6 +14,7 @@ import {
     ShieldCheck,
     Search,
 } from "lucide-react";
+import { z } from "zod";
 import { Textarea } from "@/components/ui/textarea";
 import { useTranslations } from "next-intl";
 import {
@@ -68,6 +69,60 @@ const inputClass =
 const labelClass =
     "pl-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/45";
 
+const contactFormSchema = z.object({
+    name: z
+        .string()
+        .trim()
+        .min(2, "Ad soyad en az 2 karakter olmalı.")
+        .max(80, "Ad soyad çok uzun."),
+
+    email: z
+        .string()
+        .trim()
+        .email("Geçerli bir e-posta adresi girin."),
+
+    phoneDigits: z
+        .string()
+        .min(7, "Telefon numarası çok kısa.")
+        .max(15, "Telefon numarası çok uzun.")
+        .regex(/^\d+$/, "Telefon numarası sadece rakamlardan oluşmalı."),
+
+    message: z
+        .string()
+        .trim()
+        .min(10, "Mesaj en az 10 karakter olmalı.")
+        .max(1000, "Mesaj çok uzun."),
+
+    isHumanChecked: z
+        .boolean()
+        .refine((value) => value === true, {
+            message: "Mesaj göndermeden önce onaylamalısınız.",
+        }),
+});
+
+function getPhoneDigits(value: string) {
+    return value.replace(/\D/g, "").slice(0, 15);
+}
+
+function formatPhoneInput(value: string) {
+    const digits = getPhoneDigits(value);
+
+    if (digits.length <= 3) return digits;
+
+    if (digits.length <= 6) {
+        return `${digits.slice(0, 3)} ${digits.slice(3)}`;
+    }
+
+    if (digits.length <= 10) {
+        return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+    }
+
+    return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(
+        6,
+        10
+    )} ${digits.slice(10)}`;
+}
+
 export function ContactSection() {
     const t = useTranslations("ContactSection");
 
@@ -78,7 +133,15 @@ export function ContactSection() {
 
     const [isPhoneDropdownOpen, setIsPhoneDropdownOpen] = useState(false);
     const [phoneCountrySearch, setPhoneCountrySearch] = useState("");
+
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [message, setMessage] = useState("");
     const [isHumanChecked, setIsHumanChecked] = useState(false);
+
+    const [hasTriedSubmit, setHasTriedSubmit] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const otherPhoneCountries = useMemo(() => {
         return allPhoneCountries
@@ -123,6 +186,22 @@ export function ContactSection() {
         filteredPreferredCountries.length > 0 ||
         filteredOtherCountries.length > 0;
 
+    const phoneDigits = getPhoneDigits(phone);
+
+    const validationResult = contactFormSchema.safeParse({
+        name,
+        email,
+        phoneDigits,
+        message,
+        isHumanChecked,
+    });
+
+    const fieldErrors = validationResult.success
+        ? {}
+        : validationResult.error.flatten().fieldErrors;
+
+    const isFormValid = validationResult.success;
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (
@@ -143,6 +222,63 @@ export function ContactSection() {
         setSelectedPhoneCountry(country);
         setIsPhoneDropdownOpen(false);
         setPhoneCountrySearch("");
+    };
+
+    const handlePhoneChange = (value: string) => {
+        setPhone(formatPhoneInput(value));
+    };
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setHasTriedSubmit(true);
+
+        const result = contactFormSchema.safeParse({
+            name,
+            email,
+            phoneDigits,
+            message,
+            isHumanChecked,
+        });
+
+        if (!result.success) return;
+
+        setIsSubmitting(true);
+
+        const payload = {
+            name: name.trim(),
+            email: email.trim(),
+            phone: `${selectedPhoneCountry.dialCode}${phoneDigits}`,
+            countryCode: selectedPhoneCountry.code,
+            message: message.trim(),
+        };
+
+        try {
+            console.log("Contact form payload:", payload);
+
+            // API hazır olduğunda buraya bağlayabilirsin:
+            // const response = await fetch("/api/contact", {
+            //     method: "POST",
+            //     headers: { "Content-Type": "application/json" },
+            //     body: JSON.stringify(payload),
+            // });
+            //
+            // if (!response.ok) {
+            //     throw new Error("Contact request failed");
+            // }
+
+            alert("Mesajınız başarıyla hazırlandı.");
+
+            setName("");
+            setEmail("");
+            setPhone("");
+            setMessage("");
+            setIsHumanChecked(false);
+            setHasTriedSubmit(false);
+        } catch {
+            alert("Mesaj gönderilirken bir hata oluştu.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const contactCards = [
@@ -227,7 +363,11 @@ export function ContactSection() {
                             </p>
                         </div>
 
-                        <form className="grid gap-5">
+                        <form
+                            onSubmit={handleSubmit}
+                            className="grid gap-5"
+                            noValidate
+                        >
                             <div className="grid gap-5 sm:grid-cols-2">
                                 <div className="grid gap-2">
                                     <label
@@ -240,9 +380,25 @@ export function ContactSection() {
                                     <input
                                         type="text"
                                         id="name"
+                                        value={name}
+                                        onChange={(e) =>
+                                            setName(e.target.value)
+                                        }
                                         placeholder={t("form.namePlaceholder")}
-                                        className={inputClass}
+                                        autoComplete="name"
+                                        className={`${inputClass} ${
+                                            hasTriedSubmit && fieldErrors.name
+                                                ? "border-red-400/50 focus:border-red-400/60"
+                                                : ""
+                                        }`}
                                     />
+
+                                    {hasTriedSubmit &&
+                                        fieldErrors.name?.[0] && (
+                                            <p className="pl-1 text-xs text-red-300">
+                                                {fieldErrors.name[0]}
+                                            </p>
+                                        )}
                                 </div>
 
                                 <div className="grid gap-2">
@@ -256,9 +412,25 @@ export function ContactSection() {
                                     <input
                                         type="email"
                                         id="email"
+                                        value={email}
+                                        onChange={(e) =>
+                                            setEmail(e.target.value)
+                                        }
                                         placeholder={t("form.emailPlaceholder")}
-                                        className={inputClass}
+                                        autoComplete="email"
+                                        className={`${inputClass} ${
+                                            hasTriedSubmit && fieldErrors.email
+                                                ? "border-red-400/50 focus:border-red-400/60"
+                                                : ""
+                                        }`}
                                     />
+
+                                    {hasTriedSubmit &&
+                                        fieldErrors.email?.[0] && (
+                                            <p className="pl-1 text-xs text-red-300">
+                                                {fieldErrors.email[0]}
+                                            </p>
+                                        )}
                                 </div>
                             </div>
 
@@ -268,7 +440,14 @@ export function ContactSection() {
                                 </label>
 
                                 <div className="relative" ref={countryDropdownRef}>
-                                    <div className="flex overflow-hidden rounded-2xl border border-white/10 bg-black/20 transition duration-200 hover:border-white/15 hover:bg-black/25 focus-within:border-white/30 focus-within:bg-black/30">
+                                    <div
+                                        className={`flex overflow-hidden rounded-2xl border bg-black/20 transition duration-200 hover:bg-black/25 focus-within:bg-black/30 ${
+                                            hasTriedSubmit &&
+                                            fieldErrors.phoneDigits
+                                                ? "border-red-400/50 focus-within:border-red-400/60"
+                                                : "border-white/10 hover:border-white/15 focus-within:border-white/30"
+                                        }`}
+                                    >
                                         <button
                                             type="button"
                                             onClick={() =>
@@ -296,9 +475,17 @@ export function ContactSection() {
                                         <input
                                             type="tel"
                                             id="phone"
+                                            value={phone}
+                                            onChange={(e) =>
+                                                handlePhoneChange(
+                                                    e.target.value
+                                                )
+                                            }
                                             placeholder={t(
                                                 "form.phonePlaceholder"
                                             )}
+                                            inputMode="numeric"
+                                            autoComplete="tel"
                                             className="w-full bg-transparent px-4 py-3.5 text-sm text-white outline-none placeholder:text-white/25"
                                         />
                                     </div>
@@ -458,6 +645,13 @@ export function ContactSection() {
                                         </div>
                                     )}
                                 </div>
+
+                                {hasTriedSubmit &&
+                                    fieldErrors.phoneDigits?.[0] && (
+                                        <p className="pl-1 text-xs text-red-300">
+                                            {fieldErrors.phoneDigits[0]}
+                                        </p>
+                                    )}
                             </div>
 
                             <div className="grid gap-2">
@@ -467,9 +661,34 @@ export function ContactSection() {
 
                                 <Textarea
                                     id="message"
+                                    value={message}
+                                    onChange={(e) =>
+                                        setMessage(e.target.value)
+                                    }
                                     placeholder={t("form.messagePlaceholder")}
-                                    className="min-h-[150px] w-full resize-none rounded-2xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm text-white shadow-none outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus-visible:border-white/30 focus-visible:bg-black/30 focus-visible:ring-0 focus-visible:ring-offset-0"
+                                    className={`min-h-[150px] w-full resize-none rounded-2xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm text-white shadow-none outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus-visible:border-white/30 focus-visible:bg-black/30 focus-visible:ring-0 focus-visible:ring-offset-0 ${
+                                        hasTriedSubmit && fieldErrors.message
+                                            ? "border-red-400/50 focus-visible:border-red-400/60"
+                                            : ""
+                                    }`}
                                 />
+
+                                <div className="flex items-center justify-between gap-3 pl-1">
+                                    {hasTriedSubmit &&
+                                    fieldErrors.message?.[0] ? (
+                                        <p className="text-xs text-red-300">
+                                            {fieldErrors.message[0]}
+                                        </p>
+                                    ) : (
+                                        <p className="text-xs text-white/30">
+                                            En az 10 karakter.
+                                        </p>
+                                    )}
+
+                                    <p className="text-xs text-white/25">
+                                        {message.trim().length}/1000
+                                    </p>
+                                </div>
                             </div>
 
                             <button
@@ -514,16 +733,27 @@ export function ContactSection() {
                                 />
                             </button>
 
+                            {hasTriedSubmit &&
+                                fieldErrors.isHumanChecked?.[0] && (
+                                    <p className="-mt-3 pl-1 text-xs text-red-300">
+                                        {fieldErrors.isHumanChecked[0]}
+                                    </p>
+                                )}
+
                             <button
-                                type="button"
-                                disabled={!isHumanChecked}
+                                type="submit"
+                                disabled={!isFormValid || isSubmitting}
                                 className={`group flex h-12 w-full items-center justify-center gap-2 rounded-full px-6 text-sm font-semibold transition duration-300 ${
-                                    isHumanChecked
+                                    isFormValid && !isSubmitting
                                         ? "bg-white text-black hover:bg-white/90 active:scale-[0.99]"
                                         : "cursor-not-allowed bg-white/30 text-black/45"
                                 }`}
                             >
-                                <span>{t("form.submitButton")}</span>
+                                <span>
+                                    {isSubmitting
+                                        ? "Gönderiliyor..."
+                                        : t("form.submitButton")}
+                                </span>
                                 <Send className="h-4 w-4 transition duration-300 group-hover:translate-x-0.5" />
                             </button>
                         </form>

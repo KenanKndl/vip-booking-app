@@ -47,17 +47,21 @@
   },
   "CookieConsentBanner": {
     "bannerTitle": "Cookie-Einstellungen",
-    "bannerDescription": "Wir verwenden Cookies, um Ihre Sprachpräferenz zu speichern und Ihr Erlebnis zu verbessern.",
-    "rejectAll": "Nur notwendig",
+    "bannerDescription": "Wir verwenden Cookies, um Ihr Website-Erlebnis zu verbessern. Sie können Ihre Einstellungen jederzeit ändern.",
+    "rejectAll": "Alle ablehnen",
     "manage": "Verwalten",
     "acceptAll": "Alle akzeptieren",
     "dialogTitle": "Cookie-Einstellungen",
-    "dialogDescription": "Hier können Sie verwalten, welche Cookies verwendet werden dürfen.",
+    "dialogDescription": "Notwendige Cookies sind immer aktiv. Andere Cookie-Kategorien können Sie je nach Präferenz aktivieren oder deaktivieren.",
     "essentialTitle": "Notwendige Cookies",
-    "essentialDescription": "Erforderlich für die Sicherheit der Website, grundlegende Funktionen und die Speicherung Ihrer Cookie-Präferenzen.",
-    "preferencesTitle": "Sprachpräferenz-Cookies",
-    "preferencesDescription": "Ermöglicht es uns, die von Ihnen gewählte Sprache zu speichern. Wenn deaktiviert, gilt Ihre Sprachwahl nur für die aktuelle Sitzung.",
-    "savePreferences": "Einstellungen speichern"
+    "essentialDescription": "Erforderlich, damit die Website sicher und korrekt funktioniert. Sie können nicht deaktiviert werden.",
+    "preferencesTitle": "Präferenz-Cookies",
+    "preferencesDescription": "Werden verwendet, um Auswahlmöglichkeiten wie Ihre gewählte Sprache zu speichern.",
+    "analyticsTitle": "Analyse-Cookies",
+    "analyticsDescription": "Helfen uns zu verstehen, wie Besucher die Website nutzen.",
+    "marketingTitle": "Marketing-Cookies",
+    "marketingDescription": "Werden verwendet, um Werbung und Remarketing-Aktivitäten zu personalisieren.",
+    "savePreferences": "Auswahl speichern"
   },
   "CookieSettingsTrigger": {
     "label": "Cookie-Einstellungen"

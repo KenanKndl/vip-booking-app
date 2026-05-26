@@ -7,23 +7,19 @@ import { useTranslations } from "next-intl";
 const footerLinks = [
     {
         key: "about",
-        href: "#about",
-    },
-    {
-        key: "vehicles",
-        href: "/araclarimiz",
+        href: "/hakkimizda",
     },
     {
         key: "gallery",
-        href: "#gallery",
+        href: "/galeri",
     },
     {
         key: "reservations",
-        href: "#reservations",
+        href: "/rezervasyon",
     },
     {
         key: "contact",
-        href: "#contact",
+        href: "/iletisim",
     },
 ];
 
@@ -138,11 +134,18 @@ export function Footer() {
                     <div className="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-white/30 md:flex-row md:items-center md:justify-between">
                         <p>{t("copyright")}</p>
 
-                        <div className="flex gap-5">
-                            <Link href="#" className="transition-colors hover:text-white/60">
+                        <div className="flex flex-wrap gap-5">
+                            <Link
+                                href="/gizlilik-politikasi"
+                                className="transition-colors hover:text-white/60"
+                            >
                                 {t("privacyPolicy")}
                             </Link>
-                            <Link href="#" className="transition-colors hover:text-white/60">
+
+                            <Link
+                                href="/kullanim-sartlari"
+                                className="transition-colors hover:text-white/60"
+                            >
                                 {t("termsOfUse")}
                             </Link>
 

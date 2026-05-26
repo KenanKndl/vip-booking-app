@@ -47,17 +47,21 @@
   },
   "CookieConsentBanner": {
     "bannerTitle": "Cookie preferences",
-    "bannerDescription": "We use cookies to remember your language preference and improve your experience.",
-    "rejectAll": "Essential only",
+    "bannerDescription": "We use cookies to improve your website experience. You can change your preferences at any time.",
+    "rejectAll": "Reject all",
     "manage": "Manage",
     "acceptAll": "Accept all",
-    "dialogTitle": "Cookie Preferences",
-    "dialogDescription": "You can manage which cookies are allowed to be used here.",
+    "dialogTitle": "Cookie preferences",
+    "dialogDescription": "Essential cookies are always active. You can enable or disable other cookie categories based on your preferences.",
     "essentialTitle": "Essential cookies",
-    "essentialDescription": "Necessary for site security, basic operation logic, and storing your cookie preferences.",
-    "preferencesTitle": "Language preference cookies",
-    "preferencesDescription": "Allows us to remember your selected language. If disabled, your language selection will only apply to the current session.",
-    "savePreferences": "Save preferences"
+    "essentialDescription": "Required for the website to work securely and properly. They cannot be disabled.",
+    "preferencesTitle": "Preference cookies",
+    "preferencesDescription": "Used to remember choices such as your selected language.",
+    "analyticsTitle": "Analytics cookies",
+    "analyticsDescription": "Help us understand how visitors use the website.",
+    "marketingTitle": "Marketing cookies",
+    "marketingDescription": "Used to personalize advertising and remarketing activities.",
+    "savePreferences": "Save selection"
   },
   "CookieSettingsTrigger": {
     "label": "Cookie Preferences"

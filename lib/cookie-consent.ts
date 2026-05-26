@@ -3,8 +3,16 @@
 export type CookieConsent = {
     necessary: true;
     preferences: boolean;
-    version: 1;
+    analytics: boolean;
+    marketing: boolean;
+    version: 2;
     updatedAt: string;
+};
+
+export type CookieConsentPreferences = {
+    preferences: boolean;
+    analytics: boolean;
+    marketing: boolean;
 };
 
 export const CONSENT_COOKIE_NAME = "matilda_cookie_consent";
@@ -49,7 +57,7 @@ export function getStoredConsent(): CookieConsent | null {
     try {
         const parsed = JSON.parse(raw) as CookieConsent;
 
-        if (parsed.version !== 1) return null;
+        if (parsed.version !== 2) return null;
 
         return parsed;
     } catch {
@@ -79,11 +87,15 @@ export function clearLanguage() {
     deleteCookie(LANGUAGE_COOKIE_NAME);
 }
 
-export function createConsent(preferences: boolean): CookieConsent {
+export function createConsent(
+    preferences: CookieConsentPreferences
+): CookieConsent {
     return {
         necessary: true,
-        preferences,
-        version: 1,
+        preferences: preferences.preferences,
+        analytics: preferences.analytics,
+        marketing: preferences.marketing,
+        version: 2,
         updatedAt: new Date().toISOString(),
     };
 }

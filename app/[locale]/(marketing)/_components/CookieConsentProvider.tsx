@@ -16,6 +16,7 @@ import {
     saveConsent,
     saveLanguage,
     type CookieConsent,
+    type CookieConsentPreferences,
     type LanguageCode,
 } from "@/lib/cookie-consent";
 
@@ -28,15 +29,18 @@ type CookieConsentContextValue = {
     closeSettings: () => void;
     acceptAll: () => void;
     rejectAll: () => void;
-    savePreferences: (preferences: boolean) => void;
+    savePreferences: (preferences: CookieConsentPreferences) => void;
     setLanguagePreference: (language: LanguageCode) => void;
 };
 
-const CookieConsentContext = createContext<CookieConsentContextValue | null>(null);
+const CookieConsentContext = createContext<CookieConsentContextValue | null>(
+    null
+);
 
 export function CookieConsentProvider({ children }: { children: ReactNode }) {
     const [consent, setConsent] = useState<CookieConsent | null>(null);
-    const [selectedLanguage, setSelectedLanguage] = useState<LanguageCode>("TR");
+    const [selectedLanguage, setSelectedLanguage] =
+        useState<LanguageCode>("TR");
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -68,7 +72,11 @@ export function CookieConsentProvider({ children }: { children: ReactNode }) {
     };
 
     const acceptAll = () => {
-        const nextConsent = createConsent(true);
+        const nextConsent = createConsent({
+            preferences: true,
+            analytics: true,
+            marketing: true,
+        });
 
         setConsent(nextConsent);
         saveConsent(nextConsent);
@@ -77,7 +85,11 @@ export function CookieConsentProvider({ children }: { children: ReactNode }) {
     };
 
     const rejectAll = () => {
-        const nextConsent = createConsent(false);
+        const nextConsent = createConsent({
+            preferences: false,
+            analytics: false,
+            marketing: false,
+        });
 
         setConsent(nextConsent);
         saveConsent(nextConsent);
@@ -85,8 +97,9 @@ export function CookieConsentProvider({ children }: { children: ReactNode }) {
         setIsSettingsOpen(false);
     };
 
-    const savePreferences = (preferences: boolean) => {
+    const savePreferences = (preferences: CookieConsentPreferences) => {
         const nextConsent = createConsent(preferences);
+
         persistConsent(nextConsent);
         setIsSettingsOpen(false);
     };

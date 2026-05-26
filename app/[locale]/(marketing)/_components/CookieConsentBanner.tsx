@@ -14,8 +14,10 @@ import { useCookieConsent } from "./CookieConsentProvider";
 import { useTranslations } from "next-intl";
 
 const FORCE_COOKIE_BANNER = false;
+
 export function CookieConsentBanner() {
     const t = useTranslations("CookieConsentBanner");
+
     const {
         consent,
         hasAnswered,
@@ -27,15 +29,27 @@ export function CookieConsentBanner() {
         savePreferences,
     } = useCookieConsent();
 
-    const [preferencesEnabled, setPreferencesEnabled] = useState(true);
+    const [preferencesEnabled, setPreferencesEnabled] = useState(false);
+    const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
+    const [marketingEnabled, setMarketingEnabled] = useState(false);
 
     useEffect(() => {
-        if (consent) {
-            setPreferencesEnabled(consent.preferences);
-        }
+        if (!consent) return;
+
+        setPreferencesEnabled(consent.preferences);
+        setAnalyticsEnabled(consent.analytics);
+        setMarketingEnabled(consent.marketing);
     }, [consent]);
 
     const shouldShowBanner = FORCE_COOKIE_BANNER || !hasAnswered;
+
+    const handleSavePreferences = () => {
+        savePreferences({
+            preferences: preferencesEnabled,
+            analytics: analyticsEnabled,
+            marketing: marketingEnabled,
+        });
+    };
 
     return (
         <>
@@ -94,41 +108,34 @@ export function CookieConsentBanner() {
                         </DialogDescription>
                     </DialogHeader>
 
-                    <div className="mt-4 space-y-4">
-                        <div className="rounded-2xl border border-white/10 p-4">
-                            <div className="flex items-center justify-between gap-4">
-                                <div>
-                                    <h3 className="text-sm font-semibold text-white">
-                                        {t("essentialTitle")}
-                                    </h3>
+                    <div className="mt-4 space-y-3">
+                        <CookiePreferenceRow
+                            title={t("essentialTitle")}
+                            description={t("essentialDescription")}
+                            checked
+                            disabled
+                        />
 
-                                    <p className="mt-1 text-sm leading-6 text-white/45">
-                                        {t("essentialDescription")}
-                                    </p>
-                                </div>
+                        <CookiePreferenceRow
+                            title={t("preferencesTitle")}
+                            description={t("preferencesDescription")}
+                            checked={preferencesEnabled}
+                            onCheckedChange={setPreferencesEnabled}
+                        />
 
-                                <Switch checked disabled />
-                            </div>
-                        </div>
+                        <CookiePreferenceRow
+                            title={t("analyticsTitle")}
+                            description={t("analyticsDescription")}
+                            checked={analyticsEnabled}
+                            onCheckedChange={setAnalyticsEnabled}
+                        />
 
-                        <div className="rounded-2xl border border-white/10 p-4">
-                            <div className="flex items-center justify-between gap-4">
-                                <div>
-                                    <h3 className="text-sm font-semibold text-white">
-                                        {t("preferencesTitle")}
-                                    </h3>
-
-                                    <p className="mt-1 text-sm leading-6 text-white/45">
-                                        {t("preferencesDescription")}
-                                    </p>
-                                </div>
-
-                                <Switch
-                                    checked={preferencesEnabled}
-                                    onCheckedChange={setPreferencesEnabled}
-                                />
-                            </div>
-                        </div>
+                        <CookiePreferenceRow
+                            title={t("marketingTitle")}
+                            description={t("marketingDescription")}
+                            checked={marketingEnabled}
+                            onCheckedChange={setMarketingEnabled}
+                        />
                     </div>
 
                     <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-end">
@@ -143,7 +150,16 @@ export function CookieConsentBanner() {
 
                         <Button
                             type="button"
-                            onClick={() => savePreferences(preferencesEnabled)}
+                            variant="ghost"
+                            onClick={acceptAll}
+                            className="rounded-full text-white/65 hover:bg-white/10 hover:text-white"
+                        >
+                            {t("acceptAll")}
+                        </Button>
+
+                        <Button
+                            type="button"
+                            onClick={handleSavePreferences}
                             className="rounded-full bg-white text-black hover:bg-white/90"
                         >
                             {t("savePreferences")}
@@ -152,5 +168,41 @@ export function CookieConsentBanner() {
                 </DialogContent>
             </Dialog>
         </>
+    );
+}
+
+function CookiePreferenceRow({
+                                 title,
+                                 description,
+                                 checked,
+                                 disabled = false,
+                                 onCheckedChange,
+                             }: {
+    title: string;
+    description: string;
+    checked: boolean;
+    disabled?: boolean;
+    onCheckedChange?: (checked: boolean) => void;
+}) {
+    return (
+        <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+            <div className="flex items-center justify-between gap-4">
+                <div>
+                    <h3 className="text-sm font-semibold text-white">
+                        {title}
+                    </h3>
+
+                    <p className="mt-1 text-sm leading-6 text-white/45">
+                        {description}
+                    </p>
+                </div>
+
+                <Switch
+                    checked={checked}
+                    disabled={disabled}
+                    onCheckedChange={onCheckedChange}
+                />
+            </div>
+        </div>
     );
 }

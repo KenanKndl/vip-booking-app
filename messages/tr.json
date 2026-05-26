@@ -47,17 +47,21 @@
   },
   "CookieConsentBanner": {
     "bannerTitle": "Çerez tercihleri",
-    "bannerDescription": "Dil tercihinizi hatırlamak ve deneyiminizi iyileştirmek için çerezler kullanıyoruz.",
-    "rejectAll": "Sadece zorunlu",
+    "bannerDescription": "Web sitemizde deneyiminizi iyileştirmek için çerezler kullanıyoruz. Tercihlerinizi dilediğiniz zaman değiştirebilirsiniz.",
+    "rejectAll": "Tümünü reddet",
     "manage": "Yönet",
     "acceptAll": "Tümünü kabul et",
-    "dialogTitle": "Çerez Tercihleri",
-    "dialogDescription": "Hangi çerezlerin kullanılmasına izin vereceğinizi buradan yönetebilirsiniz.",
+    "dialogTitle": "Çerez tercihleri",
+    "dialogDescription": "Zorunlu çerezler her zaman aktiftir. Diğer çerez kategorilerini tercihinize göre açıp kapatabilirsiniz.",
     "essentialTitle": "Zorunlu çerezler",
-    "essentialDescription": "Site güvenliği, temel çalışma mantığı ve çerez tercihlerinizi saklamak için gereklidir.",
-    "preferencesTitle": "Dil tercihi çerezleri",
-    "preferencesDescription": "Seçtiğiniz dili hatırlamamızı sağlar. Kapalı olursa dil seçiminiz yalnızca mevcut oturumda uygulanır.",
-    "savePreferences": "Tercihleri kaydet"
+    "essentialDescription": "Sitenin güvenli ve doğru şekilde çalışması için gereklidir. Kapatılamaz.",
+    "preferencesTitle": "Tercih çerezleri",
+    "preferencesDescription": "Dil tercihi gibi seçimlerinizi hatırlamak için kullanılır.",
+    "analyticsTitle": "Analitik çerezler",
+    "analyticsDescription": "Ziyaretçilerin siteyi nasıl kullandığını anlamamıza yardımcı olur.",
+    "marketingTitle": "Pazarlama çerezleri",
+    "marketingDescription": "Reklam ve yeniden pazarlama çalışmalarını kişiselleştirmek için kullanılır.",
+    "savePreferences": "Seçimi kaydet"
   },
   "CookieSettingsTrigger": {
     "label": "Çerez Tercihleri"

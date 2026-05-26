@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { z } from "zod";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import {
     MapPin,
@@ -25,6 +26,11 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCurrencyStore } from "@/store/useCurrencyStore";
+import {
+    allPhoneCountries,
+    preferredPhoneCountries,
+    type PhoneCountry,
+} from "@/lib/phone-countries";
 
 type ReservationSectionProps = {
     dbRoutes: any[];
@@ -55,6 +61,73 @@ type AddonItem = {
 };
 
 type AddonQuantities = Record<string, number>;
+
+const reservationStep3Schema = z.object({
+    name: z
+        .string()
+        .trim()
+        .min(2, "Ad soyad en az 2 karakter olmalı.")
+        .max(80, "Ad soyad çok uzun."),
+
+    phoneDigits: z
+        .string()
+        .min(7, "Telefon numarası çok kısa.")
+        .max(15, "Telefon numarası çok uzun.")
+        .regex(/^\d+$/, "Telefon numarası sadece rakamlardan oluşmalı."),
+
+    email: z
+        .string()
+        .trim()
+        .optional()
+        .refine(
+            (value) => !value || z.string().email().safeParse(value).success,
+            {
+                message: "Geçerli bir e-posta adresi girin.",
+            }
+        ),
+
+    pickupAddressDetail: z
+        .string()
+        .trim()
+        .max(160, "Alınacak adres detayı çok uzun.")
+        .optional(),
+
+    dropoffAddressDetail: z
+        .string()
+        .trim()
+        .max(160, "Bırakılacak adres detayı çok uzun.")
+        .optional(),
+
+    reservationNote: z
+        .string()
+        .trim()
+        .max(1000, "Rezervasyon notu çok uzun.")
+        .optional(),
+});
+
+function getPhoneDigits(value: string) {
+    return value.replace(/\D/g, "").slice(0, 15);
+}
+
+function formatPhoneInput(value: string) {
+    const digits = getPhoneDigits(value);
+
+    if (digits.length <= 3) return digits;
+
+    if (digits.length <= 6) {
+        return `${digits.slice(0, 3)} ${digits.slice(3)}`;
+    }
+
+    if (digits.length <= 10) {
+        return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+    }
+
+    return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(
+        6,
+        10
+    )} ${digits.slice(10)}`;
+}
+
 
 const babySeatOptions: AddonItem[] = [
     {
@@ -236,6 +309,15 @@ export function ReservationSection({
 
     const displayCurrency = useCurrencyStore((state) => state.currency);
 
+    const countryDropdownRef = useRef<HTMLDivElement | null>(null);
+
+    const [selectedPhoneCountry, setSelectedPhoneCountry] =
+        useState<PhoneCountry>(preferredPhoneCountries[0]);
+
+    const [isPhoneDropdownOpen, setIsPhoneDropdownOpen] = useState(false);
+    const [phoneCountrySearch, setPhoneCountrySearch] = useState("");
+    const [hasTriedSubmit, setHasTriedSubmit] = useState(false);
+
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
@@ -263,6 +345,49 @@ export function ReservationSection({
             Array.from(new Set(dbRoutes.map((r) => r.dropoff))).filter(Boolean),
         [dbRoutes]
     ) as string[];
+
+    const otherPhoneCountries = useMemo(() => {
+        return allPhoneCountries
+            .filter(
+                (country) =>
+                    !preferredPhoneCountries.some(
+                        (preferred) => preferred.code === country.code
+                    )
+            )
+            .sort((a, b) => a.label.localeCompare(b.label));
+    }, []);
+
+    const filteredPreferredCountries = useMemo(() => {
+        const query = phoneCountrySearch.trim().toLowerCase();
+
+        if (!query) return preferredPhoneCountries;
+
+        return preferredPhoneCountries.filter((country) => {
+            return (
+                country.label.toLowerCase().includes(query) ||
+                country.code.toLowerCase().includes(query) ||
+                country.dialCode.includes(query)
+            );
+        });
+    }, [phoneCountrySearch]);
+
+    const filteredOtherCountries = useMemo(() => {
+        const query = phoneCountrySearch.trim().toLowerCase();
+
+        if (!query) return otherPhoneCountries;
+
+        return otherPhoneCountries.filter((country) => {
+            return (
+                country.label.toLowerCase().includes(query) ||
+                country.code.toLowerCase().includes(query) ||
+                country.dialCode.includes(query)
+            );
+        });
+    }, [otherPhoneCountries, phoneCountrySearch]);
+
+    const hasCountryResults =
+        filteredPreferredCountries.length > 0 ||
+        filteredOtherCountries.length > 0;
 
     const totalPassengers = adults + children;
 
@@ -345,6 +470,39 @@ export function ReservationSection({
     const hasBabySeatSelection = totalBabySeatCount > 0;
     const hasVehicleExtraSelection = totalVehicleExtraCount > 0;
 
+    const phoneDigits = getPhoneDigits(phone);
+
+    const reservationValidationResult = reservationStep3Schema.safeParse({
+        name,
+        phoneDigits,
+        email,
+        pickupAddressDetail,
+        dropoffAddressDetail,
+        reservationNote,
+    });
+
+    const reservationFieldErrors = reservationValidationResult.success
+        ? {}
+        : reservationValidationResult.error.flatten().fieldErrors;
+
+    const isReservationFormValid = reservationValidationResult.success;
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                countryDropdownRef.current &&
+                !countryDropdownRef.current.contains(event.target as Node)
+            ) {
+                setIsPhoneDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () =>
+            document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
     useEffect(() => {
         const hasOpenModal = isBabySeatModalOpen || isVehicleExtraModalOpen;
 
@@ -357,6 +515,16 @@ export function ReservationSection({
             document.body.style.overflow = previousOverflow;
         };
     }, [isBabySeatModalOpen, isVehicleExtraModalOpen]);
+
+    const handleSelectPhoneCountry = (country: PhoneCountry) => {
+        setSelectedPhoneCountry(country);
+        setIsPhoneDropdownOpen(false);
+        setPhoneCountrySearch("");
+    };
+
+    const handlePhoneChange = (value: string) => {
+        setPhone(formatPhoneInput(value));
+    };
 
     const handleAddonQuantityChange = (
         type: "babySeat" | "vehicleExtra",
@@ -403,8 +571,18 @@ export function ReservationSection({
     };
 
     const handleCompleteReservation = async () => {
-        if (!name || !phone) {
-            alert(t("alerts.missingFieldsStep3"));
+        setHasTriedSubmit(true);
+
+        const result = reservationStep3Schema.safeParse({
+            name,
+            phoneDigits,
+            email,
+            pickupAddressDetail,
+            dropoffAddressDetail,
+            reservationNote,
+        });
+
+        if (!result.success) {
             return;
         }
 
@@ -430,12 +608,12 @@ export function ReservationSection({
             childCount: String(children),
             routeId: selectedRoute.id,
             vehicleId: selectedPricing.vehicle.id,
-            customerName: name,
-            customerPhone: phone,
-            customerEmail: email,
-            pickupAddressDetail,
-            dropoffAddressDetail,
-            reservationNote,
+            customerName: name.trim(),
+            customerPhone: `${selectedPhoneCountry.dialCode}${phoneDigits}`,
+            customerEmail: email.trim(),
+            pickupAddressDetail: pickupAddressDetail.trim(),
+            dropoffAddressDetail: dropoffAddressDetail.trim(),
+            reservationNote: reservationNote.trim(),
             babySeatSelections: selectedBabySeatItems.map((item) => ({
                 id: item.id,
                 title: item.title,
@@ -791,8 +969,21 @@ export function ReservationSection({
                                                         placeholder={t(
                                                             "step3.namePlaceholder"
                                                         )}
-                                                        className={contactInputClass}
+                                                        autoComplete="name"
+                                                        className={`${contactInputClass} ${
+                                                            hasTriedSubmit &&
+                                                            reservationFieldErrors.name
+                                                                ? "border-red-400/50 focus:border-red-400/60"
+                                                                : ""
+                                                        }`}
                                                     />
+
+                                                    {hasTriedSubmit &&
+                                                        reservationFieldErrors.name?.[0] && (
+                                                            <p className="pl-1 text-xs text-red-300">
+                                                                {reservationFieldErrors.name[0]}
+                                                            </p>
+                                                        )}
                                                 </div>
 
                                                 <div className="grid gap-2">
@@ -801,17 +992,201 @@ export function ReservationSection({
                                                         Telefon
                                                     </label>
 
-                                                    <input
-                                                        type="tel"
-                                                        value={phone}
-                                                        onChange={(e) =>
-                                                            setPhone(e.target.value)
-                                                        }
-                                                        placeholder={t(
-                                                            "step3.phonePlaceholder"
+                                                    <div
+                                                        className="relative"
+                                                        ref={countryDropdownRef}
+                                                    >
+                                                        <div
+                                                            className={`flex overflow-hidden rounded-2xl border bg-black/20 transition duration-200 hover:bg-black/25 focus-within:bg-black/30 ${
+                                                                hasTriedSubmit &&
+                                                                reservationFieldErrors.phoneDigits
+                                                                    ? "border-red-400/50 focus-within:border-red-400/60"
+                                                                    : "border-white/10 hover:border-white/15 focus-within:border-white/30"
+                                                            }`}
+                                                        >
+                                                            <button
+                                                                type="button"
+                                                                onClick={() =>
+                                                                    setIsPhoneDropdownOpen(
+                                                                        (prev) => !prev
+                                                                    )
+                                                                }
+                                                                className="flex min-w-[126px] items-center justify-center gap-2 border-r border-white/10 px-4 py-3.5 text-sm font-semibold text-white/70 outline-none transition hover:bg-white/[0.04] hover:text-white"
+                                                            >
+                                                                <span
+                                                                    className={`${selectedPhoneCountry.flagClass} bg-transparent text-base outline-none shadow-none`}
+                                                                />
+                                                                <span>
+                                                                    {selectedPhoneCountry.dialCode}
+                                                                </span>
+                                                                <ChevronDown
+                                                                    className={`h-3.5 w-3.5 text-white/35 transition duration-200 ${
+                                                                        isPhoneDropdownOpen
+                                                                            ? "rotate-180"
+                                                                            : ""
+                                                                    }`}
+                                                                />
+                                                            </button>
+
+                                                            <input
+                                                                type="tel"
+                                                                value={phone}
+                                                                onChange={(e) =>
+                                                                    handlePhoneChange(
+                                                                        e.target.value
+                                                                    )
+                                                                }
+                                                                placeholder={t(
+                                                                    "step3.phonePlaceholder"
+                                                                )}
+                                                                inputMode="numeric"
+                                                                autoComplete="tel"
+                                                                className="w-full bg-transparent px-4 py-3.5 text-sm text-white outline-none placeholder:text-white/25"
+                                                            />
+                                                        </div>
+
+                                                        {isPhoneDropdownOpen && (
+                                                            <div className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111111] sm:w-[360px]">
+                                                                <div className="border-b border-white/10 p-2">
+                                                                    <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-3">
+                                                                        <Search className="h-4 w-4 shrink-0 text-[#22D3EE]/70" />
+
+                                                                        <input
+                                                                            value={phoneCountrySearch}
+                                                                            onChange={(e) =>
+                                                                                setPhoneCountrySearch(
+                                                                                    e.target.value
+                                                                                )
+                                                                            }
+                                                                            placeholder="Ülke veya kod ara..."
+                                                                            className="h-10 w-full bg-transparent text-sm text-white outline-none placeholder:text-white/30"
+                                                                            autoFocus
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="max-h-[320px] overflow-y-auto p-1.5">
+                                                                    {!hasCountryResults && (
+                                                                        <div className="px-4 py-8 text-center text-sm text-white/40">
+                                                                            Ülke bulunamadı.
+                                                                        </div>
+                                                                    )}
+
+                                                                    {filteredPreferredCountries.length > 0 && (
+                                                                        <div>
+                                                                            <p className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/30">
+                                                                                Sık kullanılanlar
+                                                                            </p>
+
+                                                                            <div className="grid gap-1">
+                                                                                {filteredPreferredCountries.map(
+                                                                                    (country) => {
+                                                                                        const isActive =
+                                                                                            selectedPhoneCountry.code ===
+                                                                                            country.code;
+
+                                                                                        return (
+                                                                                            <button
+                                                                                                key={country.code}
+                                                                                                type="button"
+                                                                                                onClick={() =>
+                                                                                                    handleSelectPhoneCountry(
+                                                                                                        country
+                                                                                                    )
+                                                                                                }
+                                                                                                className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-white outline-none transition hover:bg-white/10"
+                                                                                            >
+                                                                                                <span
+                                                                                                    className={`${country.flagClass} bg-transparent text-base outline-none shadow-none`}
+                                                                                                />
+
+                                                                                                <div className="min-w-0 flex-1">
+                                                                                                    <p className="truncate text-sm font-medium text-white">
+                                                                                                        {country.label}
+                                                                                                    </p>
+
+                                                                                                    <p className="text-xs text-white/40">
+                                                                                                        {country.code}{" "}
+                                                                                                        {country.dialCode}
+                                                                                                    </p>
+                                                                                                </div>
+
+                                                                                                {isActive && (
+                                                                                                    <Check className="h-4 w-4 shrink-0 text-[#22D3EE]" />
+                                                                                                )}
+                                                                                            </button>
+                                                                                        );
+                                                                                    }
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
+
+                                                                    {filteredPreferredCountries.length > 0 &&
+                                                                        filteredOtherCountries.length > 0 && (
+                                                                            <div className="my-1 h-px bg-white/10" />
+                                                                        )}
+
+                                                                    {filteredOtherCountries.length > 0 && (
+                                                                        <div>
+                                                                            <p className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/30">
+                                                                                Tüm ülkeler
+                                                                            </p>
+
+                                                                            <div className="grid gap-1">
+                                                                                {filteredOtherCountries.map(
+                                                                                    (country) => {
+                                                                                        const isActive =
+                                                                                            selectedPhoneCountry.code ===
+                                                                                            country.code;
+
+                                                                                        return (
+                                                                                            <button
+                                                                                                key={country.code}
+                                                                                                type="button"
+                                                                                                onClick={() =>
+                                                                                                    handleSelectPhoneCountry(
+                                                                                                        country
+                                                                                                    )
+                                                                                                }
+                                                                                                className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-white outline-none transition hover:bg-white/10"
+                                                                                            >
+                                                                                                <span
+                                                                                                    className={`${country.flagClass} bg-transparent text-base outline-none shadow-none`}
+                                                                                                />
+
+                                                                                                <div className="min-w-0 flex-1">
+                                                                                                    <p className="truncate text-sm font-medium text-white">
+                                                                                                        {country.label}
+                                                                                                    </p>
+
+                                                                                                    <p className="text-xs text-white/40">
+                                                                                                        {country.code}{" "}
+                                                                                                        {country.dialCode}
+                                                                                                    </p>
+                                                                                                </div>
+
+                                                                                                {isActive && (
+                                                                                                    <Check className="h-4 w-4 shrink-0 text-[#22D3EE]" />
+                                                                                                )}
+                                                                                            </button>
+                                                                                        );
+                                                                                    }
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div>
                                                         )}
-                                                        className={contactInputClass}
-                                                    />
+                                                    </div>
+
+                                                    {hasTriedSubmit &&
+                                                        reservationFieldErrors.phoneDigits?.[0] && (
+                                                            <p className="pl-1 text-xs text-red-300">
+                                                                {reservationFieldErrors.phoneDigits[0]}
+                                                            </p>
+                                                        )}
                                                 </div>
 
                                                 <div className="grid gap-2">
@@ -829,8 +1204,21 @@ export function ReservationSection({
                                                         placeholder={t(
                                                             "step3.emailPlaceholder"
                                                         )}
-                                                        className={contactInputClass}
+                                                        autoComplete="email"
+                                                        className={`${contactInputClass} ${
+                                                            hasTriedSubmit &&
+                                                            reservationFieldErrors.email
+                                                                ? "border-red-400/50 focus:border-red-400/60"
+                                                                : ""
+                                                        }`}
                                                     />
+
+                                                    {hasTriedSubmit &&
+                                                        reservationFieldErrors.email?.[0] && (
+                                                            <p className="pl-1 text-xs text-red-300">
+                                                                {reservationFieldErrors.email[0]}
+                                                            </p>
+                                                        )}
                                                 </div>
                                             </div>
 
@@ -861,8 +1249,20 @@ export function ReservationSection({
                                                                 setPickupAddressDetail(e.target.value)
                                                             }
                                                             placeholder="Otel, lobi, blok veya kapı no"
-                                                            className={contactInputClass}
+                                                            className={`${contactInputClass} ${
+                                                                hasTriedSubmit &&
+                                                                reservationFieldErrors.pickupAddressDetail
+                                                                    ? "border-red-400/50 focus:border-red-400/60"
+                                                                    : ""
+                                                            }`}
                                                         />
+
+                                                        {hasTriedSubmit &&
+                                                            reservationFieldErrors.pickupAddressDetail?.[0] && (
+                                                                <p className="pl-1 text-xs text-red-300">
+                                                                    {reservationFieldErrors.pickupAddressDetail[0]}
+                                                                </p>
+                                                            )}
                                                     </div>
 
                                                     <div className="grid gap-2">
@@ -877,8 +1277,20 @@ export function ReservationSection({
                                                                 setDropoffAddressDetail(e.target.value)
                                                             }
                                                             placeholder="Otel, terminal, villa veya adres"
-                                                            className={contactInputClass}
+                                                            className={`${contactInputClass} ${
+                                                                hasTriedSubmit &&
+                                                                reservationFieldErrors.dropoffAddressDetail
+                                                                    ? "border-red-400/50 focus:border-red-400/60"
+                                                                    : ""
+                                                            }`}
                                                         />
+
+                                                        {hasTriedSubmit &&
+                                                            reservationFieldErrors.dropoffAddressDetail?.[0] && (
+                                                                <p className="pl-1 text-xs text-red-300">
+                                                                    {reservationFieldErrors.dropoffAddressDetail[0]}
+                                                                </p>
+                                                            )}
                                                     </div>
                                                 </div>
 
@@ -893,8 +1305,30 @@ export function ReservationSection({
                                                             setReservationNote(e.target.value)
                                                         }
                                                         placeholder="Uçuş numarası, özel karşılama notu veya ek talebinizi yazabilirsiniz."
-                                                        className="min-h-[96px] w-full resize-none rounded-2xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm leading-6 text-white outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus:border-white/30 focus:bg-black/30"
+                                                        className={`min-h-[96px] w-full resize-none rounded-2xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm leading-6 text-white outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus:border-white/30 focus:bg-black/30 ${
+                                                            hasTriedSubmit &&
+                                                            reservationFieldErrors.reservationNote
+                                                                ? "border-red-400/50 focus:border-red-400/60"
+                                                                : ""
+                                                        }`}
                                                     />
+
+                                                    <div className="flex items-center justify-between gap-3 pl-1">
+                                                        {hasTriedSubmit &&
+                                                        reservationFieldErrors.reservationNote?.[0] ? (
+                                                            <p className="text-xs text-red-300">
+                                                                {reservationFieldErrors.reservationNote[0]}
+                                                            </p>
+                                                        ) : (
+                                                            <p className="text-xs text-white/30">
+                                                                Maksimum 1000 karakter.
+                                                            </p>
+                                                        )}
+
+                                                        <p className="text-xs text-white/25">
+                                                            {reservationNote.trim().length}/1000
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -1063,9 +1497,13 @@ export function ReservationSection({
 
                                                 <button
                                                     type="button"
-                                                    disabled={isSubmitting}
+                                                    disabled={!isReservationFormValid || isSubmitting}
                                                     onClick={handleCompleteReservation}
-                                                    className="group inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-black transition duration-300 hover:bg-white/90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
+                                                    className={`group inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-full px-6 text-sm font-semibold transition duration-300 ${
+                                                        isReservationFormValid && !isSubmitting
+                                                            ? "bg-white text-black hover:bg-white/90 active:scale-[0.99]"
+                                                            : "cursor-not-allowed bg-white/30 text-black/45"
+                                                    }`}
                                                 >
                                                     {isSubmitting
                                                         ? t("step3.loadingButton")

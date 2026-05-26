@@ -1,187 +1,241 @@
 ﻿"use client";
 
 import { useRef, useState } from "react";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import {
+    AnimatePresence,
+    motion,
+    useMotionValueEvent,
+    useScroll,
+} from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-// Sadece statik olan stil ve görsel verilerini tutuyoruz.
-// Metinler next-intl ile çekilecek.
 const featuresData = [
     {
         id: 0,
         key: "feature1",
         color: "text-[#FACC15]",
+        border: "border-[#FACC15]/35",
+        dot: "bg-[#FACC15]",
         image: "https://images.unsplash.com/photo-1609521263047-f8f205293f24?q=80&w=800&auto=format&fit=crop",
     },
     {
         id: 1,
         key: "feature2",
         color: "text-[#C084FC]",
+        border: "border-[#C084FC]/35",
+        dot: "bg-[#C084FC]",
         image: "https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=800&auto=format&fit=crop",
     },
     {
         id: 2,
         key: "feature3",
         color: "text-[#22D3EE]",
+        border: "border-[#22D3EE]/35",
+        dot: "bg-[#22D3EE]",
         image: "https://images.unsplash.com/photo-1549317336-206569e8475c?q=80&w=800&auto=format&fit=crop",
     },
 ];
 
 export function AboutSection() {
     const t = useTranslations("AboutSection");
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [activeIndex, setActiveIndex] = useState(-1);
+    const sectionRef = useRef<HTMLElement | null>(null);
+    const [activeIndex, setActiveIndex] = useState(0);
 
     const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start 80px", "end end"],
+        target: sectionRef,
+        offset: ["start start", "end end"],
     });
 
     useMotionValueEvent(scrollYProgress, "change", (latest) => {
-        if (latest < 0.25) {
-            setActiveIndex(-1);
-        } else if (latest < 0.50) {
-            setActiveIndex(0);
-        } else if (latest < 0.72) {
-            setActiveIndex(1);
-        } else {
-            setActiveIndex(2);
-        }
+        const nextIndex = Math.min(
+            featuresData.length - 1,
+            Math.max(0, Math.floor(latest * featuresData.length))
+        );
+
+        setActiveIndex(nextIndex);
     });
 
+    const activeFeature = featuresData[activeIndex];
+
     return (
-        <section ref={containerRef} className="relative h-[400vh] bg-[#0d0d0d]">
-            <div className="sticky top-20 flex h-[calc(100vh-80px)] w-full items-center justify-center overflow-hidden px-6 lg:px-8">
+        <section
+            ref={sectionRef}
+            style={{ height: `${featuresData.length * 105}vh` }}
+            className="relative bg-[#0d0d0d] px-6 lg:px-8"
+        >
+            <div className="sticky top-0 flex min-h-screen items-center overflow-hidden py-16 md:py-20">
+                <div className="mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+                    <div>
+                        <h2 className="max-w-2xl text-4xl font-semibold tracking-tight text-white md:text-5xl lg:text-6xl">
+                            {t("openingTitle1")}{" "}
+                            <span className="text-white/45">
+                                {t("openingTitle2")}
+                            </span>
+                        </h2>
 
-                {/* AÇILIŞ EKRANI */}
-                <motion.div
-                    className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none"
-                    animate={{
-                        opacity: activeIndex === -1 ? 1 : 0,
-                        y: activeIndex === -1 ? 0 : -100,
-                        scale: activeIndex === -1 ? 1 : 0.9,
-                        filter: activeIndex === -1 ? "blur(0px)" : "blur(12px)",
-                    }}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                >
-                    <p className="mb-6 max-w-md text-center text-sm font-medium tracking-[0.24em] text-white/40 uppercase">
-                        {t("openingSub")}
-                    </p>
-
-                    <h2 className="flex flex-col items-center justify-center gap-4 text-center font-bold tracking-tighter uppercase select-none md:gap-6">
-                        <span className="text-7xl leading-none text-white md:text-[9rem]">{t("openingTitle1")}</span>
-                        <span className="text-7xl leading-none text-white/40 md:text-[9rem]">{t("openingTitle2")}</span>
-                    </h2>
-                </motion.div>
-
-                {/* ANA İÇERIK IÇI GRID */}
-                <motion.div
-                    className="mx-auto grid w-full max-w-7xl grid-cols-1 lg:grid-cols-2 gap-16 items-center z-10"
-                    initial={false}
-                    animate={{
-                        opacity: activeIndex >= 0 ? 1 : 0,
-                        y: activeIndex >= 0 ? 0 : 100,
-                        filter: activeIndex >= 0 ? "blur(0px)" : "blur(12px)",
-                    }}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                >
-
-                    {/* SOL TARAF: Metin Blokları */}
-                    <div className="relative flex h-[450px] flex-col justify-center" style={{ perspective: "1000px" }}>
-                        <p className="absolute top-0 left-0 text-xs font-medium tracking-[0.4em] text-white/35 uppercase mb-8">
-                            {t("sectionHeader")}
+                        <p className="mt-5 max-w-xl text-base leading-8 text-white/45 md:text-lg">
+                            {t("openingSub")}
                         </p>
 
-                        <div className="relative mt-12 h-full w-full">
+                        <div className="mt-8 grid gap-2.5">
                             {featuresData.map((feature, index) => {
                                 const isActive = activeIndex === index;
-                                const isPast = index < activeIndex;
+
+                                return (
+                                    <button
+                                        key={feature.id}
+                                        type="button"
+                                        className={`group flex items-center justify-between rounded-2xl border px-4 py-3 text-left transition duration-300 ${
+                                            isActive
+                                                ? `${feature.border} bg-white/[0.045]`
+                                                : "border-white/10 bg-white/[0.02] hover:border-white/15 hover:bg-white/[0.035]"
+                                        }`}
+                                    >
+                                        <span className="flex min-w-0 items-center gap-3">
+                                            <span
+                                                className={`h-2.5 w-2.5 shrink-0 rounded-full ${feature.dot}`}
+                                            />
+
+                                            <span className="min-w-0">
+                                                <span
+                                                    className={`block truncate text-sm font-semibold ${
+                                                        isActive
+                                                            ? "text-white"
+                                                            : "text-white/60"
+                                                    }`}
+                                                >
+                                                    {t(`${feature.key}.title`)}
+                                                </span>
+
+                                                <span
+                                                    className={`mt-0.5 block text-xs font-medium ${feature.color}`}
+                                                >
+                                                    {t(`${feature.key}.stat`)}
+                                                </span>
+                                            </span>
+                                        </span>
+
+                                        <ArrowRight
+                                            className={`h-4 w-4 shrink-0 transition duration-300 ${
+                                                isActive
+                                                    ? `${feature.color} translate-x-0 opacity-100`
+                                                    : "-translate-x-1 text-white/20 opacity-0 group-hover:translate-x-0 group-hover:opacity-60"
+                                            }`}
+                                        />
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={activeFeature.id}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -8 }}
+                                transition={{ duration: 0.25, ease: "easeOut" }}
+                                className="mt-5 rounded-[1.5rem] border border-white/10 bg-white/[0.025] p-5"
+                            >
+                                <p
+                                    className={`text-sm font-semibold ${activeFeature.color}`}
+                                >
+                                    {t(`${activeFeature.key}.stat`)}
+                                </p>
+
+                                <h3 className="mt-2 text-2xl font-semibold tracking-tight text-white">
+                                    {t(`${activeFeature.key}.title`)}
+                                </h3>
+
+                                <p className="mt-3 max-w-xl text-sm leading-7 text-white/45">
+                                    {t(`${activeFeature.key}.description`)}
+                                </p>
+                            </motion.div>
+                        </AnimatePresence>
+                    </div>
+
+                    <div className="rounded-[2rem] border border-white/10 bg-white/[0.025] p-4 sm:p-5">
+                        <div className="relative h-[420px] overflow-hidden rounded-[1.5rem] border border-white/10 bg-black/20 md:h-[520px]">
+                            {featuresData.map((feature, index) => {
+                                const isActive = activeIndex === index;
 
                                 return (
                                     <motion.div
                                         key={feature.id}
-                                        className="absolute inset-0 flex flex-col justify-center pointer-events-none"
                                         initial={false}
                                         animate={{
                                             opacity: isActive ? 1 : 0,
-                                            y: isActive ? 0 : isPast ? -60 : 60,
-                                            rotateX: isActive ? 0 : isPast ? 45 : -45,
-                                            scale: isActive ? 1 : 0.85,
-                                            filter: isActive ? "blur(0px)" : "blur(8px)",
+                                            clipPath: isActive
+                                                ? "inset(0% 0% 0% 0% round 1.5rem)"
+                                                : "inset(12% 12% 12% 12% round 2rem)",
+                                            scale: isActive ? 1 : 1.04,
                                         }}
                                         transition={{
-                                            duration: 0.7,
-                                            ease: [0.16, 1, 0.3, 1]
+                                            opacity: {
+                                                duration: 0.2,
+                                                ease: "easeOut",
+                                            },
+                                            clipPath: {
+                                                duration: 0.65,
+                                                ease: [0.16, 1, 0.3, 1],
+                                            },
+                                            scale: {
+                                                duration: 0.65,
+                                                ease: [0.16, 1, 0.3, 1],
+                                            },
                                         }}
+                                        className="absolute inset-0"
                                     >
-                                        <motion.h3
-                                            className="text-3xl font-bold tracking-tight text-white md:text-4xl leading-tight mb-4"
-                                            animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 20 }}
-                                            transition={{ duration: 0.5, delay: isActive ? 0.05 : 0 }}
-                                        >
-                                            <span className={`${feature.color} block text-lg font-semibold mb-1`}>
-                                                {t(`${feature.key}.stat`)}
-                                            </span>
-                                            {t(`${feature.key}.title`)}
-                                        </motion.h3>
+                                        <motion.img
+                                            src={feature.image}
+                                            alt={t(`${feature.key}.title`)}
+                                            initial={false}
+                                            animate={{
+                                                scale: isActive ? 1 : 1.08,
+                                                y: isActive ? 0 : 16,
+                                            }}
+                                            transition={{
+                                                duration: 0.85,
+                                                ease: [0.16, 1, 0.3, 1],
+                                            }}
+                                            className="h-full w-full object-cover"
+                                        />
 
-                                        <motion.p
-                                            className="max-w-xl text-xs md:text-sm leading-relaxed text-white/55 text-justify"
-                                            animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 20 }}
-                                            transition={{ duration: 0.5, delay: isActive ? 0.15 : 0 }}
-                                        >
-                                            {t(`${feature.key}.description`)}
-                                        </motion.p>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d]/75 via-[#0d0d0d]/10 to-transparent" />
                                     </motion.div>
                                 );
                             })}
+
+                            <div className="pointer-events-none absolute inset-0 rounded-[1.5rem] ring-1 ring-inset ring-white/10" />
+
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={activeFeature.id}
+                                    initial={{ opacity: 0, y: 18 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    transition={{
+                                        duration: 0.3,
+                                        ease: "easeOut",
+                                    }}
+                                    className="absolute bottom-5 left-5 right-5"
+                                >
+                                    <div className="max-w-xl rounded-[1.25rem] border border-white/10 bg-[#0d0d0d]/55 p-4 backdrop-blur-md">
+                                        <p
+                                            className={`text-sm font-semibold ${activeFeature.color}`}
+                                        >
+                                            {t(`${activeFeature.key}.stat`)}
+                                        </p>
+
+                                        <h3 className="mt-2 text-2xl font-semibold tracking-tight text-white md:text-3xl">
+                                            {t(`${activeFeature.key}.title`)}
+                                        </h3>
+                                    </div>
+                                </motion.div>
+                            </AnimatePresence>
                         </div>
                     </div>
-
-                    {/* SAĞ TARAF: Sinematik Derinlikli Görseller */}
-                    <div className="relative flex h-[480px] w-full items-center justify-center">
-                        {featuresData.map((feature, index) => {
-                            const isActive = activeIndex === index;
-                            const isPast = index < activeIndex;
-                            const isFuture = index > activeIndex;
-
-                            return (
-                                <motion.div
-                                    key={feature.id}
-                                    className="absolute inset-0 h-full w-full overflow-hidden rounded-3xl border border-white/10 bg-[#111]"
-                                    initial={false}
-                                    animate={{
-                                        opacity: activeIndex === -1 ? 0 : isActive ? 1 : 0,
-                                        y: activeIndex === -1 ? 40 : isActive ? 0 : isFuture ? 80 : 0,
-                                        scale: activeIndex === -1 ? 0.95 : isActive ? 1 : isPast ? 0.9 : 1.1,
-                                        zIndex: isActive ? 10 : isPast ? 0 : 5,
-                                    }}
-                                    transition={{
-                                        duration: 0.8,
-                                        ease: [0.16, 1, 0.3, 1]
-                                    }}
-                                >
-                                    <motion.img
-                                        src={feature.image}
-                                        alt={t(`${feature.key}.title`)}
-                                        className="h-full w-full object-cover"
-                                        animate={{
-                                            scale: isActive ? 1.05 : 1
-                                        }}
-                                        transition={{
-                                            duration: 12,
-                                            ease: "linear",
-                                            repeat: Infinity,
-                                            repeatType: "reverse"
-                                        }}
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d]/80 via-[#0d0d0d]/20 to-transparent" />
-                                </motion.div>
-                            );
-                        })}
-                    </div>
-
-                </motion.div>
+                </div>
             </div>
         </section>
     );

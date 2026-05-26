@@ -147,7 +147,7 @@ export function HeroSection() {
                                     asChild
                                     className="h-12 w-full rounded-full bg-white px-7 text-sm font-semibold text-black hover:bg-white/90 sm:w-auto"
                                 >
-                                    <Link href="#booking">{t("buttons.book")}</Link>
+                                    <Link href="/rezervasyon">{t("buttons.book")}</Link>
                                 </Button>
 
                                 <Button
@@ -155,7 +155,7 @@ export function HeroSection() {
                                     variant="ghost"
                                     className="h-12 w-full rounded-full px-7 text-sm font-semibold text-white/75 hover:bg-white/10 hover:text-white sm:w-auto"
                                 >
-                                    <Link href="#gallery">{t("buttons.fleet")}</Link>
+                                    <Link href="/galeri">{t("buttons.fleet")}</Link>
                                 </Button>
                             </motion.div>
                         </motion.div>

@@ -469,7 +469,7 @@ export function ReservationSection({
                 alert(t("alerts.success", { pnr: data.data.pnrCode }));
                 window.location.reload();
             } else {
-                alert(t("alerts.error"));
+                alert(data.error || t("alerts.error"));
             }
         } catch (error) {
             alert(t("alerts.networkError"));

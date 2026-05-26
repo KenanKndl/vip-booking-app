@@ -85,6 +85,8 @@ model Reservation {
   pnrCode         String   @unique
   
   pickupDateTime  DateTime
+  busyFrom        DateTime?
+  busyTo          DateTime?
   adultCount      Int
   childCount      Int      @default(0)
   

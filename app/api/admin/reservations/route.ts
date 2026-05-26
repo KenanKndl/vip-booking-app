@@ -39,7 +39,12 @@ export async function PUT(request: Request) {
   const origin = request.headers.get('origin');
   try {
     const body = await request.json();
-    const { id, status, customerName, customerPhone, pickupDateTime, totalPrice, currency, routeId } = body;
+    
+    // EKSİK OLAN KISIM EKLENDİ: busyFrom ve busyTo alanlarını da body'den alıyoruz
+    const { 
+      id, status, customerName, customerPhone, pickupDateTime, 
+      totalPrice, currency, routeId, busyFrom, busyTo 
+    } = body;
 
     if (!id) return NextResponse.json({ success: false, error: 'ID eksik.' }, { status: 400, headers: getCorsHeaders(origin) });
 
@@ -53,6 +58,20 @@ export async function PUT(request: Request) {
     if (currency) updateData.currency = currency;
     if (routeId) updateData.routeId = routeId;
 
+    // ==========================================
+    // 🛡️ DİNAMİK ARAÇ BLOKAJI GÜNCELLEMESİ 
+    // ==========================================
+    if (status === 'CANCELLED') {
+      // Eğer rezervasyon iptal edildiyse, aracın üzerindeki kilidi tamamen kaldır (null yap)
+      updateData.busyFrom = null;
+      updateData.busyTo = null;
+    } else {
+      // İptal edilmediyse ve admin özel bir saat gönderdiyse o saatleri kaydet
+      if (busyFrom) updateData.busyFrom = new Date(busyFrom);
+      if (busyTo) updateData.busyTo = new Date(busyTo);
+    }
+    // ==========================================
+
     const updatedRes = await prisma.reservation.update({
       where: { id },
       data: updateData,
@@ -60,7 +79,7 @@ export async function PUT(request: Request) {
 
     return NextResponse.json({ success: true, data: updatedRes }, { status: 200, headers: getCorsHeaders(origin) });
   } catch (error) {
-    console.error(error);
+    console.error("Admin Rezervasyon Güncelleme Hatası:", error);
     return NextResponse.json({ success: false, error: 'Güncellenemedi.' }, { status: 500, headers: getCorsHeaders(origin) });
   }
 }

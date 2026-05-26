@@ -612,10 +612,10 @@ export function ReservationSection({
 
                                     <div className="flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
                                         <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3">
-                                            <Users className="h-4 w-4 text-white/40" />
+                                            <Users className="h-4 w-4 text-[#C084FC]" />
                                             <p className="text-sm text-white/45">
                                                 Toplam yolcu:{" "}
-                                                <span className="font-semibold text-white">
+                                                <span className="font-semibold text-[#C084FC]">
                                                     {totalPassengers}
                                                 </span>
                                             </p>
@@ -667,7 +667,7 @@ export function ReservationSection({
 
                                     <div className="rounded-[1.25rem] border border-white/10 bg-white/[0.03] p-4">
                                         <div className="flex items-start gap-3">
-                                            <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-black/20 text-white/55">
+                                            <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#FACC15]/20 bg-[#FACC15]/10 text-[#FACC15]">
                                                 <Info className="h-4 w-4" />
                                             </div>
 
@@ -834,23 +834,24 @@ export function ReservationSection({
                                                 </div>
                                             </div>
 
-                                            <div className="mt-6 border-t border-white/10 pt-6">
-                                                <div className="flex items-start justify-between gap-4">
-                                                    <div>
+                                            <div className="mt-6 border-t border-white/10 pt-5">
+                                                <div className="flex items-center justify-between gap-3">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="h-2 w-2 rounded-full bg-[#22D3EE]" />
                                                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
                                                             Transfer detayı
                                                         </p>
-                                                        <p className="mt-2 text-sm leading-6 text-white/45">
-                                                            Şoförün tam olarak hangi adrese veya otele gelmesi gerektiğini belirtin.
-                                                        </p>
                                                     </div>
+
+                                                    <span className="hidden text-xs font-medium text-white/30 sm:inline">
+            Opsiyonel bilgiler
+        </span>
                                                 </div>
 
-                                                <div className="mt-4 grid gap-4">
+                                                <div className="mt-4 grid gap-3 md:grid-cols-2">
                                                     <div className="grid gap-2">
-                                                        <label className={labelClass}>
-                                                            <MapPin className="h-3.5 w-3.5" />
-                                                            Alınacak Adres / Hotel Adı
+                                                        <label className="pl-1 text-xs font-medium text-white/45">
+                                                            Alınacak adres / hotel adı
                                                         </label>
 
                                                         <input
@@ -859,15 +860,14 @@ export function ReservationSection({
                                                             onChange={(e) =>
                                                                 setPickupAddressDetail(e.target.value)
                                                             }
-                                                            placeholder="Örn. Otel adı, lobi, blok, kapı no veya kısa adres detayı"
+                                                            placeholder="Otel, lobi, blok veya kapı no"
                                                             className={contactInputClass}
                                                         />
                                                     </div>
 
                                                     <div className="grid gap-2">
-                                                        <label className={labelClass}>
-                                                            <MapPin className="h-3.5 w-3.5" />
-                                                            Bırakılacak Adres / Hotel Adı
+                                                        <label className="pl-1 text-xs font-medium text-white/45">
+                                                            Bırakılacak adres / hotel adı
                                                         </label>
 
                                                         <input
@@ -876,26 +876,25 @@ export function ReservationSection({
                                                             onChange={(e) =>
                                                                 setDropoffAddressDetail(e.target.value)
                                                             }
-                                                            placeholder="Örn. Otel adı, terminal, villa, apart veya adres detayı"
+                                                            placeholder="Otel, terminal, villa veya adres"
                                                             className={contactInputClass}
                                                         />
                                                     </div>
+                                                </div>
 
-                                                    <div className="grid gap-2">
-                                                        <label className={labelClass}>
-                                                            <Info className="h-3.5 w-3.5" />
-                                                            Rezervasyon notu
-                                                        </label>
+                                                <div className="mt-3 grid gap-2">
+                                                    <label className="pl-1 text-xs font-medium text-white/45">
+                                                        Rezervasyon notu
+                                                    </label>
 
-                                                        <textarea
-                                                            value={reservationNote}
-                                                            onChange={(e) =>
-                                                                setReservationNote(e.target.value)
-                                                            }
-                                                            placeholder="Uçuş numarası, çocuk koltuğu detayı, özel karşılama notu veya ek taleplerinizi yazabilirsiniz."
-                                                            className={contactTextareaClass}
-                                                        />
-                                                    </div>
+                                                    <textarea
+                                                        value={reservationNote}
+                                                        onChange={(e) =>
+                                                            setReservationNote(e.target.value)
+                                                        }
+                                                        placeholder="Uçuş numarası, özel karşılama notu veya ek talebinizi yazabilirsiniz."
+                                                        className="min-h-[96px] w-full resize-none rounded-2xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm leading-6 text-white outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus:border-white/30 focus:bg-black/30"
+                                                    />
                                                 </div>
                                             </div>
 
@@ -911,6 +910,7 @@ export function ReservationSection({
                                                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
                                                     <AddonToggle
                                                         icon={Baby}
+                                                        tone="purple"
                                                         title="Bebek koltuğu istiyorum"
                                                         description={
                                                             hasBabySeatSelection
@@ -927,6 +927,7 @@ export function ReservationSection({
 
                                                     <AddonToggle
                                                         icon={Plus}
+                                                        tone="yellow"
                                                         title="Araç içinde ekstra istiyorum"
                                                         description={
                                                             hasVehicleExtraSelection
@@ -1044,7 +1045,7 @@ export function ReservationSection({
                                                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
                                                     Toplam yolculuk ücreti
                                                 </p>
-                                                <p className="mt-1 text-3xl font-semibold tracking-tight text-white">
+                                                <p className="mt-1 text-3xl font-semibold tracking-tight text-[#FACC15]">
                                                     {getFormattedPrice(
                                                         reservationTotalPrice
                                                     )}
@@ -1137,9 +1138,9 @@ function StepHeader({ step, t }: { step: number; t: any }) {
                         <div
                             className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-sm font-semibold transition duration-300 ${
                                 isCompleted
-                                    ? "border-white bg-white text-black"
+                                    ? "border-[#22D3EE] bg-[#22D3EE] text-black"
                                     : isActive
-                                        ? "border-white/25 bg-white/[0.08] text-white"
+                                        ? "border-[#22D3EE]/35 bg-[#22D3EE]/10 text-[#22D3EE]"
                                         : "border-white/10 bg-black/20 text-white/35"
                             }`}
                         >
@@ -1237,10 +1238,10 @@ function SearchSelect({
             </button>
 
             {isOpen && (
-                <div className="absolute left-0 top-[calc(100%+0.5rem)] z-40 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111111] shadow-2xl shadow-black/40">
+                <div className="absolute left-0 top-[calc(100%+0.5rem)] z-40 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111111]">
                     <div className="border-b border-white/10 p-2">
                         <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-3">
-                            <Search className="h-4 w-4 text-white/30" />
+                            <Search className="h-4 w-4 text-[#22D3EE]/70" />
                             <input
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
@@ -1268,7 +1269,7 @@ function SearchSelect({
                                         </span>
 
                                         {isActive && (
-                                            <Check className="h-4 w-4 shrink-0 text-white/70" />
+                                            <Check className="h-4 w-4 shrink-0 text-[#22D3EE]" />
                                         )}
                                     </button>
                                 );
@@ -1422,7 +1423,7 @@ function VehicleCard({
 
                 <div className="border-t border-white/10 pt-5">
                     <div className="mb-4 flex items-start gap-3 rounded-2xl border border-white/10 bg-black/20 p-3">
-                        <Route className="mt-0.5 h-4 w-4 shrink-0 text-white/45" />
+                        <Route className="mt-0.5 h-4 w-4 shrink-0 text-[#22D3EE]" />
                         <p className="text-xs leading-5 text-white/45">
                             Aşağıdaki fiyatlar kişi başı değil, seçilen araç
                             için toplam yolculuk ücretidir.
@@ -1539,7 +1540,7 @@ function AddonSelectionModal({
                         exit={{ opacity: 0, y: 18, scale: 0.98 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
                         onMouseDown={(event) => event.stopPropagation()}
-                        className="w-full max-w-4xl overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#121212] shadow-2xl shadow-black/60"
+                        className="w-full max-w-4xl overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#121212]"
                     >
                         <div className="flex items-start justify-between gap-5 border-b border-white/10 bg-white/[0.035] p-5 sm:p-6">
                             <div>
@@ -1584,7 +1585,7 @@ function AddonSelectionModal({
                                                     <div
                                                         className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border ${
                                                             quantity > 0
-                                                                ? "border-white/20 bg-white text-black"
+                                                                ? "border-[#C084FC]/25 bg-[#C084FC]/10 text-[#C084FC]"
                                                                 : "border-white/10 bg-white/[0.04] text-white/65"
                                                         }`}
                                                     >
@@ -1660,7 +1661,7 @@ function AddonSelectionModal({
                                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
                                         Modal toplamı
                                     </p>
-                                    <p className="mt-1 text-2xl font-semibold tracking-tight text-white">
+                                    <p className="mt-1 text-2xl font-semibold tracking-tight text-[#FACC15]">
                                         {getFormattedPrice(totalPrice)}
                                     </p>
                                     <p className="mt-1 text-xs text-white/35">
@@ -1686,24 +1687,41 @@ function AddonSelectionModal({
 
 function AddonToggle({
                          icon: Icon,
+                         tone = "cyan",
                          title,
                          description,
                          active,
                          onClick,
                      }: {
     icon: React.ElementType;
+    tone?: "cyan" | "purple" | "yellow";
     title: string;
     description: string;
     active: boolean;
     onClick: () => void;
 }) {
+    const toneClass = {
+        cyan: {
+            icon: "border-[#22D3EE]/20 bg-[#22D3EE]/10 text-[#22D3EE]",
+            active: "border-[#22D3EE]/30 bg-[#22D3EE]/10",
+        },
+        purple: {
+            icon: "border-[#C084FC]/20 bg-[#C084FC]/10 text-[#C084FC]",
+            active: "border-[#C084FC]/30 bg-[#C084FC]/10",
+        },
+        yellow: {
+            icon: "border-[#FACC15]/20 bg-[#FACC15]/12 text-[#FACC15]",
+            active: "border-[#FACC15]/30 bg-[#FACC15]/10",
+        },
+    }[tone];
+
     return (
         <button
             type="button"
             onClick={onClick}
             className={`rounded-2xl border p-4 text-left transition duration-300 ${
                 active
-                    ? "border-white/25 bg-white/[0.08]"
+                    ? toneClass.active
                     : "border-white/10 bg-black/20 hover:border-white/15 hover:bg-white/[0.04]"
             }`}
         >
@@ -1711,7 +1729,7 @@ function AddonToggle({
                 <div
                     className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border ${
                         active
-                            ? "border-white/20 bg-white text-black"
+                            ? toneClass.icon
                             : "border-white/10 bg-white/[0.04] text-white/70"
                     }`}
                 >

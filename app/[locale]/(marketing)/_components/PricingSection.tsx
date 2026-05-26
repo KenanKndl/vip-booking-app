@@ -1,194 +1,312 @@
 ﻿"use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Info } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import {
+    AnimatePresence,
+    motion,
+    useMotionValueEvent,
+    useScroll,
+} from "framer-motion";
+import { ArrowRight, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 
-type Currency = "TRY" | "USD" | "EUR";
 type Location = "IST" | "SAW" | "CITY";
 
-const currencySymbols: Record<Currency, string> = {
-    TRY: "₺",
-    USD: "$",
-    EUR: "€",
+type RouteItem = {
+    to: string;
+    price: number;
 };
 
-const routesData = {
+type RouteGroup = {
+    id: Location;
+    routes: RouteItem[];
+};
+
+const routesData: Record<Location, RouteItem[]> = {
     IST: [
-        { to: "Taksim / Beyoğlu", prices: { TRY: 2500, USD: 75, EUR: 70 } },
-        { to: "Beşiktaş / Ortaköy", prices: { TRY: 2750, USD: 85, EUR: 80 } },
-        { to: "Sultanahmet / Fatih", prices: { TRY: 2800, USD: 88, EUR: 82 } },
-        { to: "Şişli / Nişantaşı", prices: { TRY: 2600, USD: 80, EUR: 75 } },
-        { to: "Kadıköy / Moda", prices: { TRY: 3200, USD: 95, EUR: 90 } },
-        { to: "Sarıyer / Maslak", prices: { TRY: 2900, USD: 88, EUR: 82 } },
+        { to: "Taksim / Beyoğlu", price: 2500 },
+        { to: "Beşiktaş / Ortaköy", price: 2750 },
+        { to: "Sultanahmet / Fatih", price: 2800 },
+        { to: "Şişli / Nişantaşı", price: 2600 },
+        { to: "Kadıköy / Moda", price: 3200 },
+        { to: "Sarıyer / Maslak", price: 2900 },
     ],
     SAW: [
-        { to: "Kadıköy / Moda", prices: { TRY: 2000, USD: 60, EUR: 55 } },
-        { to: "Taksim / Beyoğlu", prices: { TRY: 2900, USD: 90, EUR: 85 } },
-        { to: "Beşiktaş / Ortaköy", prices: { TRY: 3100, USD: 95, EUR: 90 } },
-        { to: "Sultanahmet / Fatih", prices: { TRY: 3000, USD: 92, EUR: 88 } },
+        { to: "Kadıköy / Moda", price: 2000 },
+        { to: "Taksim / Beyoğlu", price: 2900 },
+        { to: "Beşiktaş / Ortaköy", price: 3100 },
+        { to: "Sultanahmet / Fatih", price: 3000 },
     ],
     CITY: [
-        { to: "Taksim - Sultanahmet", prices: { TRY: 1500, USD: 45, EUR: 40 } },
-        { to: "Beşiktaş - Kadıköy", prices: { TRY: 1800, USD: 55, EUR: 50 } },
-        { to: "Nişantaşı - Bebek", prices: { TRY: 1200, USD: 35, EUR: 32 } },
+        { to: "Taksim - Sultanahmet", price: 1500 },
+        { to: "Beşiktaş - Kadıköy", price: 1800 },
+        { to: "Nişantaşı - Bebek", price: 1200 },
     ],
 };
 
-const tabsConfig: { id: Location; activeBg: string }[] = [
-    { id: "IST", activeBg: "bg-[#22D3EE]" },
-    { id: "SAW", activeBg: "bg-[#C084FC]" },
-    { id: "CITY", activeBg: "bg-[#FACC15]" },
-];
+const getLocationTone = (location: Location) => {
+    if (location === "IST") {
+        return {
+            dot: "bg-[#22D3EE]",
+            border: "border-[#22D3EE]/35",
+            text: "text-[#22D3EE]",
+        };
+    }
+
+    if (location === "SAW") {
+        return {
+            dot: "bg-[#C084FC]",
+            border: "border-[#C084FC]/35",
+            text: "text-[#C084FC]",
+        };
+    }
+
+    return {
+        dot: "bg-[#FACC15]",
+        border: "border-[#FACC15]/35",
+        text: "text-[#FACC15]",
+        line: "bg-[#FACC15]",
+    };
+};
 
 export function PricingSection() {
     const t = useTranslations("PricingSection");
-    const [currency, setCurrency] = useState<Currency>("TRY");
-    const [activeTab, setActiveTab] = useState<Location>("IST");
+    const sectionRef = useRef<HTMLElement | null>(null);
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    const routeGroups = useMemo<RouteGroup[]>(
+        () => [
+            {
+                id: "IST",
+                routes: routesData.IST,
+            },
+            {
+                id: "SAW",
+                routes: routesData.SAW,
+            },
+            {
+                id: "CITY",
+                routes: routesData.CITY,
+            },
+        ],
+        []
+    );
+
+    const activeGroup = routeGroups[activeIndex];
+    const activeTone = getLocationTone(activeGroup.id);
+    const sectionHeight = `${routeGroups.length * 108}vh`;
+
+    const { scrollYProgress } = useScroll({
+        target: sectionRef,
+        offset: ["start start", "end end"],
+    });
+
+    useMotionValueEvent(scrollYProgress, "change", (latest) => {
+        const nextIndex = Math.min(
+            routeGroups.length - 1,
+            Math.max(0, Math.floor(latest * routeGroups.length))
+        );
+
+        setActiveIndex(nextIndex);
+    });
+
+    const scrollToGroup = (index: number) => {
+        if (!sectionRef.current) return;
+
+        const sectionTop = sectionRef.current.offsetTop;
+        const sectionScrollableHeight =
+            sectionRef.current.offsetHeight - window.innerHeight;
+        const targetProgress =
+            routeGroups.length <= 1 ? 0 : index / routeGroups.length + 0.01;
+
+        window.scrollTo({
+            top: sectionTop + sectionScrollableHeight * targetProgress,
+            behavior: "smooth",
+        });
+    };
 
     return (
-        <section id="pricing" className="bg-[#0d0d0d] px-6 py-32 lg:px-8">
-            <div className="mx-auto max-w-5xl">
+        <section
+            ref={sectionRef}
+            id="pricing"
+            style={{ height: sectionHeight }}
+            className="relative bg-[#0d0d0d] px-6 lg:px-8"
+        >
+            <div className="sticky top-0 flex min-h-screen items-center overflow-hidden py-16 md:py-20">
+                <div className="mx-auto grid w-full max-w-7xl gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
+                    <div className="relative z-10">
+                        <h2 className="max-w-xl text-4xl font-semibold tracking-tight text-white md:text-5xl lg:text-6xl">
+                            {t("titlePart1")}{" "}
+                            <span className="text-white/45">{t("titlePart2")}</span>
+                        </h2>
 
-                {/* Başlık Grubu */}
-                <div className="mx-auto max-w-3xl text-center">
-                    <p className="text-xs font-medium tracking-[0.4em] text-white/35 uppercase">
-                        {t("subtitle")}
-                    </p>
-                    <h2 className="mt-4 text-3xl font-semibold tracking-tight text-white md:text-5xl">
-                        {t("titlePart1")} <span className="text-white/60">{t("titlePart2")}</span>
-                    </h2>
-                    <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-white/45 md:text-lg">
-                        {t("description")}
-                    </p>
-                </div>
+                        <p className="mt-5 max-w-xl text-base leading-8 text-white/45 md:text-lg">
+                            {t("description")}
+                        </p>
 
-                {/* Kontrol Paneli */}
-                <div className="mt-16 flex flex-col items-center justify-between gap-6 md:flex-row">
+                        <div className="mt-8 grid gap-2.5">
+                            {routeGroups.map((group, index) => {
+                                const isActive = activeIndex === index;
+                                const tone = getLocationTone(group.id);
 
-                    {/* Tablar */}
-                    <div className="flex rounded-full bg-white/[0.03] p-1.5 border border-white/5 w-full md:w-auto overflow-x-auto hide-scrollbar">
-                        {tabsConfig.map((tab) => (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id)}
-                                className={`relative whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-300 ${
-                                    activeTab === tab.id ? "text-black" : "text-white/50 hover:text-white"
-                                }`}
-                            >
-                                {activeTab === tab.id && (
-                                    <motion.span
-                                        layoutId="activeTabIndicator"
-                                        className={`absolute inset-0 rounded-full ${tab.activeBg}`}
-                                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                                    />
-                                )}
-                                <span className="relative z-10">{t(`tabs.${tab.id}`)}</span>
-                            </button>
-                        ))}
+                                return (
+                                    <button
+                                        key={group.id}
+                                        type="button"
+                                        onClick={() => scrollToGroup(index)}
+                                        className={`group flex items-center justify-between rounded-2xl border px-4 py-3 text-left transition duration-300 ${
+                                            isActive
+                                                ? `${tone.border} bg-white/[0.045]`
+                                                : "border-white/10 bg-white/[0.02] hover:border-white/15 hover:bg-white/[0.035]"
+                                        }`}
+                                    >
+                                        <span className="flex min-w-0 items-center gap-3">
+                                            <span
+                                                className={`h-2.5 w-2.5 shrink-0 rounded-full ${tone.dot}`}
+                                            />
+                                            <span
+                                                className={`truncate text-sm font-semibold ${
+                                                    isActive
+                                                        ? "text-white"
+                                                        : "text-white/55 group-hover:text-white/80"
+                                                }`}
+                                            >
+                                                {getLocationLabel(group.id, t)}
+                                            </span>
+                                        </span>
+
+                                        <span
+                                            className={`flex shrink-0 items-center gap-1.5 text-xs font-medium transition ${
+                                                isActive
+                                                    ? tone.text
+                                                    : "text-white/30 group-hover:text-white/45"
+                                            }`}
+                                        >
+                                            {group.routes.length} popüler rota
+                                            <ArrowRight
+                                                className={`h-3.5 w-3.5 transition duration-300 ${
+                                                    isActive
+                                                        ? "translate-x-0 opacity-100"
+                                                        : "-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-60"
+                                                }`}
+                                            />
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </div>
 
-                    {/* Para Birimi */}
-                    <div className="flex rounded-full bg-white/[0.03] p-1.5 border border-white/5">
-                        {(["TRY", "USD", "EUR"] as Currency[]).map((cur) => (
-                            <button
-                                key={cur}
-                                onClick={() => setCurrency(cur)}
-                                className={`relative rounded-full px-5 py-2 text-sm font-semibold transition-colors duration-300 ${
-                                    currency === cur ? "text-white" : "text-white/30 hover:text-white/70"
-                                }`}
+                    <div className="rounded-[2rem] border border-white/10 bg-white/[0.025] p-4 sm:p-5 lg:p-6">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={activeGroup.id}
+                                initial={{ opacity: 0, y: 12 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -8 }}
+                                transition={{ duration: 0.22, ease: "easeOut" }}
                             >
-                                {currency === cur && (
-                                    <motion.span
-                                        layoutId="activeCurrencyIndicator"
-                                        className="absolute inset-0 rounded-full bg-white/10"
-                                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                                    />
-                                )}
-                                <span className="relative z-10">{cur}</span>
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Grid Rota Listesi */}
-                <div className="mt-8">
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={activeTab}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
-                            transition={{ duration: 0.3 }}
-                            className="grid gap-4 md:grid-cols-2"
-                        >
-                            {routesData[activeTab].map((route, idx) => (
-                                <div
-                                    key={idx}
-                                    className="group flex items-center justify-between rounded-2xl border border-white/5 bg-white/[0.02] p-5 transition-all duration-300 hover:border-white/10 hover:bg-white/[0.04]"
-                                >
-                                    <div className="flex items-center gap-4">
-                                        <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-white/30 pr-0.5 transition-colors duration-300 
-                                            ${activeTab === "IST" ? "group-hover:bg-[#22D3EE]/10 group-hover:text-[#22D3EE]" : ""}
-                                            ${activeTab === "SAW" ? "group-hover:bg-[#C084FC]/10 group-hover:text-[#C084FC]" : ""}
-                                            ${activeTab === "CITY" ? "group-hover:bg-[#FACC15]/10 group-hover:text-[#FACC15]" : ""}
-                                        `}>
-                                            <MapPin className="h-4 w-4" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-medium text-white/40 mb-1">{t("destinationLabel")}</p>
-                                            <p className="text-base font-semibold text-white">
-                                                {route.to}
+                                <div className="flex flex-col gap-4 border-b border-white/10 pb-5 sm:flex-row sm:items-end sm:justify-between">
+                                    <div>
+                                        <div className="flex items-center gap-2">
+                                            <span
+                                                className={`h-2.5 w-2.5 rounded-full ${activeTone.dot}`}
+                                            />
+                                            <p className="text-sm font-medium text-white/40">
+                                                Kalkış noktası
                                             </p>
                                         </div>
+
+                                        <h3 className="mt-2 text-3xl font-semibold tracking-tight text-white md:text-4xl">
+                                            {getLocationLabel(activeGroup.id, t)}
+                                        </h3>
                                     </div>
 
-                                    <div className="text-right">
-                                        <div className={`text-xl font-bold tracking-tight transition-colors duration-300
-                                            ${activeTab === "IST" ? "text-[#22D3EE]" : ""}
-                                            ${activeTab === "SAW" ? "text-[#C084FC]" : ""}
-                                            ${activeTab === "CITY" ? "text-[#FACC15]" : ""}
-                                        `}>
-                                            <AnimatePresence mode="wait">
-                                                <motion.span
-                                                    key={currency}
-                                                    initial={{ opacity: 0, scale: 0.95 }}
-                                                    animate={{ opacity: 1, scale: 1 }}
-                                                    exit={{ opacity: 0, scale: 0.95 }}
-                                                    transition={{ duration: 0.15 }}
-                                                    className="inline-block"
-                                                >
-                                                    {currencySymbols[currency]}
-                                                    {route.prices[currency].toLocaleString("tr-TR")}
-                                                </motion.span>
-                                            </AnimatePresence>
+                                    <p className="max-w-sm text-sm leading-6 text-white/40 sm:text-right">
+                                        Sık tercih edilen rotalar için başlangıç transfer ücretleri.
+                                    </p>
+                                </div>
+
+                                <div className="relative mt-4">
+                                    <div className="max-h-[392px] overflow-y-auto pr-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                                        <div className="grid gap-2.5 py-1">
+                                            {activeGroup.routes.map((route, index) => (
+                                                <RoutePriceRow
+                                                    key={`${activeGroup.id}-${route.to}`}
+                                                    route={route}
+                                                    index={index}
+                                                    fromLabel={getLocationLabel(activeGroup.id, t)}
+                                                />
+                                            ))}
                                         </div>
                                     </div>
                                 </div>
-                            ))}
-                        </motion.div>
-                    </AnimatePresence>
-                </div>
 
-                {/* Alt Bilgilendirme */}
-                <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-6 rounded-2xl border border-white/5 bg-white/[0.02] p-5 md:p-6">
-                    <div className="flex items-start gap-3">
-                        <Info className="mt-0.5 h-5 w-5 flex-shrink-0 text-white/30" />
-                        <p className="text-sm leading-relaxed text-white/45">
-                            {t("infoText")}
-                        </p>
+                                <div className="mt-5 flex flex-col items-center justify-between gap-4 rounded-2xl border border-white/10 bg-black/20 p-4 sm:flex-row">
+                                    <div className="flex items-start gap-3">
+                                        <Info className="mt-0.5 h-4 w-4 shrink-0 text-white/30" />
+                                        <p className="text-sm leading-6 text-white/45">
+                                            Fiyatlar başlangıç transfer ücretidir. Araç tipi, yolcu sayısı ve gidiş-dönüş seçimine göre rezervasyon adımında netleşir.
+                                        </p>
+                                    </div>
+
+                                    <Button
+                                        asChild
+                                        className="h-11 w-full shrink-0 rounded-full bg-white px-6 text-sm font-semibold text-black transition-all hover:bg-white/90 sm:w-auto"
+                                    >
+                                        <a href="#booking">{t("quoteButton")}</a>
+                                    </Button>
+                                </div>
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
-                    <Button
-                        asChild
-                        className="w-full sm:w-auto h-11 rounded-full bg-white px-6 text-sm font-semibold text-black hover:bg-white/90 transition-all flex-shrink-0"
-                    >
-                        <a href="#booking">{t("quoteButton")}</a>
-                    </Button>
                 </div>
-
             </div>
         </section>
     );
+}
+
+function RoutePriceRow({
+                           route,
+                           index,
+                           fromLabel,
+                       }: {
+    route: RouteItem;
+    index: number;
+    fromLabel: string;
+}) {
+    return (
+        <motion.article
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.18, delay: Math.min(index, 8) * 0.018, ease: "easeOut" }}
+            className="group rounded-2xl border border-white/10 bg-black/20 px-4 py-3 transition duration-300 hover:border-white/15 hover:bg-white/[0.04] sm:px-5"
+        >
+            <div className="flex items-center justify-between gap-4">
+                <div className="flex min-w-0 items-center gap-2">
+                    <span className="truncate text-sm text-white/35">
+                        {fromLabel}
+                    </span>
+                    <ArrowRight className="h-3.5 w-3.5 shrink-0 text-white/25" />
+                    <span className="truncate text-sm font-semibold text-white">
+                        {route.to}
+                    </span>
+                </div>
+
+                <div className="flex shrink-0 items-baseline gap-3 text-right">
+                    <span className="hidden text-[11px] font-medium uppercase tracking-[0.14em] text-white/25 sm:inline">
+                        Başlangıç
+                    </span>
+                    <span className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
+                        ₺{route.price.toLocaleString("tr-TR")}
+                    </span>
+                </div>
+            </div>
+        </motion.article>
+    );
+}
+
+function getLocationLabel(location: Location, t: any) {
+    return t(`tabs.${location}`);
 }

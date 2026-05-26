@@ -134,7 +134,9 @@ export function ContactSection() {
         };
 
         document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
+
+        return () =>
+            document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
     const handleSelectPhoneCountry = (country: PhoneCountry) => {
@@ -147,22 +149,30 @@ export function ContactSection() {
         {
             key: "phone",
             icon: Phone,
+            iconColor: "text-[#22D3EE]",
+            iconBg: "bg-[#22D3EE]/10",
             label: t("info.phoneLabel"),
             title: "+90 553 685 67 67",
-            description: "Rezervasyon ve transfer talepleriniz için arayabilirsiniz.",
+            description:
+                "Rezervasyon ve transfer talepleriniz için arayabilirsiniz.",
             href: "tel:+905536856767",
         },
         {
             key: "email",
             icon: Mail,
+            iconColor: "text-[#C084FC]",
+            iconBg: "bg-[#C084FC]/10",
             label: t("info.emailLabel"),
             title: "reservation@vipbooking.com",
-            description: "Rezervasyon, teklif ve genel sorularınız için yazabilirsiniz.",
+            description:
+                "Rezervasyon, teklif ve genel sorularınız için yazabilirsiniz.",
             href: "mailto:reservation@vipbooking.com",
         },
         {
             key: "company",
             icon: Building2,
+            iconColor: "text-[#FACC15]",
+            iconBg: "bg-[#FACC15]/12",
             label: t("info.companyLabel"),
             title: t("info.companyName"),
             description: "VIP transfer ve özel ulaşım hizmetleri.",
@@ -188,7 +198,9 @@ export function ContactSection() {
 
                     <h1 className="mt-5 max-w-4xl text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
                         {t("titlePart1")}{" "}
-                        <span className="text-white/45">{t("titlePart2")}</span>
+                        <span className="text-white/45">
+                            {t("titlePart2")}
+                        </span>
                     </h1>
 
                     <p className="mt-5 max-w-2xl text-sm leading-7 text-white/45 sm:text-base">
@@ -199,23 +211,32 @@ export function ContactSection() {
                 <div className="mt-10 grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch">
                     <motion.div
                         variants={fadeUpVariants}
-                        className="h-full rounded-[1.75rem] border border-white/10 bg-white/[0.035] p-5 shadow-2xl shadow-black/20 sm:p-6 lg:p-8"
+                        className="h-full rounded-[1.75rem] border border-white/10 bg-white/[0.035] p-5 sm:p-6 lg:p-8"
                     >
                         <div className="mb-7 flex flex-col gap-2 border-b border-white/10 pb-6">
                             <h2 className="text-2xl font-semibold tracking-tight text-white">
                                 {t("form.submitButton")}
                             </h2>
+
                             <p className="max-w-xl text-sm leading-6 text-white/45">
-                                {t("description")}
+                                Size en kısa sürede dönüş yapalım.{" "}
+                                <span className="font-medium text-[#22D3EE]">
+                                    Transfer talebinizi
+                                </span>{" "}
+                                detaylıca iletebilirsiniz.
                             </p>
                         </div>
 
                         <form className="grid gap-5">
                             <div className="grid gap-5 sm:grid-cols-2">
                                 <div className="grid gap-2">
-                                    <label htmlFor="name" className={labelClass}>
+                                    <label
+                                        htmlFor="name"
+                                        className={labelClass}
+                                    >
                                         {t("form.nameLabel")}
                                     </label>
+
                                     <input
                                         type="text"
                                         id="name"
@@ -225,9 +246,13 @@ export function ContactSection() {
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <label htmlFor="email" className={labelClass}>
+                                    <label
+                                        htmlFor="email"
+                                        className={labelClass}
+                                    >
                                         {t("form.emailLabel")}
                                     </label>
+
                                     <input
                                         type="email"
                                         id="email"
@@ -247,14 +272,18 @@ export function ContactSection() {
                                         <button
                                             type="button"
                                             onClick={() =>
-                                                setIsPhoneDropdownOpen((prev) => !prev)
+                                                setIsPhoneDropdownOpen(
+                                                    (prev) => !prev
+                                                )
                                             }
                                             className="flex min-w-[126px] items-center justify-center gap-2 border-r border-white/10 px-4 py-3.5 text-sm font-semibold text-white/70 outline-none transition hover:bg-white/[0.04] hover:text-white"
                                         >
                                             <span
                                                 className={`${selectedPhoneCountry.flagClass} bg-transparent text-base outline-none shadow-none`}
                                             />
-                                            <span>{selectedPhoneCountry.dialCode}</span>
+                                            <span>
+                                                {selectedPhoneCountry.dialCode}
+                                            </span>
                                             <ChevronDown
                                                 className={`h-3.5 w-3.5 text-white/35 transition duration-200 ${
                                                     isPhoneDropdownOpen
@@ -267,16 +296,19 @@ export function ContactSection() {
                                         <input
                                             type="tel"
                                             id="phone"
-                                            placeholder={t("form.phonePlaceholder")}
+                                            placeholder={t(
+                                                "form.phonePlaceholder"
+                                            )}
                                             className="w-full bg-transparent px-4 py-3.5 text-sm text-white outline-none placeholder:text-white/25"
                                         />
                                     </div>
 
                                     {isPhoneDropdownOpen && (
-                                        <div className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111111] shadow-2xl shadow-black/40 sm:w-[360px]">
+                                        <div className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111111] sm:w-[360px]">
                                             <div className="border-b border-white/10 p-2">
                                                 <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-3">
-                                                    <Search className="h-4 w-4 shrink-0 text-white/30" />
+                                                    <Search className="h-4 w-4 shrink-0 text-[#22D3EE]/70" />
+
                                                     <input
                                                         value={phoneCountrySearch}
                                                         onChange={(e) =>
@@ -298,120 +330,130 @@ export function ContactSection() {
                                                     </div>
                                                 )}
 
-                                                {filteredPreferredCountries.length > 0 && (
-                                                    <div>
-                                                        <p className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/30">
-                                                            Sık kullanılanlar
-                                                        </p>
+                                                {filteredPreferredCountries.length >
+                                                    0 && (
+                                                        <div>
+                                                            <p className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/30">
+                                                                Sık kullanılanlar
+                                                            </p>
 
-                                                        <div className="grid gap-1">
-                                                            {filteredPreferredCountries.map(
-                                                                (country) => {
-                                                                    const isActive =
-                                                                        selectedPhoneCountry.code ===
-                                                                        country.code;
+                                                            <div className="grid gap-1">
+                                                                {filteredPreferredCountries.map(
+                                                                    (country) => {
+                                                                        const isActive =
+                                                                            selectedPhoneCountry.code ===
+                                                                            country.code;
 
-                                                                    return (
-                                                                        <button
-                                                                            key={country.code}
-                                                                            type="button"
-                                                                            onClick={() =>
-                                                                                handleSelectPhoneCountry(
-                                                                                    country
-                                                                                )
-                                                                            }
-                                                                            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-white outline-none transition hover:bg-white/10"
-                                                                        >
+                                                                        return (
+                                                                            <button
+                                                                                key={
+                                                                                    country.code
+                                                                                }
+                                                                                type="button"
+                                                                                onClick={() =>
+                                                                                    handleSelectPhoneCountry(
+                                                                                        country
+                                                                                    )
+                                                                                }
+                                                                                className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-white outline-none transition hover:bg-white/10"
+                                                                            >
                                                                             <span
                                                                                 className={`${country.flagClass} bg-transparent text-base outline-none shadow-none`}
                                                                             />
 
-                                                                            <div className="min-w-0 flex-1">
-                                                                                <p className="truncate text-sm font-medium text-white">
-                                                                                    {
-                                                                                        country.label
-                                                                                    }
-                                                                                </p>
-                                                                                <p className="text-xs text-white/40">
-                                                                                    {
-                                                                                        country.code
-                                                                                    }{" "}
-                                                                                    {
-                                                                                        country.dialCode
-                                                                                    }
-                                                                                </p>
-                                                                            </div>
+                                                                                <div className="min-w-0 flex-1">
+                                                                                    <p className="truncate text-sm font-medium text-white">
+                                                                                        {
+                                                                                            country.label
+                                                                                        }
+                                                                                    </p>
 
-                                                                            {isActive && (
-                                                                                <Check className="h-4 w-4 shrink-0 text-white/70" />
-                                                                            )}
-                                                                        </button>
-                                                                    );
-                                                                }
-                                                            )}
+                                                                                    <p className="text-xs text-white/40">
+                                                                                        {
+                                                                                            country.code
+                                                                                        }{" "}
+                                                                                        {
+                                                                                            country.dialCode
+                                                                                        }
+                                                                                    </p>
+                                                                                </div>
+
+                                                                                {isActive && (
+                                                                                    <Check className="h-4 w-4 shrink-0 text-[#22D3EE]" />
+                                                                                )}
+                                                                            </button>
+                                                                        );
+                                                                    }
+                                                                )}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                )}
+                                                    )}
 
-                                                {filteredPreferredCountries.length > 0 &&
-                                                    filteredOtherCountries.length > 0 && (
+                                                {filteredPreferredCountries.length >
+                                                    0 &&
+                                                    filteredOtherCountries.length >
+                                                    0 && (
                                                         <div className="my-1 h-px bg-white/10" />
                                                     )}
 
-                                                {filteredOtherCountries.length > 0 && (
-                                                    <div>
-                                                        <p className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/30">
-                                                            Tüm ülkeler
-                                                        </p>
+                                                {filteredOtherCountries.length >
+                                                    0 && (
+                                                        <div>
+                                                            <p className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/30">
+                                                                Tüm ülkeler
+                                                            </p>
 
-                                                        <div className="grid gap-1">
-                                                            {filteredOtherCountries.map(
-                                                                (country) => {
-                                                                    const isActive =
-                                                                        selectedPhoneCountry.code ===
-                                                                        country.code;
+                                                            <div className="grid gap-1">
+                                                                {filteredOtherCountries.map(
+                                                                    (country) => {
+                                                                        const isActive =
+                                                                            selectedPhoneCountry.code ===
+                                                                            country.code;
 
-                                                                    return (
-                                                                        <button
-                                                                            key={country.code}
-                                                                            type="button"
-                                                                            onClick={() =>
-                                                                                handleSelectPhoneCountry(
-                                                                                    country
-                                                                                )
-                                                                            }
-                                                                            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-white outline-none transition hover:bg-white/10"
-                                                                        >
+                                                                        return (
+                                                                            <button
+                                                                                key={
+                                                                                    country.code
+                                                                                }
+                                                                                type="button"
+                                                                                onClick={() =>
+                                                                                    handleSelectPhoneCountry(
+                                                                                        country
+                                                                                    )
+                                                                                }
+                                                                                className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-white outline-none transition hover:bg-white/10"
+                                                                            >
                                                                             <span
                                                                                 className={`${country.flagClass} bg-transparent text-base outline-none shadow-none`}
                                                                             />
 
-                                                                            <div className="min-w-0 flex-1">
-                                                                                <p className="truncate text-sm font-medium text-white">
-                                                                                    {
-                                                                                        country.label
-                                                                                    }
-                                                                                </p>
-                                                                                <p className="text-xs text-white/40">
-                                                                                    {
-                                                                                        country.code
-                                                                                    }{" "}
-                                                                                    {
-                                                                                        country.dialCode
-                                                                                    }
-                                                                                </p>
-                                                                            </div>
+                                                                                <div className="min-w-0 flex-1">
+                                                                                    <p className="truncate text-sm font-medium text-white">
+                                                                                        {
+                                                                                            country.label
+                                                                                        }
+                                                                                    </p>
 
-                                                                            {isActive && (
-                                                                                <Check className="h-4 w-4 shrink-0 text-white/70" />
-                                                                            )}
-                                                                        </button>
-                                                                    );
-                                                                }
-                                                            )}
+                                                                                    <p className="text-xs text-white/40">
+                                                                                        {
+                                                                                            country.code
+                                                                                        }{" "}
+                                                                                        {
+                                                                                            country.dialCode
+                                                                                        }
+                                                                                    </p>
+                                                                                </div>
+
+                                                                                {isActive && (
+                                                                                    <Check className="h-4 w-4 shrink-0 text-[#22D3EE]" />
+                                                                                )}
+                                                                            </button>
+                                                                        );
+                                                                    }
+                                                                )}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                )}
+                                                    )}
                                             </div>
                                         </div>
                                     )}
@@ -432,10 +474,12 @@ export function ContactSection() {
 
                             <button
                                 type="button"
-                                onClick={() => setIsHumanChecked((prev) => !prev)}
+                                onClick={() =>
+                                    setIsHumanChecked((prev) => !prev)
+                                }
                                 className={`flex items-center justify-between rounded-2xl border px-4 py-3.5 text-left transition duration-200 ${
                                     isHumanChecked
-                                        ? "border-white/20 bg-white/[0.06]"
+                                        ? "border-[#22D3EE]/25 bg-[#22D3EE]/10"
                                         : "border-white/10 bg-black/20 hover:border-white/15 hover:bg-black/25"
                                 }`}
                             >
@@ -443,7 +487,7 @@ export function ContactSection() {
                                     <span
                                         className={`flex h-5 w-5 items-center justify-center rounded-md border transition duration-200 ${
                                             isHumanChecked
-                                                ? "border-white bg-white text-black"
+                                                ? "border-[#22D3EE] bg-[#22D3EE] text-black"
                                                 : "border-white/20 bg-white/[0.03] text-transparent"
                                         }`}
                                     >
@@ -454,6 +498,7 @@ export function ContactSection() {
                                         <p className="text-sm font-medium text-white">
                                             Ben robot değilim
                                         </p>
+
                                         <p className="mt-0.5 text-xs text-white/35">
                                             Mesaj göndermeden önce onaylayın.
                                         </p>
@@ -463,7 +508,7 @@ export function ContactSection() {
                                 <ShieldCheck
                                     className={`h-5 w-5 transition duration-200 ${
                                         isHumanChecked
-                                            ? "text-white/70"
+                                            ? "text-[#22D3EE]"
                                             : "text-white/25"
                                     }`}
                                 />
@@ -493,8 +538,10 @@ export function ContactSection() {
                                 const Icon = item.icon;
 
                                 const content = (
-                                    <div className="group flex h-full items-start gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.035] p-5 transition duration-300 hover:border-white/15 hover:bg-white/[0.055]">
-                                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-black/20 text-white/55 transition duration-300 group-hover:text-white">
+                                    <div className="group flex h-full items-start gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.035] p-5 transition duration-300 hover:border-white/15 hover:bg-white/[0.045]">
+                                        <div
+                                            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-white/10 ${item.iconBg} ${item.iconColor} transition duration-300`}
+                                        >
                                             <Icon className="h-5 w-5" />
                                         </div>
 
@@ -545,7 +592,7 @@ export function ContactSection() {
                             className="flex min-h-[420px] flex-1 flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.035]"
                         >
                             <div className="flex items-start gap-4 p-5">
-                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-black/20 text-white/55">
+                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-[#FACC15]/12 text-[#FACC15]">
                                     <MapPin className="h-5 w-5" />
                                 </div>
 

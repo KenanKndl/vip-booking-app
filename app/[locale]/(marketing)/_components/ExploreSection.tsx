@@ -6,7 +6,6 @@ import { Car, Handshake, ArrowRight } from "lucide-react";
 import { FaInstagram, FaYoutube, FaTripadvisor, FaGoogle } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 
-// Sadece stil, ikon ve URL konfigürasyonlarını tutuyoruz
 const exploreConfig = [
     {
         key: "vehicles",
@@ -34,7 +33,7 @@ const socialLinks = [
 ];
 
 const featureChipClass =
-    "cursor-pointer select-none rounded-full px-3 py-1.5 text-sm font-medium text-black/55 transition-all duration-300 hover:bg-[#0d0d0d] hover:text-white";
+    "cursor-pointer select-none rounded-full bg-black/[0.03] px-3 py-1.5 text-xs font-medium text-black/55 transition-all duration-300 hover:bg-[#0d0d0d] hover:text-white sm:text-sm";
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -57,8 +56,8 @@ export function ExploreSection() {
     const t = useTranslations("ExploreSection");
 
     return (
-        <section id="explore" className="px-6 py-28 lg:px-8 lg:py-40">
-            <div className="mx-auto grid max-w-7xl gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+        <section id="explore" className="px-4 py-20 sm:px-6 sm:py-24 lg:px-8 lg:py-40">
+            <div className="mx-auto grid max-w-7xl gap-10 sm:gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-14">
                 <motion.div
                     initial={{ opacity: 0, y: 18 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -66,16 +65,16 @@ export function ExploreSection() {
                     transition={{ duration: 0.8, ease: "easeOut" }}
                     className="lg:sticky lg:top-32 lg:pt-6"
                 >
-                    <h2 className="max-w-2xl text-4xl font-semibold tracking-tight text-black md:text-5xl lg:text-6xl">
+                    <h2 className="max-w-2xl text-3xl font-semibold tracking-tight text-black sm:text-4xl md:text-5xl lg:text-6xl">
                         {t("titlePart1")}
                         <span className="text-black/45">{t("titlePart2")}</span>
                     </h2>
 
-                    <p className="mt-6 max-w-lg text-base leading-8 text-black/55 md:text-lg">
+                    <p className="mt-5 max-w-lg text-sm leading-7 text-black/55 sm:mt-6 sm:text-base sm:leading-8 md:text-lg">
                         {t("description")}
                     </p>
 
-                    <div className="mt-8 flex flex-wrap gap-1">
+                    <div className="mt-7 flex flex-wrap gap-2 sm:mt-8">
                         <span className={featureChipClass}>{t("chips.chip1")}</span>
                         <span className={featureChipClass}>{t("chips.chip2")}</span>
                         <span className={featureChipClass}>{t("chips.chip3")}</span>
@@ -96,9 +95,9 @@ export function ExploreSection() {
                             <motion.div variants={itemVariants} key={item.key}>
                                 <Link
                                     href={item.href}
-                                    className={`group block rounded-[1.75rem] border border-black/10 bg-white px-6 py-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md ${item.hoverBorder}`}
+                                    className={`group block rounded-[1.5rem] border border-black/10 bg-white px-4 py-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:rounded-[1.75rem] sm:px-6 sm:py-6 ${item.hoverBorder}`}
                                 >
-                                    <div className="flex items-start gap-4">
+                                    <div className="flex items-start gap-3.5 sm:gap-4">
                                         <div
                                             className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[1.1rem] ${item.iconBg}`}
                                         >
@@ -107,7 +106,7 @@ export function ExploreSection() {
 
                                         <div className="min-w-0 flex-1">
                                             <div className="flex items-start justify-between gap-4 pt-0.5">
-                                                <h3 className="text-2xl font-semibold tracking-tight text-black md:text-[1.7rem] md:leading-tight">
+                                                <h3 className="text-xl font-semibold tracking-tight text-black sm:text-2xl md:text-[1.7rem] md:leading-tight">
                                                     {t(`${item.key}.title`)}
                                                 </h3>
                                             </div>
@@ -117,14 +116,13 @@ export function ExploreSection() {
                                             </p>
 
                                             <div className="mt-5 grid gap-2">
-                                                {/* Detayları json'dan çekiyoruz */}
                                                 {[1, 2, 3].map((num) => (
                                                     <div
                                                         key={num}
-                                                        className="flex items-center gap-2 text-sm font-medium text-black/45"
+                                                        className="flex items-start gap-2 text-sm font-medium leading-6 text-black/45"
                                                     >
-                                                        <span className="h-1.5 w-1.5 rounded-full bg-black/25" />
-                                                        {t(`${item.key}.details.detail${num}`)}
+                                                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-black/25" />
+                                                        <span>{t(`${item.key}.details.detail${num}`)}</span>
                                                     </div>
                                                 ))}
                                             </div>
@@ -141,15 +139,15 @@ export function ExploreSection() {
                     })}
 
                     <motion.div variants={itemVariants}>
-                        <div className="group rounded-[1.75rem] border border-black/10 bg-[#111111] px-6 py-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#C084FC]/40 hover:shadow-md">
-                            <div className="flex items-start gap-4">
+                        <div className="group rounded-[1.5rem] border border-black/10 bg-[#111111] px-4 py-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#C084FC]/40 hover:shadow-md sm:rounded-[1.75rem] sm:px-6 sm:py-6">
+                            <div className="flex items-start gap-3.5 sm:gap-4">
                                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[1.1rem] bg-[#C084FC]/15">
                                     <FaInstagram className="h-5 w-5 text-[#C084FC]" />
                                 </div>
 
                                 <div className="min-w-0 flex-1">
                                     <div className="flex items-start justify-between gap-4 pt-0.5">
-                                        <h3 className="text-2xl font-semibold tracking-tight text-white md:text-[1.7rem] md:leading-tight">
+                                        <h3 className="text-xl font-semibold tracking-tight text-white sm:text-2xl md:text-[1.7rem] md:leading-tight">
                                             {t("social.title")}
                                         </h3>
 
@@ -166,10 +164,10 @@ export function ExploreSection() {
                                         {[1, 2, 3].map((num) => (
                                             <div
                                                 key={num}
-                                                className="flex items-center gap-2 text-sm font-medium text-white/45"
+                                                className="flex items-start gap-2 text-sm font-medium leading-6 text-white/45"
                                             >
-                                                <span className="h-1.5 w-1.5 rounded-full bg-white/25" />
-                                                {t(`social.details.detail${num}`)}
+                                                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/25" />
+                                                <span>{t(`social.details.detail${num}`)}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -185,7 +183,7 @@ export function ExploreSection() {
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     title={item.name}
-                                                    className="flex h-9 w-9 items-center justify-center rounded-[0.9rem] bg-white/8 text-white/55 transition-all duration-300 hover:bg-white hover:text-black"
+                                                    className="flex h-10 w-10 items-center justify-center rounded-[0.95rem] bg-white/8 text-white/55 transition-all duration-300 hover:bg-white hover:text-black sm:h-9 sm:w-9 sm:rounded-[0.9rem]"
                                                 >
                                                     <Icon className="h-4 w-4" />
                                                 </Link>

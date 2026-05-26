@@ -130,6 +130,7 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
         };
 
         window.addEventListener("keydown", handleKeyDown);
+
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [selectedIndex, showNext, showPrev]);
 
@@ -161,7 +162,7 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
         <>
             <section
                 id="gallery"
-                className="min-h-screen bg-[#0d0d0d] px-5 pb-20 pt-14 text-white sm:px-6 lg:px-8 lg:pb-28 lg:pt-20"
+                className="min-h-screen bg-[#0d0d0d] px-4 pb-16 pt-28 text-white sm:px-6 sm:pb-20 lg:px-8 lg:pb-28 lg:pt-32"
             >
                 <motion.div
                     variants={pageVariants}
@@ -170,11 +171,11 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
                     className="mx-auto max-w-7xl"
                 >
                     <motion.div variants={fadeUpVariants} className="max-w-3xl">
-                        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/35">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/35 sm:text-xs sm:tracking-[0.35em]">
                             {t("subtitle")}
                         </p>
 
-                        <h1 className="mt-5 max-w-4xl text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                        <h1 className="mt-4 max-w-4xl text-3xl font-semibold tracking-tight text-white sm:mt-5 sm:text-5xl lg:text-6xl">
                             {t("titlePart1")}{" "}
                             <span className="text-white/45">
                                 {t("titlePart2")}
@@ -184,9 +185,9 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
 
                     <motion.div
                         variants={fadeUpVariants}
-                        className="mt-10 flex flex-col gap-4 border-t border-white/10 pt-6 lg:flex-row lg:items-center lg:justify-between"
+                        className="mt-8 flex flex-col gap-4 border-t border-white/10 pt-5 sm:mt-10 sm:pt-6 lg:flex-row lg:items-center lg:justify-between"
                     >
-                        <div className="overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                        <div className="-mx-4 overflow-x-auto px-4 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:px-0">
                             <div className="flex w-max items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] p-1.5">
                                 {categoryKeys.map((catKey) => {
                                     const isActive =
@@ -199,7 +200,7 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
                                             onClick={() =>
                                                 handleCategoryChange(catKey)
                                             }
-                                            className={`rounded-full px-5 py-2.5 text-sm font-medium transition-colors duration-200 ${
+                                            className={`rounded-full px-4 py-2.5 text-sm font-medium transition-colors duration-200 sm:px-5 ${
                                                 isActive
                                                     ? "bg-white text-black"
                                                     : "text-white/50 hover:bg-white/[0.06] hover:text-white"
@@ -221,7 +222,7 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
                         </div>
                     </motion.div>
 
-                    <div className="mt-10">
+                    <div className="mt-8 sm:mt-10">
                         {filteredImages.length > 0 ? (
                             <motion.div
                                 key={activeCategoryKey}
@@ -239,7 +240,7 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
                                             setDirection(0);
                                             setSelectedIndex(index);
                                         }}
-                                        className="group overflow-hidden rounded-[1.5rem] border border-white/[0.08] bg-white/[0.025] text-left transition duration-300 hover:border-white/15 hover:bg-white/[0.04]"
+                                        className="group overflow-hidden rounded-[1.35rem] border border-white/[0.08] bg-white/[0.025] text-left transition duration-300 active:scale-[0.99] hover:border-white/15 hover:bg-white/[0.04] sm:rounded-[1.5rem]"
                                     >
                                         <div className="relative aspect-[4/3] overflow-hidden">
                                             <img
@@ -249,14 +250,14 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
                                                 className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.025]"
                                             />
 
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent opacity-70 transition-opacity duration-300 group-hover:opacity-85" />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-75 transition-opacity duration-300 group-hover:opacity-85" />
 
-                                            <div className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-black/25 text-white/75 opacity-0 backdrop-blur-md transition-all duration-300 group-hover:opacity-100 group-hover:bg-white group-hover:text-black">
+                                            <div className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-black/30 text-white/75 opacity-100 backdrop-blur-md transition-all duration-300 group-hover:bg-white group-hover:text-black sm:right-4 sm:top-4 md:opacity-0 md:group-hover:opacity-100">
                                                 <Maximize2 className="h-3.5 w-3.5" />
                                             </div>
 
-                                            <div className="absolute inset-x-0 bottom-0 p-4">
-                                                <span className="inline-flex rounded-full bg-black/25 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/70 backdrop-blur-md">
+                                            <div className="absolute inset-x-0 bottom-0 p-3.5 sm:p-4">
+                                                <span className="inline-flex rounded-full bg-black/30 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/70 backdrop-blur-md">
                                                     {t(
                                                         `categories.${img.categoryKey}`
                                                     )}
@@ -273,7 +274,7 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
                         ) : (
                             <motion.div
                                 variants={fadeUpVariants}
-                                className="flex min-h-[360px] flex-col items-center justify-center rounded-[1.75rem] border border-white/10 bg-white/[0.03] px-6 text-center"
+                                className="flex min-h-[300px] flex-col items-center justify-center rounded-[1.5rem] border border-white/10 bg-white/[0.03] px-5 text-center sm:min-h-[360px] sm:rounded-[1.75rem] sm:px-6"
                             >
                                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/[0.05] text-white/25">
                                     <ImageIcon className="h-7 w-7" />
@@ -300,7 +301,7 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2 }}
                         onClick={() => setSelectedIndex(null)}
-                        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 px-4 py-5 backdrop-blur-md sm:px-6"
+                        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 px-3 py-4 backdrop-blur-md sm:px-6 sm:py-5"
                     >
                         <button
                             type="button"
@@ -308,7 +309,7 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
                                 e.stopPropagation();
                                 setSelectedIndex(null);
                             }}
-                            className="absolute right-4 top-4 z-[120] flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-black/25 text-white/70 backdrop-blur-md transition hover:border-white/20 hover:bg-white hover:text-black sm:right-6 sm:top-6"
+                            className="absolute right-3 top-3 z-[120] flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-black/35 text-white/75 backdrop-blur-md transition active:scale-[0.96] hover:border-white/20 hover:bg-white hover:text-black sm:right-6 sm:top-6"
                             aria-label="Close gallery image"
                         >
                             <X className="h-4 w-4" />
@@ -344,9 +345,9 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
 
                         <div
                             onClick={(e) => e.stopPropagation()}
-                            className="flex max-h-full w-full max-w-6xl flex-col"
+                            className="flex max-h-[calc(100svh-2rem)] w-full max-w-6xl flex-col"
                         >
-                            <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-[1.5rem] bg-white/[0.03]">
+                            <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-[1.25rem] bg-white/[0.03] sm:rounded-[1.5rem]">
                                 <AnimatePresence
                                     initial={false}
                                     custom={direction}
@@ -365,12 +366,12 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
                                             duration: 0.22,
                                             ease: "easeOut",
                                         }}
-                                        className="max-h-[72vh] w-full object-contain"
+                                        className="max-h-[62svh] w-full object-contain sm:max-h-[72vh]"
                                     />
                                 </AnimatePresence>
                             </div>
 
-                            <div className="mt-4 flex items-center justify-between gap-4">
+                            <div className="mt-3 flex items-center justify-between gap-4 sm:mt-4">
                                 <div className="min-w-0">
                                     <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/35">
                                         {t(
@@ -378,7 +379,7 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
                                         )}
                                     </p>
 
-                                    <h3 className="mt-1 truncate text-base font-medium text-white">
+                                    <h3 className="mt-1 truncate text-sm font-medium text-white sm:text-base">
                                         {currentImage.title}
                                     </h3>
                                 </div>
@@ -397,7 +398,7 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
                                     <button
                                         type="button"
                                         onClick={showPrev}
-                                        className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white/70 backdrop-blur-md transition active:scale-[0.96]"
+                                        className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white/70 backdrop-blur-md transition active:scale-[0.96]"
                                         aria-label="Previous image"
                                     >
                                         <ChevronLeft className="h-[18px] w-[18px]" />
@@ -416,7 +417,7 @@ export function GallerySection({ dbImages = [] }: { dbImages: any[] }) {
                                     <button
                                         type="button"
                                         onClick={showNext}
-                                        className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white/70 backdrop-blur-md transition active:scale-[0.96]"
+                                        className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white/70 backdrop-blur-md transition active:scale-[0.96]"
                                         aria-label="Next image"
                                     >
                                         <ChevronRight className="h-[18px] w-[18px]" />

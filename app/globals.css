@@ -143,3 +143,26 @@
 .animate-trusted-scroll {
   animation: trusted-scroll 24s linear infinite;
 }
+
+.floating-whatsapp-button {
+  transition:
+          bottom 300ms ease,
+          opacity 300ms ease,
+          transform 300ms ease;
+}
+
+body.has-reservation-mobile-cta .floating-whatsapp-button {
+  bottom: calc(5.75rem + env(safe-area-inset-bottom));
+}
+
+body.has-open-modal .floating-whatsapp-button {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.92);
+}
+
+@media (min-width: 1024px) {
+  body.has-reservation-mobile-cta .floating-whatsapp-button {
+    bottom: 2rem;
+  }
+}

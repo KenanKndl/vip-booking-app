@@ -3,14 +3,11 @@ import { FaWhatsapp } from "react-icons/fa";
 import { prisma } from "@/lib/prisma";
 
 export async function FloatingWhatsAppButton() {
-    // Veritabanından admin ayarlarını çekiyoruz
     const settings = await prisma.adminSettings.findFirst();
-    
-    // Veritabanında numara varsa onu al, yoksa geçici bir numara kullan
+
     const rawNumber = settings?.whatsappNumber || "+905000000000";
-    
-    // WhatsApp linkinin bozulmaması için boşlukları ve gereksiz karakterleri temizliyoruz (sadece rakamlar ve + kalır)
-    const cleanNumber = rawNumber.replace(/[^0-9+]/g, '');
+
+    const cleanNumber = rawNumber.replace(/[^0-9+]/g, "");
 
     return (
         <Link
@@ -18,7 +15,7 @@ export async function FloatingWhatsAppButton() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="WhatsApp ile iletişime geç"
-            className="fixed bottom-6 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/30 transition-transform duration-300 hover:scale-105 md:right-8 md:bottom-8"
+            className="floating-whatsapp-button fixed bottom-6 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/30 transition-all duration-300 hover:scale-105 md:bottom-8 md:right-8"
         >
             <FaWhatsapp className="h-7 w-7" />
         </Link>

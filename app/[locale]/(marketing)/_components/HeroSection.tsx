@@ -17,7 +17,6 @@ const trustedNames = [
     "MICE Travel",
 ];
 
-// Metinleri JSON'a taşıdığımız için burada sadece anahtar ve renk yapılandırması tutuyoruz.
 const animatedPhrasesConfig = [
     { key: "phrase1", color: "text-[#FACC15]" },
     { key: "phrase2", color: "text-[#C084FC]" },
@@ -57,8 +56,8 @@ export function HeroSection() {
 
     return (
         <section className="min-h-[100svh] overflow-hidden bg-[#0d0d0d]">
-            <div className="mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-center px-4 pt-24 sm:px-6 sm:pt-28 lg:px-8 lg:pt-32">
-                <div className="relative flex min-h-[520px] items-center justify-center overflow-hidden px-0 pb-12 pt-8 sm:min-h-[560px] sm:px-6 sm:pb-16 sm:pt-10 md:min-h-[580px] md:px-12 md:pb-20 md:pt-12">
+            <div className="mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-center px-4 pt-20 sm:px-6 sm:pt-28 lg:px-8 lg:pt-32">
+                <div className="relative flex min-h-[calc(100svh-5rem)] items-center justify-center overflow-hidden px-0 pb-10 pt-8 sm:min-h-[560px] sm:px-6 sm:pb-16 sm:pt-10 md:min-h-[580px] md:px-12 md:pb-20 md:pt-12">
                     <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center text-center">
                         <motion.div
                             className="flex w-full flex-col items-center gap-5"
@@ -101,7 +100,7 @@ export function HeroSection() {
                             {/* Mobil Başlık */}
                             <motion.h1
                                 variants={itemVariants}
-                                className="block max-w-[22rem] text-[2.45rem] font-bold leading-[1.05] tracking-tight text-white sm:hidden"
+                                className="block max-w-[21rem] text-[2.3rem] font-bold leading-[1.06] tracking-tight text-white sm:hidden"
                             >
                                 <span className="block">
                                     {t("mobileTitlePrefix")}
@@ -134,14 +133,14 @@ export function HeroSection() {
 
                             <motion.p
                                 variants={itemVariants}
-                                className="mt-5 max-w-[21rem] text-sm leading-7 text-white/55 sm:max-w-2xl sm:text-base md:text-lg"
+                                className="mt-3 max-w-[21rem] text-sm leading-7 text-white/55 sm:mt-5 sm:max-w-2xl sm:text-base md:text-lg"
                             >
                                 {t("description")}
                             </motion.p>
 
                             <motion.div
                                 variants={itemVariants}
-                                className="mt-6 flex w-full max-w-xs flex-col items-center justify-center gap-3 sm:max-w-none sm:flex-row sm:gap-4"
+                                className="mt-5 flex w-full max-w-xs flex-col items-center justify-center gap-3 sm:mt-6 sm:max-w-none sm:flex-row sm:gap-4"
                             >
                                 <Button
                                     asChild
@@ -160,8 +159,8 @@ export function HeroSection() {
                             </motion.div>
                         </motion.div>
 
-                        <div className="mt-10 w-full max-w-3xl sm:mt-12">
-                            <p className="mb-6 text-[10px] font-medium tracking-[0.22em] text-white/50 uppercase sm:mb-8 sm:text-xs sm:tracking-[0.25em]">
+                        <div className="mt-8 w-full max-w-3xl sm:mt-12">
+                            <p className="mb-5 text-[10px] font-medium tracking-[0.2em] text-white/50 uppercase sm:mb-8 sm:text-xs sm:tracking-[0.25em]">
                                 {t("trusted.prefix")}
                                 <span className="bg-[#C084FC]/60 px-2 py-0.5 font-bold text-white">
                                     {t("trusted.highlight")}
@@ -177,7 +176,7 @@ export function HeroSection() {
                                     {[...trustedNames, ...trustedNames].map((name, index) => (
                                         <span
                                             key={`${name}-${index}`}
-                                            className="whitespace-nowrap text-lg font-semibold tracking-wide text-white/35 sm:text-2xl md:text-3xl"
+                                            className="whitespace-nowrap text-base font-semibold tracking-wide text-white/35 sm:text-2xl md:text-3xl"
                                         >
                                             {name}
                                         </span>

@@ -67,7 +67,7 @@ const inputClass =
     "w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm text-white outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus:border-white/30 focus:bg-black/30";
 
 const labelClass =
-    "pl-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/45";
+    "pl-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/45 sm:tracking-[0.18em]";
 
 const contactFormSchema = z.object({
     name: z
@@ -319,7 +319,7 @@ export function ContactSection() {
     return (
         <section
             id="contact"
-            className="min-h-screen bg-[#0d0d0d] px-5 pb-20 pt-14 text-white sm:px-6 lg:px-8 lg:pb-28 lg:pt-20"
+            className="min-h-screen bg-[#0d0d0d] px-4 pb-16 pt-28 text-white sm:px-6 sm:pb-20 lg:px-8 lg:pb-28 lg:pt-32"
         >
             <motion.div
                 variants={pageVariants}
@@ -328,29 +328,29 @@ export function ContactSection() {
                 className="mx-auto max-w-7xl"
             >
                 <motion.div variants={fadeUpVariants} className="max-w-3xl">
-                    <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/35">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/35 sm:text-xs sm:tracking-[0.35em]">
                         {t("subTitle")}
                     </p>
 
-                    <h1 className="mt-5 max-w-4xl text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                    <h1 className="mt-4 max-w-4xl text-3xl font-semibold tracking-tight text-white sm:mt-5 sm:text-5xl lg:text-6xl">
                         {t("titlePart1")}{" "}
                         <span className="text-white/45">
                             {t("titlePart2")}
                         </span>
                     </h1>
 
-                    <p className="mt-5 max-w-2xl text-sm leading-7 text-white/45 sm:text-base">
+                    <p className="mt-4 max-w-2xl text-sm leading-7 text-white/45 sm:mt-5 sm:text-base">
                         {t("description")}
                     </p>
                 </motion.div>
 
-                <div className="mt-10 grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch">
+                <div className="mt-8 grid gap-5 sm:mt-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch lg:gap-6">
                     <motion.div
                         variants={fadeUpVariants}
-                        className="h-full rounded-[1.75rem] border border-white/10 bg-white/[0.035] p-5 sm:p-6 lg:p-8"
+                        className="h-full rounded-[1.5rem] border border-white/10 bg-white/[0.035] p-4 sm:rounded-[1.75rem] sm:p-6 lg:p-8"
                     >
-                        <div className="mb-7 flex flex-col gap-2 border-b border-white/10 pb-6">
-                            <h2 className="text-2xl font-semibold tracking-tight text-white">
+                        <div className="mb-6 flex flex-col gap-2 border-b border-white/10 pb-5 sm:mb-7 sm:pb-6">
+                            <h2 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
                                 {t("form.submitButton")}
                             </h2>
 
@@ -455,7 +455,7 @@ export function ContactSection() {
                                                     (prev) => !prev
                                                 )
                                             }
-                                            className="flex min-w-[126px] items-center justify-center gap-2 border-r border-white/10 px-4 py-3.5 text-sm font-semibold text-white/70 outline-none transition hover:bg-white/[0.04] hover:text-white"
+                                            className="flex min-w-[108px] items-center justify-center gap-1.5 border-r border-white/10 px-3 py-3.5 text-sm font-semibold text-white/70 outline-none transition hover:bg-white/[0.04] hover:text-white sm:min-w-[126px] sm:gap-2 sm:px-4"
                                         >
                                             <span
                                                 className={`${selectedPhoneCountry.flagClass} bg-transparent text-base outline-none shadow-none`}
@@ -486,12 +486,12 @@ export function ContactSection() {
                                             )}
                                             inputMode="numeric"
                                             autoComplete="tel"
-                                            className="w-full bg-transparent px-4 py-3.5 text-sm text-white outline-none placeholder:text-white/25"
+                                            className="min-w-0 w-full bg-transparent px-3 py-3.5 text-sm text-white outline-none placeholder:text-white/25 sm:px-4"
                                         />
                                     </div>
 
                                     {isPhoneDropdownOpen && (
-                                        <div className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111111] sm:w-[360px]">
+                                        <div className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111111] shadow-2xl shadow-black/40 sm:w-[360px]">
                                             <div className="border-b border-white/10 p-2">
                                                 <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-3">
                                                     <Search className="h-4 w-4 shrink-0 text-[#22D3EE]/70" />
@@ -510,7 +510,7 @@ export function ContactSection() {
                                                 </div>
                                             </div>
 
-                                            <div className="max-h-[320px] overflow-y-auto p-1.5">
+                                            <div className="max-h-[52svh] overflow-y-auto p-1.5 sm:max-h-[320px]">
                                                 {!hasCountryResults && (
                                                     <div className="px-4 py-8 text-center text-sm text-white/40">
                                                         Ülke bulunamadı.
@@ -666,7 +666,7 @@ export function ContactSection() {
                                         setMessage(e.target.value)
                                     }
                                     placeholder={t("form.messagePlaceholder")}
-                                    className={`min-h-[150px] w-full resize-none rounded-2xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm text-white shadow-none outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus-visible:border-white/30 focus-visible:bg-black/30 focus-visible:ring-0 focus-visible:ring-offset-0 ${
+                                    className={`min-h-[140px] w-full resize-none rounded-2xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm text-white shadow-none outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus-visible:border-white/30 focus-visible:bg-black/30 focus-visible:ring-0 focus-visible:ring-offset-0 sm:min-h-[150px] ${
                                         hasTriedSubmit && fieldErrors.message
                                             ? "border-red-400/50 focus-visible:border-red-400/60"
                                             : ""
@@ -685,7 +685,7 @@ export function ContactSection() {
                                         </p>
                                     )}
 
-                                    <p className="text-xs text-white/25">
+                                    <p className="shrink-0 text-xs text-white/25">
                                         {message.trim().length}/1000
                                     </p>
                                 </div>
@@ -696,15 +696,15 @@ export function ContactSection() {
                                 onClick={() =>
                                     setIsHumanChecked((prev) => !prev)
                                 }
-                                className={`flex items-center justify-between rounded-2xl border px-4 py-3.5 text-left transition duration-200 ${
+                                className={`flex items-center justify-between gap-4 rounded-2xl border px-4 py-3.5 text-left transition duration-200 ${
                                     isHumanChecked
                                         ? "border-[#22D3EE]/25 bg-[#22D3EE]/10"
                                         : "border-white/10 bg-black/20 hover:border-white/15 hover:bg-black/25"
                                 }`}
                             >
-                                <div className="flex items-center gap-3">
+                                <div className="flex min-w-0 items-center gap-3">
                                     <span
-                                        className={`flex h-5 w-5 items-center justify-center rounded-md border transition duration-200 ${
+                                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition duration-200 ${
                                             isHumanChecked
                                                 ? "border-[#22D3EE] bg-[#22D3EE] text-black"
                                                 : "border-white/20 bg-white/[0.03] text-transparent"
@@ -713,7 +713,7 @@ export function ContactSection() {
                                         <Check className="h-3.5 w-3.5" />
                                     </span>
 
-                                    <div>
+                                    <div className="min-w-0">
                                         <p className="text-sm font-medium text-white">
                                             Ben robot değilim
                                         </p>
@@ -725,7 +725,7 @@ export function ContactSection() {
                                 </div>
 
                                 <ShieldCheck
-                                    className={`h-5 w-5 transition duration-200 ${
+                                    className={`h-5 w-5 shrink-0 transition duration-200 ${
                                         isHumanChecked
                                             ? "text-[#22D3EE]"
                                             : "text-white/25"
@@ -768,7 +768,7 @@ export function ContactSection() {
                                 const Icon = item.icon;
 
                                 const content = (
-                                    <div className="group flex h-full items-start gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.035] p-5 transition duration-300 hover:border-white/15 hover:bg-white/[0.045]">
+                                    <div className="group flex h-full items-start gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.035] p-4 transition duration-300 hover:border-white/15 hover:bg-white/[0.045] sm:p-5">
                                         <div
                                             className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-white/10 ${item.iconBg} ${item.iconColor} transition duration-300`}
                                         >
@@ -819,9 +819,9 @@ export function ContactSection() {
 
                         <motion.div
                             variants={cardVariants}
-                            className="flex min-h-[420px] flex-1 flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.035]"
+                            className="flex min-h-[360px] flex-1 flex-col overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.035] sm:min-h-[420px] sm:rounded-[1.75rem]"
                         >
-                            <div className="flex items-start gap-4 p-5">
+                            <div className="flex items-start gap-4 p-4 sm:p-5">
                                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-[#FACC15]/12 text-[#FACC15]">
                                     <MapPin className="h-5 w-5" />
                                 </div>
@@ -837,7 +837,7 @@ export function ContactSection() {
                                 </div>
                             </div>
 
-                            <div className="relative min-h-[280px] flex-1 border-t border-white/10 bg-black/20 sm:min-h-[320px] lg:min-h-[360px]">
+                            <div className="relative min-h-[240px] flex-1 border-t border-white/10 bg-black/20 sm:min-h-[320px] lg:min-h-[360px]">
                                 <iframe
                                     src="https://maps.google.com/maps?q=G%C3%BCzelyurt%20Mah.%2026065%20sokak%20No:6%20Aksu%20Antalya&t=&z=15&ie=UTF8&iwloc=&output=embed"
                                     width="100%"

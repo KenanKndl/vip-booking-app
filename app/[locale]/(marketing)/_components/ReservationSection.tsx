@@ -279,13 +279,13 @@ const inputClass =
     "w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm text-white outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus:border-white/30 focus:bg-black/30";
 
 const contactInputClass =
-    "h-12 w-full rounded-2xl border border-white/10 bg-black/20 px-4 text-sm text-white outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus:border-white/30 focus:bg-black/30";
+    "h-12 w-full min-w-0 rounded-2xl border border-white/10 bg-black/20 px-4 text-sm text-white outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus:border-white/30 focus:bg-black/30";
 
 const contactTextareaClass =
     "min-h-[112px] w-full resize-none rounded-2xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm leading-6 text-white outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus:border-white/30 focus:bg-black/30";
 
 const labelClass =
-    "flex items-center gap-2 pl-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/45";
+    "flex items-center gap-2 pl-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/45 sm:text-xs sm:tracking-[0.18em]";
 
 export function ReservationSection({
                                        dbRoutes = [],
@@ -488,6 +488,22 @@ export function ReservationSection({
     const isReservationFormValid = reservationValidationResult.success;
 
     useEffect(() => {
+        const shouldHideWhatsApp =
+            step === 3 || isBabySeatModalOpen || isVehicleExtraModalOpen;
+
+        if (!shouldHideWhatsApp) {
+            document.body.classList.remove("has-reservation-mobile-cta");
+            return;
+        }
+
+        document.body.classList.add("has-reservation-mobile-cta");
+
+        return () => {
+            document.body.classList.remove("has-reservation-mobile-cta");
+        };
+    }, [step, isBabySeatModalOpen, isVehicleExtraModalOpen]);
+
+    useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (
                 countryDropdownRef.current &&
@@ -509,10 +525,13 @@ export function ReservationSection({
         if (!hasOpenModal) return;
 
         const previousOverflow = document.body.style.overflow;
+
         document.body.style.overflow = "hidden";
+        document.body.classList.add("has-open-modal");
 
         return () => {
             document.body.style.overflow = previousOverflow;
+            document.body.classList.remove("has-open-modal");
         };
     }, [isBabySeatModalOpen, isVehicleExtraModalOpen]);
 
@@ -659,7 +678,7 @@ export function ReservationSection({
     return (
         <section
             id="booking"
-            className="min-h-screen bg-[#0d0d0d] px-5 pb-20 pt-14 text-white sm:px-6 lg:px-8 lg:pb-28 lg:pt-20"
+            className="min-h-screen bg-[#0d0d0d] px-4 pb-40 pt-28 text-white sm:px-6 sm:pb-24 lg:px-8 lg:pb-28 lg:pt-32"
         >
             <motion.div
                 variants={pageVariants}
@@ -668,16 +687,16 @@ export function ReservationSection({
                 className="mx-auto max-w-6xl"
             >
                 <motion.div variants={fadeUpVariants} className="max-w-3xl">
-                    <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/35">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/35 sm:text-xs sm:tracking-[0.35em]">
                         Rezervasyon
                     </p>
 
-                    <h1 className="mt-5 text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                    <h1 className="mt-4 text-3xl font-semibold tracking-tight text-white sm:mt-5 sm:text-5xl lg:text-6xl">
                         Transferinizi{" "}
                         <span className="text-white/45">planlayın.</span>
                     </h1>
 
-                    <p className="mt-5 max-w-2xl text-sm leading-7 text-white/45 sm:text-base">
+                    <p className="mt-4 max-w-2xl text-sm leading-7 text-white/45 sm:mt-5 sm:text-base">
                         Güzergahınızı, yolcu bilgilerinizi ve araç seçiminizi
                         birkaç adımda tamamlayın.
                     </p>
@@ -685,11 +704,11 @@ export function ReservationSection({
 
                 <motion.div
                     variants={fadeUpVariants}
-                    className="mt-10 rounded-[2rem] border border-white/10 bg-white/[0.035] p-4 sm:p-5 lg:p-6"
+                    className="mt-8 rounded-[1.5rem] border border-white/10 bg-white/[0.035] p-3 sm:mt-10 sm:rounded-[2rem] sm:p-5 lg:p-6"
                 >
                     <StepHeader step={step} t={t} />
 
-                    <div className="mt-8 rounded-[1.5rem] border border-white/10 bg-black/20 p-5 sm:p-6 lg:p-8">
+                    <div className="mt-5 rounded-[1.25rem] border border-white/10 bg-black/20 p-4 sm:mt-8 sm:rounded-[1.5rem] sm:p-6 lg:p-8">
                         <AnimatePresence mode="wait">
                             {step === 1 && (
                                 <motion.div
@@ -701,7 +720,7 @@ export function ReservationSection({
                                     className="grid gap-8"
                                 >
                                     <div>
-                                        <h2 className="text-2xl font-semibold tracking-tight text-white">
+                                        <h2 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
                                             {t("step1.title")}
                                         </h2>
                                         <p className="mt-2 text-sm leading-6 text-white/45">
@@ -734,7 +753,7 @@ export function ReservationSection({
                                         />
                                     </div>
 
-                                    <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+                                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                                         <div className="grid gap-2">
                                             <label className={labelClass}>
                                                 <Calendar className="h-3.5 w-3.5" />
@@ -788,7 +807,7 @@ export function ReservationSection({
                                         />
                                     </div>
 
-                                    <div className="flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                                    <div className="flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between sm:pt-6">
                                         <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3">
                                             <Users className="h-4 w-4 text-[#C084FC]" />
                                             <p className="text-sm text-white/45">
@@ -802,7 +821,7 @@ export function ReservationSection({
                                         <button
                                             type="button"
                                             onClick={handleFindVehicles}
-                                            className="group flex h-12 items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-black transition duration-300 hover:bg-white/90 active:scale-[0.99]"
+                                            className="group flex h-12 w-full items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-black transition duration-300 hover:bg-white/90 active:scale-[0.99] sm:w-auto"
                                         >
                                             {t("step1.findButton")}
                                             <ChevronRight className="h-4 w-4 transition duration-300 group-hover:translate-x-0.5" />
@@ -822,7 +841,7 @@ export function ReservationSection({
                                 >
                                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                                         <div>
-                                            <h2 className="text-2xl font-semibold tracking-tight text-white">
+                                            <h2 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
                                                 {t("step2.title")}
                                             </h2>
 
@@ -843,7 +862,7 @@ export function ReservationSection({
                                         </button>
                                     </div>
 
-                                    <div className="rounded-[1.25rem] border border-white/10 bg-white/[0.03] p-4">
+                                    <div className="rounded-[1.25rem] border border-white/10 bg-white/[0.03] p-3.5 sm:p-4">
                                         <div className="flex items-start gap-3">
                                             <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#FACC15]/20 bg-[#FACC15]/10 text-[#FACC15]">
                                                 <Info className="h-4 w-4" />
@@ -865,7 +884,7 @@ export function ReservationSection({
                                     </div>
 
                                     {availablePricings.length > 0 ? (
-                                        <div className="grid gap-5">
+                                        <div className="grid gap-4 sm:gap-5">
                                             {availablePricings.map(
                                                 (pricing: any) => {
                                                     const car = pricing.vehicle;
@@ -932,7 +951,7 @@ export function ReservationSection({
                                 >
                                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                                         <div>
-                                            <h2 className="text-2xl font-semibold tracking-tight text-white">
+                                            <h2 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
                                                 {t("step3.title")}
                                             </h2>
                                             <p className="mt-2 text-sm leading-6 text-white/45">
@@ -952,7 +971,7 @@ export function ReservationSection({
                                     </div>
 
                                     <div className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
-                                        <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+                                        <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.03] p-4 sm:rounded-[1.5rem] sm:p-6">
                                             <div className="grid gap-4">
                                                 <div className="grid gap-2">
                                                     <label className={labelClass}>
@@ -1011,7 +1030,7 @@ export function ReservationSection({
                                                                         (prev) => !prev
                                                                     )
                                                                 }
-                                                                className="flex min-w-[126px] items-center justify-center gap-2 border-r border-white/10 px-4 py-3.5 text-sm font-semibold text-white/70 outline-none transition hover:bg-white/[0.04] hover:text-white"
+                                                                className="flex min-w-[106px] items-center justify-center gap-1.5 border-r border-white/10 px-3 py-3.5 text-sm font-semibold text-white/70 outline-none transition hover:bg-white/[0.04] hover:text-white sm:min-w-[126px] sm:gap-2 sm:px-4"
                                                             >
                                                                 <span
                                                                     className={`${selectedPhoneCountry.flagClass} bg-transparent text-base outline-none shadow-none`}
@@ -1041,12 +1060,12 @@ export function ReservationSection({
                                                                 )}
                                                                 inputMode="numeric"
                                                                 autoComplete="tel"
-                                                                className="w-full bg-transparent px-4 py-3.5 text-sm text-white outline-none placeholder:text-white/25"
+                                                                className="min-w-0 w-full bg-transparent px-3 py-3.5 text-sm text-white outline-none placeholder:text-white/25 sm:px-4"
                                                             />
                                                         </div>
 
                                                         {isPhoneDropdownOpen && (
-                                                            <div className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111111] sm:w-[360px]">
+                                                            <div className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111111] shadow-2xl shadow-black/40 sm:w-[360px]">
                                                                 <div className="border-b border-white/10 p-2">
                                                                     <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-3">
                                                                         <Search className="h-4 w-4 shrink-0 text-[#22D3EE]/70" />
@@ -1065,7 +1084,7 @@ export function ReservationSection({
                                                                     </div>
                                                                 </div>
 
-                                                                <div className="max-h-[320px] overflow-y-auto p-1.5">
+                                                                <div className="max-h-[52svh] overflow-y-auto p-1.5 sm:max-h-[320px]">
                                                                     {!hasCountryResults && (
                                                                         <div className="px-4 py-8 text-center text-sm text-white/40">
                                                                             Ülke bulunamadı.
@@ -1341,7 +1360,7 @@ export function ReservationSection({
                                                     birkaç ek not bırakın.
                                                 </p>
 
-                                                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                                                <div className="mt-3 grid gap-3 sm:mt-4 sm:grid-cols-2">
                                                     <AddonToggle
                                                         icon={Baby}
                                                         tone="purple"
@@ -1380,7 +1399,7 @@ export function ReservationSection({
 
                                         </div>
 
-                                        <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.035] p-5 sm:p-6 lg:sticky lg:top-6">
+                                        <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:rounded-[1.5rem] sm:p-6 lg:sticky lg:top-24">
                                             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
                                                 {t("step3.summaryTitle")}
                                             </p>
@@ -1490,7 +1509,7 @@ export function ReservationSection({
                                                 </p>
                                             </div>
 
-                                            <div className="mt-6 border-t border-white/10 pt-6 pb-1">
+                                            <div className="mt-6 hidden border-t border-white/10 pb-1 pt-6 lg:block">
                                                 <p className="mb-4 text-sm leading-6 text-white/40">
                                                     Bilgilerinizi kontrol edip rezervasyonunuzu tek adımda tamamlayabilirsiniz.
                                                 </p>
@@ -1545,6 +1564,35 @@ export function ReservationSection({
                 }
                 onClose={() => setIsVehicleExtraModalOpen(false)}
             />
+
+            {step === 3 && selectedPricing && (
+                <div className="fixed inset-x-0 bottom-0 z-[80] border-t border-white/10 bg-[#0d0d0d]/95 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur-xl lg:hidden">
+                    <div className="mx-auto flex max-w-6xl items-center gap-3">
+                        <div className="min-w-0 flex-1">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/35">
+                                Toplam
+                            </p>
+                            <p className="truncate text-xl font-semibold tracking-tight text-[#FACC15]">
+                                {getFormattedPrice(reservationTotalPrice)}
+                            </p>
+                        </div>
+
+                        <button
+                            type="button"
+                            disabled={!isReservationFormValid || isSubmitting}
+                            onClick={handleCompleteReservation}
+                            className={`inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full px-5 text-xs font-semibold transition duration-300 ${
+                                isReservationFormValid && !isSubmitting
+                                    ? "bg-white text-black active:scale-[0.98]"
+                                    : "cursor-not-allowed bg-white/30 text-black/45"
+                            }`}
+                        >
+                            {isSubmitting ? t("step3.loadingButton") : t("step3.submitButton")}
+                            <CheckCircle2 className="h-4 w-4" />
+                        </button>
+                    </div>
+                </div>
+            )}
         </section>
     );
 }
@@ -1557,58 +1605,95 @@ function StepHeader({ step, t }: { step: number; t: any }) {
     ];
 
     return (
-        <div className="grid gap-3 sm:grid-cols-3">
-            {steps.map((item) => {
-                const isActive = step === item.number;
-                const isCompleted = step > item.number;
+        <div className="grid gap-3">
+            <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/20 p-2 sm:hidden">
+                {steps.map((item, index) => {
+                    const isActive = step === item.number;
+                    const isCompleted = step > item.number;
 
-                return (
-                    <div
-                        key={item.number}
-                        className={`flex items-center gap-3 rounded-2xl border px-4 py-3 transition duration-300 ${
-                            isActive
-                                ? "border-white/20 bg-white/[0.06]"
-                                : isCompleted
-                                    ? "border-white/10 bg-white/[0.035]"
-                                    : "border-white/10 bg-black/20"
-                        }`}
-                    >
-                        <div
-                            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-sm font-semibold transition duration-300 ${
-                                isCompleted
-                                    ? "border-[#22D3EE] bg-[#22D3EE] text-black"
-                                    : isActive
-                                        ? "border-[#22D3EE]/35 bg-[#22D3EE]/10 text-[#22D3EE]"
-                                        : "border-white/10 bg-black/20 text-white/35"
-                            }`}
-                        >
-                            {isCompleted ? (
-                                <Check className="h-4 w-4" />
-                            ) : (
-                                item.number
+                    return (
+                        <div key={item.number} className="flex flex-1 items-center">
+                            <div className="flex flex-1 flex-col items-center gap-1.5">
+                                <div
+                                    className={`flex h-9 w-9 items-center justify-center rounded-full border text-sm font-semibold transition duration-300 ${
+                                        isCompleted
+                                            ? "border-[#22D3EE] bg-[#22D3EE] text-black"
+                                            : isActive
+                                                ? "border-[#22D3EE]/35 bg-[#22D3EE]/10 text-[#22D3EE]"
+                                                : "border-white/10 bg-white/[0.03] text-white/35"
+                                    }`}
+                                >
+                                    {isCompleted ? <Check className="h-4 w-4" /> : item.number}
+                                </div>
+                                <p
+                                    className={`max-w-[80px] truncate text-[10px] font-medium ${
+                                        isActive || isCompleted ? "text-white" : "text-white/35"
+                                    }`}
+                                >
+                                    {item.label}
+                                </p>
+                            </div>
+
+                            {index < steps.length - 1 && (
+                                <div
+                                    className={`mx-1 h-px flex-1 ${
+                                        step > item.number ? "bg-[#22D3EE]/70" : "bg-white/10"
+                                    }`}
+                                />
                             )}
                         </div>
+                    );
+                })}
+            </div>
 
-                        <div>
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/35">
-                                Adım {item.number}
-                            </p>
-                            <p
-                                className={`mt-0.5 text-sm font-medium ${
-                                    isActive || isCompleted
-                                        ? "text-white"
-                                        : "text-white/45"
+            <div className="hidden gap-3 sm:grid sm:grid-cols-3">
+                {steps.map((item) => {
+                    const isActive = step === item.number;
+                    const isCompleted = step > item.number;
+
+                    return (
+                        <div
+                            key={item.number}
+                            className={`flex items-center gap-3 rounded-2xl border px-4 py-3 transition duration-300 ${
+                                isActive
+                                    ? "border-white/20 bg-white/[0.06]"
+                                    : isCompleted
+                                        ? "border-white/10 bg-white/[0.035]"
+                                        : "border-white/10 bg-black/20"
+                            }`}
+                        >
+                            <div
+                                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-sm font-semibold transition duration-300 ${
+                                    isCompleted
+                                        ? "border-[#22D3EE] bg-[#22D3EE] text-black"
+                                        : isActive
+                                            ? "border-[#22D3EE]/35 bg-[#22D3EE]/10 text-[#22D3EE]"
+                                            : "border-white/10 bg-black/20 text-white/35"
                                 }`}
                             >
-                                {item.label}
-                            </p>
+                                {isCompleted ? <Check className="h-4 w-4" /> : item.number}
+                            </div>
+
+                            <div className="min-w-0">
+                                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/35">
+                                    Adım {item.number}
+                                </p>
+                                <p
+                                    className={`mt-0.5 truncate text-sm font-medium ${
+                                        isActive || isCompleted ? "text-white" : "text-white/45"
+                                    }`}
+                                >
+                                    {item.label}
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                );
-            })}
+                    );
+                })}
+            </div>
         </div>
     );
 }
+
 
 function SearchSelect({
                           label,
@@ -1656,14 +1741,14 @@ function SearchSelect({
     return (
         <div ref={wrapperRef} className="relative grid gap-2">
             <label className={labelClass}>
-                <Icon className="h-3.5 w-3.5" />
-                {label}
+                <Icon className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">{label}</span>
             </label>
 
             <button
                 type="button"
                 onClick={() => setIsOpen((prev) => !prev)}
-                className={`flex h-[50px] w-full items-center justify-between gap-3 rounded-2xl border border-white/10 bg-black/20 px-4 text-left text-sm outline-none transition duration-200 hover:border-white/15 hover:bg-black/25 ${
+                className={`flex h-12 w-full items-center justify-between gap-3 rounded-2xl border border-white/10 bg-black/20 px-4 text-left text-sm outline-none transition duration-200 hover:border-white/15 hover:bg-black/25 sm:h-[50px] ${
                     value ? "text-white" : "text-white/30"
                 }`}
             >
@@ -1676,10 +1761,10 @@ function SearchSelect({
             </button>
 
             {isOpen && (
-                <div className="absolute left-0 top-[calc(100%+0.5rem)] z-40 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111111]">
+                <div className="absolute left-0 top-[calc(100%+0.5rem)] z-40 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111111] shadow-2xl shadow-black/40">
                     <div className="border-b border-white/10 p-2">
                         <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-3">
-                            <Search className="h-4 w-4 text-[#22D3EE]/70" />
+                            <Search className="h-4 w-4 shrink-0 text-[#22D3EE]/70" />
                             <input
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
@@ -1690,7 +1775,7 @@ function SearchSelect({
                         </div>
                     </div>
 
-                    <div className="max-h-[260px] overflow-y-auto p-1.5">
+                    <div className="max-h-[52svh] overflow-y-auto p-1.5 sm:max-h-[260px]">
                         {filteredOptions.length > 0 ? (
                             filteredOptions.map((option) => {
                                 const isActive = value === option;
@@ -1700,11 +1785,9 @@ function SearchSelect({
                                         key={option}
                                         type="button"
                                         onClick={() => handleSelect(option)}
-                                        className="flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-white transition hover:bg-white/10"
+                                        className="flex min-h-11 w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-white transition hover:bg-white/10"
                                     >
-                                        <span className="truncate">
-                                            {option}
-                                        </span>
+                                        <span className="truncate">{option}</span>
 
                                         {isActive && (
                                             <Check className="h-4 w-4 shrink-0 text-[#22D3EE]" />
@@ -1723,6 +1806,7 @@ function SearchSelect({
         </div>
     );
 }
+
 
 function PassengerCounter({
                               label,
@@ -1747,7 +1831,7 @@ function PassengerCounter({
     return (
         <div className="grid gap-2">
             <label className="flex items-center justify-between gap-3 pl-1">
-                <span className="flex min-w-0 items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/45">
+                <span className="flex min-w-0 items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/45 sm:text-xs sm:tracking-[0.18em]">
                     <Icon className="h-3.5 w-3.5 shrink-0" />
                     <span className="truncate">{label}</span>
                 </span>
@@ -1757,12 +1841,13 @@ function PassengerCounter({
                 </span>
             </label>
 
-            <div className="flex h-[50px] items-center justify-between rounded-2xl border border-white/10 bg-black/20 px-2">
+            <div className="flex h-12 items-center justify-between rounded-2xl border border-white/10 bg-black/20 px-2 sm:h-[50px]">
                 <button
                     type="button"
                     onClick={decrease}
                     disabled={value <= min}
                     className="flex h-9 w-9 items-center justify-center rounded-full text-white/55 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-25"
+                    aria-label={`${label} azalt`}
                 >
                     <Minus className="h-4 w-4" />
                 </button>
@@ -1776,6 +1861,7 @@ function PassengerCounter({
                     onClick={increase}
                     disabled={value >= max}
                     className="flex h-9 w-9 items-center justify-center rounded-full text-white/55 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-25"
+                    aria-label={`${label} artır`}
                 >
                     <Plus className="h-4 w-4" />
                 </button>
@@ -1783,6 +1869,7 @@ function PassengerCounter({
         </div>
     );
 }
+
 
 function VehicleCard({
                          pricing,
@@ -1800,8 +1887,8 @@ function VehicleCard({
     onSelect: (tripType: TripType) => void;
 }) {
     return (
-        <article className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.03] transition duration-300 hover:border-white/15 hover:bg-white/[0.045] lg:grid lg:grid-cols-[0.9fr_1.1fr]">
-            <div className="relative min-h-[230px] overflow-hidden bg-black/30 lg:min-h-[320px]">
+        <article className="overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/[0.03] transition duration-300 hover:border-white/15 hover:bg-white/[0.045] sm:rounded-[1.5rem] lg:grid lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="relative min-h-[210px] overflow-hidden bg-black/30 sm:min-h-[240px] lg:min-h-[320px]">
                 {car.imageUrl ? (
                     <img
                         src={car.imageUrl}
@@ -1819,9 +1906,9 @@ function VehicleCard({
                 </div>
             </div>
 
-            <div className="flex flex-col justify-between gap-8 p-5 sm:p-6">
+            <div className="flex flex-col justify-between gap-6 p-4 sm:gap-8 sm:p-6">
                 <div>
-                    <h3 className="text-2xl font-semibold tracking-tight text-white">
+                    <h3 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
                         {car.name}
                     </h3>
 
@@ -1835,12 +1922,12 @@ function VehicleCard({
                     </div>
 
                     {Array.isArray(car.features) && car.features.length > 0 && (
-                        <div className="mt-6">
+                        <div className="mt-5 sm:mt-6">
                             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
                                 {t("step2.featuresLabel")}
                             </p>
 
-                            <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                            <ul className="mt-3 grid gap-3 sm:mt-4 sm:grid-cols-2">
                                 {car.features.map(
                                     (feature: string, index: number) => (
                                         <li
@@ -1859,7 +1946,7 @@ function VehicleCard({
                     )}
                 </div>
 
-                <div className="border-t border-white/10 pt-5">
+                <div className="border-t border-white/10 pt-4 sm:pt-5">
                     <div className="mb-4 flex items-start gap-3 rounded-2xl border border-white/10 bg-black/20 p-3">
                         <Route className="mt-0.5 h-4 w-4 shrink-0 text-[#22D3EE]" />
                         <p className="text-xs leading-5 text-white/45">
@@ -1966,7 +2053,7 @@ function AddonSelectionModal({
         <AnimatePresence>
             {isOpen && (
                 <motion.div
-                    className="fixed inset-0 z-[100] flex items-end justify-center bg-black/70 px-4 py-5 backdrop-blur-sm sm:items-center sm:py-8"
+                    className="fixed inset-0 z-[100] flex items-end justify-center bg-black/70 px-3 py-3 backdrop-blur-sm sm:items-center sm:px-4 sm:py-8"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -1978,9 +2065,9 @@ function AddonSelectionModal({
                         exit={{ opacity: 0, y: 18, scale: 0.98 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
                         onMouseDown={(event) => event.stopPropagation()}
-                        className="w-full max-w-4xl overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#121212]"
+                        className="flex max-h-[calc(100svh-1.5rem)] w-full max-w-4xl flex-col overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#121212] sm:max-h-[calc(100vh-4rem)] sm:rounded-[1.75rem]"
                     >
-                        <div className="flex items-start justify-between gap-5 border-b border-white/10 bg-white/[0.035] p-5 sm:p-6">
+                        <div className="flex items-start justify-between gap-4 border-b border-white/10 bg-white/[0.035] p-4 sm:gap-5 sm:p-6">
                             <div>
                                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
                                     Ek talep
@@ -2003,7 +2090,7 @@ function AddonSelectionModal({
                             </button>
                         </div>
 
-                        <div className="max-h-[min(62vh,540px)] overflow-y-auto p-5 sm:p-6">
+                        <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">
                             <div className="grid gap-3 md:grid-cols-2">
                                 {items.map((item) => {
                                     const quantity = quantities[item.id] || 0;
@@ -2093,7 +2180,7 @@ function AddonSelectionModal({
                             </div>
                         </div>
 
-                        <div className="border-t border-white/10 bg-white/[0.025] p-5 sm:p-6">
+                        <div className="border-t border-white/10 bg-white/[0.025] p-4 sm:p-6">
                             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                                 <div>
                                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
@@ -2157,7 +2244,7 @@ function AddonToggle({
         <button
             type="button"
             onClick={onClick}
-            className={`rounded-2xl border p-4 text-left transition duration-300 ${
+            className={`min-h-[112px] rounded-2xl border p-4 text-left transition duration-300 ${
                 active
                     ? toneClass.active
                     : "border-white/10 bg-black/20 hover:border-white/15 hover:bg-white/[0.04]"
@@ -2188,10 +2275,11 @@ function AddonToggle({
 function SummaryRow({ label, value }: { label: string; value: string }) {
     return (
         <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-3 last:border-b-0 last:pb-0">
-            <span className="text-sm text-white/40">{label}</span>
-            <span className="text-right text-sm font-medium text-white">
+            <span className="shrink-0 text-sm text-white/40">{label}</span>
+            <span className="min-w-0 break-words text-right text-sm font-medium text-white">
                 {value}
             </span>
         </div>
     );
 }
+

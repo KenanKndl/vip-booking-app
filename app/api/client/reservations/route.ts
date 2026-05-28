@@ -32,6 +32,35 @@ export async function POST(request: Request) {
     }
     // ==========================================
 
+    // ==========================================
+    // 💰 GÜVENLİ FİYAT HESAPLAMASI (BACKEND)
+    // ==========================================
+    // 1. Temel rota ve araç fiyatını bul
+    const pricing = await prisma.routePricing.findUnique({
+        where: {
+            routeId_vehicleId: {
+                routeId: body.routeId,
+                vehicleId: body.vehicleId
+            }
+        }
+    });
+    
+    let calculatedPrice = pricing?.price || 0;
+
+    // 2. Gidiş-Dönüş ise fiyatı ikiye katla
+    if (body.tripType === 'ROUND_TRIP') {
+        calculatedPrice *= 2;
+    }
+
+    // 3. Ekstraları topla (Ekstra Fiyatı * Adet)
+    if (body.selectedExtras && Array.isArray(body.selectedExtras)) {
+        const extrasTotal = body.selectedExtras.reduce((sum: number, item: any) => {
+            return sum + (Number(item.priceAtThatTime) * Number(item.quantity));
+        }, 0);
+        calculatedPrice += extrasTotal;
+    }
+    // ==========================================
+
     // Benzersiz bir PNR kodu üret (Örn: VIP4892)
     const pnrCode = "VIP" + Math.floor(1000 + Math.random() * 9000);
 
@@ -52,8 +81,19 @@ export async function POST(request: Request) {
         customerName: body.customerName,
         customerPhone: body.customerPhone,
         customerEmail: body.customerEmail,
-        totalPrice: Number(body.totalPrice),
-        currency: body.currency,
+
+        // YENİ: Arayüzden gelen adres ve detaylar
+        tripType: body.tripType || 'ONE_WAY',
+        pickupAddress: body.pickupAddress || null,
+        dropoffAddress: body.dropoffAddress || null,
+        extraNotes: body.extraNotes || null,
+        
+        // YENİ: Seçilen ekstraların JSON olarak kaydedilmesi
+        selectedExtras: body.selectedExtras || [], 
+
+        // GÜNCELLEME: Frontend'den gelen fiyat yerine backend'in güvenli hesapladığı fiyat
+        totalPrice: calculatedPrice, 
+        currency: body.currency || 'EUR',
         status: 'PENDING'
       }
     });

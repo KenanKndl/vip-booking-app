@@ -23,13 +23,26 @@ enum GalleryCategory {
   SPECIAL
 }
 
+// YENİ: Ekstra ürünlerin kategorileri
+enum ExtraCategory {
+  GENERAL
+  BABY_SEAT
+}
+
+// YENİ: Yolculuk Tipi (Tek Yön / Gidiş-Dönüş)
+enum TripType {
+  ONE_WAY
+  ROUND_TRIP
+}
+
 // 3. Sistem Ayarları (Admin Panel İçin)
 model AdminSettings {
   id             String   @id @default(uuid())
   adminEmail     String   @unique
   hashedPassword String
   whatsappNumber String
-  // Yeni Döviz Kurları
+  
+  // Döviz Kurları
   eurToTl        Decimal  @default(35.0)
   eurToUsd       Decimal  @default(1.08)
   updatedAt      DateTime @updatedAt
@@ -48,6 +61,7 @@ model Route {
   reservations Reservation[]
 
   @@unique([pickup, dropoff])
+  @@index([isActive]) // Optimizasyon: Sadece aktif rotaları çekerken hızlandırır
 }
 
 // 5. Filo ve Araçlar
@@ -57,12 +71,17 @@ model Vehicle {
   type          String
   pax           Int
   luggage       Int
-  features      String[]
+  
+  // GÜNCELLEME: Çoklu dil destekli JSON (Örn: [{ "id": "f1", "tr": "Wifi", "en": "Wifi" }])
+  features      Json
+  
   imageUrl      String?
   isActive      Boolean  @default(true)
   
   prices        RoutePricing[]
   reservations  Reservation[]
+
+  @@index([isActive]) // Optimizasyon: Aktif araç listelemeyi hızlandırır
 }
 
 // 6. Fiyatlandırma (Her zaman EURO bazlı)
@@ -79,7 +98,23 @@ model RoutePricing {
   @@unique([routeId, vehicleId])
 }
 
-// 7. Rezervasyonlar
+// YENİ 7. Ekstralar ve Donanımlar (Upselling)
+model Extra {
+  id          String        @id @default(uuid())
+  // JSON Formatı: { "tr": "Puset", "en": "Stroller", "de": "Kinderwagen", "ru": "Коляска" }
+  name        Json          
+  price       Float         // Euro bazlı ekstra fiyatı
+  imageUrl    String?       // Ekstra ürün görseli
+  isActive    Boolean       @default(true)
+  category    ExtraCategory // GENERAL veya BABY_SEAT
+  
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([isActive, category]) // Optimizasyon: Müşteri ekranında kategoriye göre aktif ekstraları anında getirir
+}
+
+// 8. Rezervasyonlar
 model Reservation {
   id              String   @id @default(uuid())
   pnrCode         String   @unique
@@ -95,16 +130,25 @@ model Reservation {
   route           Route    @relation(fields: [routeId], references: [id])
   vehicle         Vehicle  @relation(fields: [vehicleId], references: [id])
 
+  // İletişim Bilgileri
   customerName    String
   customerPhone   String
   customerEmail   String
 
-  flightNumber    String?
-  needsBabySeat   Boolean  @default(false)
-  welcomeSign     String?
-  extraNotes      String?
+  // YENİ: Arayüzden Gelen Transfer Detayları
+  tripType        TripType @default(ONE_WAY) // Tek Yön / Gidiş Dönüş
+  pickupAddress   String?  // Alınacak adres / hotel adı
+  dropoffAddress  String?  // Bırakılacak adres / hotel adı
 
-  totalPrice      Float
+  // Ekstra Notlar ve Detaylar
+  extraNotes      String?  // Rezervasyon notu (Uçuş numarası vb.)
+
+  // YENİ: Seçilen Ekstraların JSON formatında tutulması
+  // Format: [{ "extraId": "uuid", "quantity": 2, "priceAtThatTime": 15 }]
+  selectedExtras  Json?
+
+  // Ödeme ve Durum
+  totalPrice      Float    // Araç Fiyatı + (Ekstra Fiyatları Toplamı)
   currency        String   @default("EUR")
   status          ReservationStatus @default(PENDING)
   
@@ -115,10 +159,12 @@ model Reservation {
   @@index([status, pickupDateTime])
 }
 
-// 8. Galeri Sistemi
+// 9. Galeri Sistemi
 model GalleryImage {
-  id        String        @id @default(uuid())
+  id        String          @id @default(uuid())
   url       String
   category  GalleryCategory
   createdAt DateTime        @default(now())
+
+  @@index([category]) // Optimizasyon: Galeride kategoriye tıklandığında hızlı filtreleme sağlar
 }

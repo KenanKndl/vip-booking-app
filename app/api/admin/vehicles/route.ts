@@ -48,7 +48,6 @@ export async function POST(request: Request) {
   
   try {
     const body = await request.json();
-    // GÜNCELLEME: imageUrl verisini de gelen paketten (body) çıkartıyoruz
     const { name, type, pax, luggage, features, isActive, imageUrl } = body;
 
     if (!name || !type || !pax || !luggage) {
@@ -62,11 +61,12 @@ export async function POST(request: Request) {
       data: {
         name,
         type,
-        pax: parseInt(pax),
-        luggage: parseInt(luggage),
-        features: features || [],
+        pax: Number(pax), // GÜNCELLEME: ParseInt yerine Number ile daha güvenli tip dönüşümü
+        luggage: Number(luggage),
+        // GÜNCELLEME: Artık string array değil, doğrudan JSON obje dizisi olarak veritabanına işlenecek (Çoklu dil)
+        features: features || [], 
         isActive: isActive !== undefined ? isActive : true,
-        imageUrl: imageUrl || null, // GÜNCELLEME: Görseli veritabanına kaydediyoruz
+        imageUrl: imageUrl || null, 
       },
     });
 
@@ -100,8 +100,9 @@ export async function PUT(request: Request) {
       data: {
         name,
         type,
-        pax: parseInt(pax),
-        luggage: parseInt(luggage),
+        pax: Number(pax),
+        luggage: Number(luggage),
+        // GÜNCELLEME: Frontend'den gelen güncel çoklu dil JSON donanım verisi
         features: features || [],
         isActive: isActive !== undefined ? isActive : true,
         ...(imageUrl && { imageUrl }), // Sadece yeni görsel geldiyse günceller, yoksa eski görsel kalır

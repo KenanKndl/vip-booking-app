@@ -24,7 +24,7 @@ import {
     Route,
     Info,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useCurrencyStore } from "@/store/useCurrencyStore";
 import {
     allPhoneCountries,
@@ -128,93 +128,6 @@ function formatPhoneInput(value: string) {
     )} ${digits.slice(10)}`;
 }
 
-
-const babySeatOptions: AddonItem[] = [
-    {
-        id: "infant-seat",
-        title: "Puset",
-        ageRange: "0 - 1 Yaş",
-        description: "Yeni doğan ve küçük bebekler için güvenli puset koltuk.",
-        priceEur: 8,
-        icon: Baby,
-    },
-    {
-        id: "child-seat",
-        title: "Bebek Koltuğu",
-        ageRange: "1 - 8 Yaş",
-        description: "Çocuk yolcular için kemer destekli standart bebek koltuğu.",
-        priceEur: 8,
-        icon: Baby,
-    },
-    {
-        id: "booster-seat",
-        title: "Yükseltici",
-        ageRange: "4 - 8 Yaş",
-        description: "Daha büyük çocuklar için yükseltici koltuk desteği.",
-        priceEur: 8,
-        icon: Baby,
-    },
-];
-
-const vehicleExtraOptions: AddonItem[] = [
-    {
-        id: "celebration-package",
-        title: "Kutlama Paketi",
-        description: "Araç içi özel karşılama, küçük süsleme ve kutlama sunumu.",
-        priceEur: 60,
-        icon: Plus,
-    },
-    {
-        id: "flower",
-        title: "Çiçek",
-        description: "Araç içerisinde hazır bekleyen çiçek karşılama paketi.",
-        priceEur: 25,
-        icon: Plus,
-    },
-    {
-        id: "efes-special-50cl",
-        title: "Bira (Efes Özel Seri 50cl)",
-        description: "Yolculuk başlangıcı için araç içinde soğuk servis edilir.",
-        priceEur: 4,
-        icon: Plus,
-    },
-    {
-        id: "fruit-plate",
-        title: "Meyve Tabağı",
-        description: "Araç içinde sunulmak üzere hazırlanmış taze meyve tabağı.",
-        priceEur: 12,
-        icon: Plus,
-    },
-    {
-        id: "chivas-35cl",
-        title: "Viski (Chivas 35cl)",
-        description: "Araç içi premium içecek seçeneği olarak eklenir.",
-        priceEur: 46,
-        icon: Plus,
-    },
-    {
-        id: "vodka-absolute-35cl",
-        title: "Vodka (Absolute 35cl)",
-        description: "Araç içi premium içecek seçeneği olarak eklenir.",
-        priceEur: 38,
-        icon: Plus,
-    },
-    {
-        id: "champagne-wine-70cl",
-        title: "Şampanya / Şarap (70cl)",
-        description: "Özel günler için araç içinde hazır bekleyen içecek seçeneği.",
-        priceEur: 34,
-        icon: Plus,
-    },
-    {
-        id: "redbull",
-        title: "Enerji İçeceği (Redbull)",
-        description: "Yolculuk için soğuk enerji içeceği seçeneği.",
-        priceEur: 4,
-        icon: Plus,
-    },
-];
-
 const createInitialAddonQuantities = (items: AddonItem[]) =>
     items.reduce<AddonQuantities>((acc, item) => {
         acc[item.id] = 0;
@@ -288,10 +201,11 @@ const labelClass =
     "flex items-center gap-2 pl-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/45 sm:text-xs sm:tracking-[0.18em]";
 
 export function ReservationSection({
-                                       dbRoutes = [],
-                                       exchangeRates,
-                                   }: ReservationSectionProps) {
+    dbRoutes = [],
+    exchangeRates,
+}: ReservationSectionProps) {
     const t = useTranslations("ReservationSection");
+    const locale = useLocale();
 
     const [step, setStep] = useState(1);
 
@@ -324,16 +238,44 @@ export function ReservationSection({
     const [pickupAddressDetail, setPickupAddressDetail] = useState("");
     const [dropoffAddressDetail, setDropoffAddressDetail] = useState("");
     const [reservationNote, setReservationNote] = useState("");
-    const [babySeatQuantities, setBabySeatQuantities] = useState<AddonQuantities>(
-        () => createInitialAddonQuantities(babySeatOptions)
-    );
-    const [vehicleExtraQuantities, setVehicleExtraQuantities] =
-        useState<AddonQuantities>(() =>
-            createInitialAddonQuantities(vehicleExtraOptions)
-        );
+    const [babySeatOptions, setBabySeatOptions] = useState<AddonItem[]>([]);
+    const [vehicleExtraOptions, setVehicleExtraOptions] = useState<AddonItem[]>([]);
+    const [babySeatQuantities, setBabySeatQuantities] = useState<AddonQuantities>({});
+    const [vehicleExtraQuantities, setVehicleExtraQuantities] = useState<AddonQuantities>({});
     const [isBabySeatModalOpen, setIsBabySeatModalOpen] = useState(false);
     const [isVehicleExtraModalOpen, setIsVehicleExtraModalOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        const fetchExtras = async () => {
+            try {
+                const res = await fetch("/api/client/extras");
+                const json = await res.json();
+                if (json.success && json.data) {
+                    const bSeats: AddonItem[] = [];
+                    const vExtras: AddonItem[] = [];
+                    json.data.forEach((extra: any) => {
+                        const item: AddonItem = {
+                            id: extra.id,
+                            title: extra.name?.[locale] || extra.name?.tr || "Ekstra",
+                            description: extra.name?.en || "", // İsteğe bağlı açıklama
+                            priceEur: extra.price,
+                            icon: extra.category === "BABY_SEAT" ? Baby : Plus,
+                        };
+                        if (extra.category === "BABY_SEAT") bSeats.push(item);
+                        else vExtras.push(item);
+                    });
+                    setBabySeatOptions(bSeats);
+                    setVehicleExtraOptions(vExtras);
+                    setBabySeatQuantities(createInitialAddonQuantities(bSeats));
+                    setVehicleExtraQuantities(createInitialAddonQuantities(vExtras));
+                }
+            } catch (err) {
+                console.error("Ekstralar yüklenemedi", err);
+            }
+        };
+        fetchExtras();
+    }, [locale]);
 
     const pickupLocations = useMemo(
         () => Array.from(new Set(dbRoutes.map((r) => r.pickup))).filter(Boolean),
@@ -630,27 +572,26 @@ export function ReservationSection({
             customerName: name.trim(),
             customerPhone: `${selectedPhoneCountry.dialCode}${phoneDigits}`,
             customerEmail: email.trim(),
-            pickupAddressDetail: pickupAddressDetail.trim(),
-            dropoffAddressDetail: dropoffAddressDetail.trim(),
-            reservationNote: reservationNote.trim(),
-            babySeatSelections: selectedBabySeatItems.map((item) => ({
-                id: item.id,
-                title: item.title,
-                quantity: item.quantity,
-                priceEur: item.priceEur,
-            })),
-            vehicleExtraSelections: selectedVehicleExtraItems.map((item) => ({
-                id: item.id,
-                title: item.title,
-                quantity: item.quantity,
-                priceEur: item.priceEur,
-            })),
-            wantsBabySeat: hasBabySeatSelection,
-            wantsExtraInVehicle: hasVehicleExtraSelection,
-            addonTotalPriceEur: addonTotalPrice,
-            totalPrice: Number(finalPrice.toFixed(2)),
-            currency: finalCurrencySymbol,
-            tripType: selectedTripType,
+            
+            // 🔴 ÇÖZÜM BURADA: İsimleri veritabanı şemasıyla (Backend ile) birebir eşleştirdik
+            pickupAddress: pickupAddressDetail.trim(),
+            dropoffAddress: dropoffAddressDetail.trim(),
+            extraNotes: reservationNote.trim(),
+            
+            // (Ekstralar zaten başarılı çalışıyor, dokunmuyoruz)
+            selectedExtras: [
+                ...selectedBabySeatItems.map((item) => ({
+                    extraId: item.id,
+                    quantity: item.quantity,
+                    priceAtThatTime: item.priceEur,
+                })),
+                ...selectedVehicleExtraItems.map((item) => ({
+                    extraId: item.id,
+                    quantity: item.quantity,
+                    priceAtThatTime: item.priceEur,
+                }))
+            ],
+            tripType: selectedTripType === "oneWay" ? "ONE_WAY" : "ROUND_TRIP",
         };
 
         try {
@@ -911,6 +852,7 @@ export function ReservationSection({
                                                                 roundTripPrice
                                                             )}
                                                             t={t}
+                                                            locale={locale}
                                                             onSelect={(
                                                                 tripType
                                                             ) =>
@@ -989,12 +931,11 @@ export function ReservationSection({
                                                             "step3.namePlaceholder"
                                                         )}
                                                         autoComplete="name"
-                                                        className={`${contactInputClass} ${
-                                                            hasTriedSubmit &&
+                                                        className={`${contactInputClass} ${hasTriedSubmit &&
                                                             reservationFieldErrors.name
-                                                                ? "border-red-400/50 focus:border-red-400/60"
-                                                                : ""
-                                                        }`}
+                                                            ? "border-red-400/50 focus:border-red-400/60"
+                                                            : ""
+                                                            }`}
                                                     />
 
                                                     {hasTriedSubmit &&
@@ -1016,12 +957,11 @@ export function ReservationSection({
                                                         ref={countryDropdownRef}
                                                     >
                                                         <div
-                                                            className={`flex overflow-hidden rounded-2xl border bg-black/20 transition duration-200 hover:bg-black/25 focus-within:bg-black/30 ${
-                                                                hasTriedSubmit &&
+                                                            className={`flex overflow-hidden rounded-2xl border bg-black/20 transition duration-200 hover:bg-black/25 focus-within:bg-black/30 ${hasTriedSubmit &&
                                                                 reservationFieldErrors.phoneDigits
-                                                                    ? "border-red-400/50 focus-within:border-red-400/60"
-                                                                    : "border-white/10 hover:border-white/15 focus-within:border-white/30"
-                                                            }`}
+                                                                ? "border-red-400/50 focus-within:border-red-400/60"
+                                                                : "border-white/10 hover:border-white/15 focus-within:border-white/30"
+                                                                }`}
                                                         >
                                                             <button
                                                                 type="button"
@@ -1039,11 +979,10 @@ export function ReservationSection({
                                                                     {selectedPhoneCountry.dialCode}
                                                                 </span>
                                                                 <ChevronDown
-                                                                    className={`h-3.5 w-3.5 text-white/35 transition duration-200 ${
-                                                                        isPhoneDropdownOpen
-                                                                            ? "rotate-180"
-                                                                            : ""
-                                                                    }`}
+                                                                    className={`h-3.5 w-3.5 text-white/35 transition duration-200 ${isPhoneDropdownOpen
+                                                                        ? "rotate-180"
+                                                                        : ""
+                                                                        }`}
                                                                 />
                                                             </button>
 
@@ -1224,12 +1163,11 @@ export function ReservationSection({
                                                             "step3.emailPlaceholder"
                                                         )}
                                                         autoComplete="email"
-                                                        className={`${contactInputClass} ${
-                                                            hasTriedSubmit &&
+                                                        className={`${contactInputClass} ${hasTriedSubmit &&
                                                             reservationFieldErrors.email
-                                                                ? "border-red-400/50 focus:border-red-400/60"
-                                                                : ""
-                                                        }`}
+                                                            ? "border-red-400/50 focus:border-red-400/60"
+                                                            : ""
+                                                            }`}
                                                     />
 
                                                     {hasTriedSubmit &&
@@ -1251,8 +1189,8 @@ export function ReservationSection({
                                                     </div>
 
                                                     <span className="hidden text-xs font-medium text-white/30 sm:inline">
-            Opsiyonel bilgiler
-        </span>
+                                                        Opsiyonel bilgiler
+                                                    </span>
                                                 </div>
 
                                                 <div className="mt-4 grid gap-3 md:grid-cols-2">
@@ -1268,12 +1206,11 @@ export function ReservationSection({
                                                                 setPickupAddressDetail(e.target.value)
                                                             }
                                                             placeholder="Otel, lobi, blok veya kapı no"
-                                                            className={`${contactInputClass} ${
-                                                                hasTriedSubmit &&
+                                                            className={`${contactInputClass} ${hasTriedSubmit &&
                                                                 reservationFieldErrors.pickupAddressDetail
-                                                                    ? "border-red-400/50 focus:border-red-400/60"
-                                                                    : ""
-                                                            }`}
+                                                                ? "border-red-400/50 focus:border-red-400/60"
+                                                                : ""
+                                                                }`}
                                                         />
 
                                                         {hasTriedSubmit &&
@@ -1296,12 +1233,11 @@ export function ReservationSection({
                                                                 setDropoffAddressDetail(e.target.value)
                                                             }
                                                             placeholder="Otel, terminal, villa veya adres"
-                                                            className={`${contactInputClass} ${
-                                                                hasTriedSubmit &&
+                                                            className={`${contactInputClass} ${hasTriedSubmit &&
                                                                 reservationFieldErrors.dropoffAddressDetail
-                                                                    ? "border-red-400/50 focus:border-red-400/60"
-                                                                    : ""
-                                                            }`}
+                                                                ? "border-red-400/50 focus:border-red-400/60"
+                                                                : ""
+                                                                }`}
                                                         />
 
                                                         {hasTriedSubmit &&
@@ -1324,17 +1260,16 @@ export function ReservationSection({
                                                             setReservationNote(e.target.value)
                                                         }
                                                         placeholder="Uçuş numarası, özel karşılama notu veya ek talebinizi yazabilirsiniz."
-                                                        className={`min-h-[96px] w-full resize-none rounded-2xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm leading-6 text-white outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus:border-white/30 focus:bg-black/30 ${
-                                                            hasTriedSubmit &&
+                                                        className={`min-h-[96px] w-full resize-none rounded-2xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm leading-6 text-white outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus:border-white/30 focus:bg-black/30 ${hasTriedSubmit &&
                                                             reservationFieldErrors.reservationNote
-                                                                ? "border-red-400/50 focus:border-red-400/60"
-                                                                : ""
-                                                        }`}
+                                                            ? "border-red-400/50 focus:border-red-400/60"
+                                                            : ""
+                                                            }`}
                                                     />
 
                                                     <div className="flex items-center justify-between gap-3 pl-1">
                                                         {hasTriedSubmit &&
-                                                        reservationFieldErrors.reservationNote?.[0] ? (
+                                                            reservationFieldErrors.reservationNote?.[0] ? (
                                                             <p className="text-xs text-red-300">
                                                                 {reservationFieldErrors.reservationNote[0]}
                                                             </p>
@@ -1420,7 +1355,7 @@ export function ReservationSection({
                                                     label="Yolculuk tipi"
                                                     value={
                                                         selectedTripType ===
-                                                        "oneWay"
+                                                            "oneWay"
                                                             ? "Tek yön"
                                                             : "Gidiş dönüş"
                                                     }
@@ -1438,61 +1373,61 @@ export function ReservationSection({
                                             {(pickupAddressDetail ||
                                                 dropoffAddressDetail ||
                                                 reservationNote) && (
-                                                <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
-                                                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
-                                                        Transfer detayı
-                                                    </p>
-                                                    <div className="mt-3 grid gap-3">
-                                                        {pickupAddressDetail && (
-                                                            <SummaryRow
-                                                                label="Alınacak yer"
-                                                                value={pickupAddressDetail}
-                                                            />
-                                                        )}
-                                                        {dropoffAddressDetail && (
-                                                            <SummaryRow
-                                                                label="Bırakılacak yer"
-                                                                value={dropoffAddressDetail}
-                                                            />
-                                                        )}
-                                                        {reservationNote && (
-                                                            <SummaryRow
-                                                                label="Not"
-                                                                value={reservationNote}
-                                                            />
-                                                        )}
+                                                    <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
+                                                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
+                                                            Transfer detayı
+                                                        </p>
+                                                        <div className="mt-3 grid gap-3">
+                                                            {pickupAddressDetail && (
+                                                                <SummaryRow
+                                                                    label="Alınacak yer"
+                                                                    value={pickupAddressDetail}
+                                                                />
+                                                            )}
+                                                            {dropoffAddressDetail && (
+                                                                <SummaryRow
+                                                                    label="Bırakılacak yer"
+                                                                    value={dropoffAddressDetail}
+                                                                />
+                                                            )}
+                                                            {reservationNote && (
+                                                                <SummaryRow
+                                                                    label="Not"
+                                                                    value={reservationNote}
+                                                                />
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            )}
+                                                )}
 
                                             {(hasBabySeatSelection ||
                                                 hasVehicleExtraSelection) && (
-                                                <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
-                                                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
-                                                        Ek talepler
-                                                    </p>
-                                                    <div className="mt-3 grid gap-3">
-                                                        {selectedBabySeatItems.map((item) => (
-                                                            <SummaryRow
-                                                                key={item.id}
-                                                                label={`${item.quantity} x ${item.title}`}
-                                                                value={getFormattedPrice(
-                                                                    item.priceEur * item.quantity
-                                                                )}
-                                                            />
-                                                        ))}
-                                                        {selectedVehicleExtraItems.map((item) => (
-                                                            <SummaryRow
-                                                                key={item.id}
-                                                                label={`${item.quantity} x ${item.title}`}
-                                                                value={getFormattedPrice(
-                                                                    item.priceEur * item.quantity
-                                                                )}
-                                                            />
-                                                        ))}
+                                                    <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
+                                                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
+                                                            Ek talepler
+                                                        </p>
+                                                        <div className="mt-3 grid gap-3">
+                                                            {selectedBabySeatItems.map((item) => (
+                                                                <SummaryRow
+                                                                    key={item.id}
+                                                                    label={`${item.quantity} x ${item.title}`}
+                                                                    value={getFormattedPrice(
+                                                                        item.priceEur * item.quantity
+                                                                    )}
+                                                                />
+                                                            ))}
+                                                            {selectedVehicleExtraItems.map((item) => (
+                                                                <SummaryRow
+                                                                    key={item.id}
+                                                                    label={`${item.quantity} x ${item.title}`}
+                                                                    value={getFormattedPrice(
+                                                                        item.priceEur * item.quantity
+                                                                    )}
+                                                                />
+                                                            ))}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            )}
+                                                )}
 
                                             <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
                                                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
@@ -1518,11 +1453,10 @@ export function ReservationSection({
                                                     type="button"
                                                     disabled={!isReservationFormValid || isSubmitting}
                                                     onClick={handleCompleteReservation}
-                                                    className={`group inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-full px-6 text-sm font-semibold transition duration-300 ${
-                                                        isReservationFormValid && !isSubmitting
-                                                            ? "bg-white text-black hover:bg-white/90 active:scale-[0.99]"
-                                                            : "cursor-not-allowed bg-white/30 text-black/45"
-                                                    }`}
+                                                    className={`group inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-full px-6 text-sm font-semibold transition duration-300 ${isReservationFormValid && !isSubmitting
+                                                        ? "bg-white text-black hover:bg-white/90 active:scale-[0.99]"
+                                                        : "cursor-not-allowed bg-white/30 text-black/45"
+                                                        }`}
                                                 >
                                                     {isSubmitting
                                                         ? t("step3.loadingButton")
@@ -1581,11 +1515,10 @@ export function ReservationSection({
                             type="button"
                             disabled={!isReservationFormValid || isSubmitting}
                             onClick={handleCompleteReservation}
-                            className={`inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full px-5 text-xs font-semibold transition duration-300 ${
-                                isReservationFormValid && !isSubmitting
-                                    ? "bg-white text-black active:scale-[0.98]"
-                                    : "cursor-not-allowed bg-white/30 text-black/45"
-                            }`}
+                            className={`inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full px-5 text-xs font-semibold transition duration-300 ${isReservationFormValid && !isSubmitting
+                                ? "bg-white text-black active:scale-[0.98]"
+                                : "cursor-not-allowed bg-white/30 text-black/45"
+                                }`}
                         >
                             {isSubmitting ? t("step3.loadingButton") : t("step3.submitButton")}
                             <CheckCircle2 className="h-4 w-4" />
@@ -1615,20 +1548,18 @@ function StepHeader({ step, t }: { step: number; t: any }) {
                         <div key={item.number} className="flex flex-1 items-center">
                             <div className="flex flex-1 flex-col items-center gap-1.5">
                                 <div
-                                    className={`flex h-9 w-9 items-center justify-center rounded-full border text-sm font-semibold transition duration-300 ${
-                                        isCompleted
-                                            ? "border-[#22D3EE] bg-[#22D3EE] text-black"
-                                            : isActive
-                                                ? "border-[#22D3EE]/35 bg-[#22D3EE]/10 text-[#22D3EE]"
-                                                : "border-white/10 bg-white/[0.03] text-white/35"
-                                    }`}
+                                    className={`flex h-9 w-9 items-center justify-center rounded-full border text-sm font-semibold transition duration-300 ${isCompleted
+                                        ? "border-[#22D3EE] bg-[#22D3EE] text-black"
+                                        : isActive
+                                            ? "border-[#22D3EE]/35 bg-[#22D3EE]/10 text-[#22D3EE]"
+                                            : "border-white/10 bg-white/[0.03] text-white/35"
+                                        }`}
                                 >
                                     {isCompleted ? <Check className="h-4 w-4" /> : item.number}
                                 </div>
                                 <p
-                                    className={`max-w-[80px] truncate text-[10px] font-medium ${
-                                        isActive || isCompleted ? "text-white" : "text-white/35"
-                                    }`}
+                                    className={`max-w-[80px] truncate text-[10px] font-medium ${isActive || isCompleted ? "text-white" : "text-white/35"
+                                        }`}
                                 >
                                     {item.label}
                                 </p>
@@ -1636,9 +1567,8 @@ function StepHeader({ step, t }: { step: number; t: any }) {
 
                             {index < steps.length - 1 && (
                                 <div
-                                    className={`mx-1 h-px flex-1 ${
-                                        step > item.number ? "bg-[#22D3EE]/70" : "bg-white/10"
-                                    }`}
+                                    className={`mx-1 h-px flex-1 ${step > item.number ? "bg-[#22D3EE]/70" : "bg-white/10"
+                                        }`}
                                 />
                             )}
                         </div>
@@ -1654,22 +1584,20 @@ function StepHeader({ step, t }: { step: number; t: any }) {
                     return (
                         <div
                             key={item.number}
-                            className={`flex items-center gap-3 rounded-2xl border px-4 py-3 transition duration-300 ${
-                                isActive
-                                    ? "border-white/20 bg-white/[0.06]"
-                                    : isCompleted
-                                        ? "border-white/10 bg-white/[0.035]"
-                                        : "border-white/10 bg-black/20"
-                            }`}
+                            className={`flex items-center gap-3 rounded-2xl border px-4 py-3 transition duration-300 ${isActive
+                                ? "border-white/20 bg-white/[0.06]"
+                                : isCompleted
+                                    ? "border-white/10 bg-white/[0.035]"
+                                    : "border-white/10 bg-black/20"
+                                }`}
                         >
                             <div
-                                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-sm font-semibold transition duration-300 ${
-                                    isCompleted
-                                        ? "border-[#22D3EE] bg-[#22D3EE] text-black"
-                                        : isActive
-                                            ? "border-[#22D3EE]/35 bg-[#22D3EE]/10 text-[#22D3EE]"
-                                            : "border-white/10 bg-black/20 text-white/35"
-                                }`}
+                                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-sm font-semibold transition duration-300 ${isCompleted
+                                    ? "border-[#22D3EE] bg-[#22D3EE] text-black"
+                                    : isActive
+                                        ? "border-[#22D3EE]/35 bg-[#22D3EE]/10 text-[#22D3EE]"
+                                        : "border-white/10 bg-black/20 text-white/35"
+                                    }`}
                             >
                                 {isCompleted ? <Check className="h-4 w-4" /> : item.number}
                             </div>
@@ -1679,9 +1607,8 @@ function StepHeader({ step, t }: { step: number; t: any }) {
                                     Adım {item.number}
                                 </p>
                                 <p
-                                    className={`mt-0.5 truncate text-sm font-medium ${
-                                        isActive || isCompleted ? "text-white" : "text-white/45"
-                                    }`}
+                                    className={`mt-0.5 truncate text-sm font-medium ${isActive || isCompleted ? "text-white" : "text-white/45"
+                                        }`}
                                 >
                                     {item.label}
                                 </p>
@@ -1696,13 +1623,13 @@ function StepHeader({ step, t }: { step: number; t: any }) {
 
 
 function SearchSelect({
-                          label,
-                          icon: Icon,
-                          value,
-                          placeholder,
-                          options,
-                          onChange,
-                      }: SearchSelectProps) {
+    label,
+    icon: Icon,
+    value,
+    placeholder,
+    options,
+    onChange,
+}: SearchSelectProps) {
     const wrapperRef = useRef<HTMLDivElement | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [search, setSearch] = useState("");
@@ -1748,15 +1675,13 @@ function SearchSelect({
             <button
                 type="button"
                 onClick={() => setIsOpen((prev) => !prev)}
-                className={`flex h-12 w-full items-center justify-between gap-3 rounded-2xl border border-white/10 bg-black/20 px-4 text-left text-sm outline-none transition duration-200 hover:border-white/15 hover:bg-black/25 sm:h-[50px] ${
-                    value ? "text-white" : "text-white/30"
-                }`}
+                className={`flex h-12 w-full items-center justify-between gap-3 rounded-2xl border border-white/10 bg-black/20 px-4 text-left text-sm outline-none transition duration-200 hover:border-white/15 hover:bg-black/25 sm:h-[50px] ${value ? "text-white" : "text-white/30"
+                    }`}
             >
                 <span className="truncate">{value || placeholder}</span>
                 <ChevronDown
-                    className={`h-4 w-4 shrink-0 text-white/35 transition duration-200 ${
-                        isOpen ? "rotate-180" : ""
-                    }`}
+                    className={`h-4 w-4 shrink-0 text-white/35 transition duration-200 ${isOpen ? "rotate-180" : ""
+                        }`}
                 />
             </button>
 
@@ -1809,14 +1734,14 @@ function SearchSelect({
 
 
 function PassengerCounter({
-                              label,
-                              icon: Icon,
-                              value,
-                              min,
-                              max,
-                              helperText,
-                              onChange,
-                          }: {
+    label,
+    icon: Icon,
+    value,
+    min,
+    max,
+    helperText,
+    onChange,
+}: {
     label: string;
     icon: React.ElementType;
     value: number;
@@ -1872,18 +1797,20 @@ function PassengerCounter({
 
 
 function VehicleCard({
-                         pricing,
-                         car,
-                         oneWayPrice,
-                         roundTripPrice,
-                         t,
-                         onSelect,
-                     }: {
+    pricing,
+    car,
+    oneWayPrice,
+    roundTripPrice,
+    t,
+    locale,
+    onSelect,
+}: {
     pricing: any;
     car: any;
     oneWayPrice: string;
     roundTripPrice: string;
     t: any;
+    locale: string;
     onSelect: (tripType: TripType) => void;
 }) {
     return (
@@ -1928,8 +1855,12 @@ function VehicleCard({
                             </p>
 
                             <ul className="mt-3 grid gap-3 sm:mt-4 sm:grid-cols-2">
-                                {car.features.map(
-                                    (feature: string, index: number) => (
+                                {car.features.map((feature: any, index: number) => {
+                                    const featureText = typeof feature === 'object' && feature !== null
+                                        ? (feature[locale] || feature.tr || feature.en)
+                                        : feature;
+
+                                    return (
                                         <li
                                             key={`${pricing.id}-${index}`}
                                             className="flex items-start gap-3 text-sm leading-5 text-white/55"
@@ -1937,10 +1868,10 @@ function VehicleCard({
                                             <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04]">
                                                 <Check className="h-3 w-3 text-white/70" />
                                             </span>
-                                            <span>{feature}</span>
+                                            <span>{featureText}</span>
                                         </li>
-                                    )
-                                )}
+                                    );
+                                })}
                             </ul>
                         </div>
                     )}
@@ -1977,11 +1908,11 @@ function VehicleCard({
 }
 
 function TripPriceOption({
-                             title,
-                             description,
-                             price,
-                             onClick,
-                         }: {
+    title,
+    description,
+    price,
+    onClick,
+}: {
     title: string;
     description: string;
     price: string;
@@ -2016,15 +1947,15 @@ function TripPriceOption({
 }
 
 function AddonSelectionModal({
-                                 isOpen,
-                                 title,
-                                 description,
-                                 items,
-                                 quantities,
-                                 getFormattedPrice,
-                                 onQuantityChange,
-                                 onClose,
-                             }: {
+    isOpen,
+    title,
+    description,
+    items,
+    quantities,
+    getFormattedPrice,
+    onQuantityChange,
+    onClose,
+}: {
     isOpen: boolean;
     title: string;
     description: string;
@@ -2099,20 +2030,18 @@ function AddonSelectionModal({
                                     return (
                                         <div
                                             key={item.id}
-                                            className={`rounded-2xl border p-4 transition duration-200 ${
-                                                quantity > 0
-                                                    ? "border-white/20 bg-white/[0.06]"
-                                                    : "border-white/10 bg-black/20"
-                                            }`}
+                                            className={`rounded-2xl border p-4 transition duration-200 ${quantity > 0
+                                                ? "border-white/20 bg-white/[0.06]"
+                                                : "border-white/10 bg-black/20"
+                                                }`}
                                         >
                                             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                                                 <div className="flex items-start gap-4">
                                                     <div
-                                                        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border ${
-                                                            quantity > 0
-                                                                ? "border-[#C084FC]/25 bg-[#C084FC]/10 text-[#C084FC]"
-                                                                : "border-white/10 bg-white/[0.04] text-white/65"
-                                                        }`}
+                                                        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border ${quantity > 0
+                                                            ? "border-[#C084FC]/25 bg-[#C084FC]/10 text-[#C084FC]"
+                                                            : "border-white/10 bg-white/[0.04] text-white/65"
+                                                            }`}
                                                     >
                                                         <Icon className="h-5 w-5" />
                                                     </div>
@@ -2211,13 +2140,13 @@ function AddonSelectionModal({
 }
 
 function AddonToggle({
-                         icon: Icon,
-                         tone = "cyan",
-                         title,
-                         description,
-                         active,
-                         onClick,
-                     }: {
+    icon: Icon,
+    tone = "cyan",
+    title,
+    description,
+    active,
+    onClick,
+}: {
     icon: React.ElementType;
     tone?: "cyan" | "purple" | "yellow";
     title: string;
@@ -2244,19 +2173,17 @@ function AddonToggle({
         <button
             type="button"
             onClick={onClick}
-            className={`min-h-[112px] rounded-2xl border p-4 text-left transition duration-300 ${
-                active
-                    ? toneClass.active
-                    : "border-white/10 bg-black/20 hover:border-white/15 hover:bg-white/[0.04]"
-            }`}
+            className={`min-h-[112px] rounded-2xl border p-4 text-left transition duration-300 ${active
+                ? toneClass.active
+                : "border-white/10 bg-black/20 hover:border-white/15 hover:bg-white/[0.04]"
+                }`}
         >
             <div className="flex items-start gap-3">
                 <div
-                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border ${
-                        active
-                            ? toneClass.icon
-                            : "border-white/10 bg-white/[0.04] text-white/70"
-                    }`}
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border ${active
+                        ? toneClass.icon
+                        : "border-white/10 bg-white/[0.04] text-white/70"
+                        }`}
                 >
                     <Icon className="h-4 w-4" />
                 </div>

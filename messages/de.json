@@ -175,7 +175,8 @@
     "nav": {
       "about": "Über uns",
       "gallery": "Galerie",
-      "contact": "Kontakt"
+      "contact": "Kontakt",
+      "pnrSearch": "PNR Suche"
     },
     "buttons": {
       "book": "Jetzt buchen"
@@ -199,58 +200,146 @@
     },
     "destinationLabel": "Zielort",
     "infoText": "Unsere Preise beinhalten Autobahn-, Brücken- und Tunnelgebühren. Für andere Orte oder private Touren, die nicht gelistet sind, erhalten Sie ein sofortiges Angebot.",
-    "quoteButton": "Individuelles Angebot"
+    "quoteButton": "Individuelles Angebot",
+    "departurePoint": "Abfahrtsort",
+    "popularRoutesDesc": "Startpreise für beliebte Transferrouten.",
+    "priceInfoText": "Die angezeigten Preise sind Startpreise. Der endgültige Preis wird während der Reservierung basierend auf Fahrzeugtyp, Passagieranzahl und Hin-/Rückfahrt berechnet.",
+    "popularRoutesCount": "{count} beliebte Routen",
+    "startingFrom": "Ab"
   },
   "ReservationSection": {
-    "alerts": {
-      "missingFieldsStep1": "Bitte füllen Sie Startort, Zielort, Datum und Uhrzeit vollständig aus.",
-      "noRoute": "Für Ihre Auswahl ist keine Route aktiv.",
-      "missingFieldsStep3": "Bitte geben Sie Ihren Namen und Ihre Telefonnummer ein.",
-      "success": "Ihre Reservierung wurde erfolgreich abgeschlossen! Ihr PNR-Code: {pnr}",
-      "error": "Bei der Reservierung ist ein Fehler aufgetreten.",
-      "networkError": "Verbindung zum Server fehlgeschlagen."
-    },
-    "steps": {
-      "step1": "Route & Datum",
-      "step2": "Fahrzeugwahl",
-      "step3": "Zahlung"
-    },
+    "mainTitle1": "Planen Sie Ihren ",
+    "mainTitle2": "Transfer.",
+    "mainDescription": "Schließen Sie Ihre Route, Passagierdaten und Fahrzeugauswahl in nur wenigen Schritten ab.",
     "step1": {
-      "title": "Planen Sie Ihre Reise",
+      "title": "Reservierung",
       "fromLabel": "Von",
-      "fromPlaceholder": "Abholort wählen",
+      "fromPlaceholder": "Wo werden Sie abgeholt?",
       "toLabel": "Nach",
-      "toPlaceholder": "Zielort wählen",
+      "toPlaceholder": "Wohin möchten Sie?",
       "dateLabel": "Datum",
       "timeLabel": "Uhrzeit",
       "adultsLabel": "Erwachsene",
-      "adultsSuffix": "Erw.",
       "childrenLabel": "Kinder",
-      "childrenSuffix": "Kinder",
-      "findButton": "Verfügbare Fahrzeuge finden"
+      "adultsHelper": "12 Jahre und älter",
+      "childrenHelper": "0 - 11 Jahre",
+      "totalPassengers": "Passagiere gesamt:",
+      "findButton": "Fahrzeug Finden",
+      "searchPlaceholder": "Suchen...",
+      "noResults": "Keine Ergebnisse gefunden."
     },
     "step2": {
-      "title": "Passende Fahrzeuge",
+      "title": "Fahrzeugauswahl",
       "passengerSuffix": "Passagiere",
       "goBack": "Zurück",
+      "infoTitle": "Die Preise sind die gesamten Fahrtkosten.",
+      "infoDesc": "Die angezeigten Beträge gelten nicht pro Person. Es ist die gesamte Transfergebühr für das gewählte Fahrzeug und die Strecke.",
+      "capacityErrorTitle": "Kapazität überschritten",
+      "capacityErrorDesc": "Kein passendes Fahrzeug für {total} Personen auf der gewählten Strecke gefunden.",
       "paxSuffix": "Pers.",
       "luggageSuffix": "Gepäck",
-      "featuresLabel": "Fahrzeugdetails",
-      "priceLabel": "Preis für eine Strecke",
-      "selectButton": "Auswählen & Weiter",
-      "capacityErrorTitle": "Kapazität überschritten",
-      "capacityErrorDesc": "Wir haben keine ausreichende Kapazität in einem Fahrzeug für {total} Passagiere. Bitte reduzieren Sie die Passagierzahl oder kontaktieren Sie uns direkt."
+      "featuresLabel": "Eigenschaften",
+      "noImage": "Kein Bild",
+      "priceWarning": "Die Preise unten gelten nicht pro Person, sondern sind die gesamten Fahrtkosten für das gewählte Fahrzeug.",
+      "oneWay": "Einfache Fahrt",
+      "oneWayDesc": "Nur die gewählte Strecke",
+      "roundTrip": "Hin- und Rückfahrt",
+      "roundTripDesc": "Gesamtpreis für Hin- und Rückfahrt",
+      "totalPriceLabel": "Gesamtpreis"
     },
     "step3": {
-      "title": "Letzter Schritt: Kontaktdaten",
+      "title": "Kontakt & Bestätigung",
       "goBack": "Zurück",
-      "contactInfoTitle": "Ihre Kontaktdaten",
-      "namePlaceholder": "Vollständiger Name",
-      "phonePlaceholder": "Telefonnummer",
-      "emailPlaceholder": "E-Mail-Adresse",
-      "summaryTitle": "Zusammenfassung",
-      "loadingButton": "Bitte warten...",
-      "submitButton": "Reservierung abschließen"
+      "contactInfoTitle": "Kontaktinformationen",
+      "namePlaceholder": "Ihr Vor- und Nachname",
+      "phoneLabel": "Telefon",
+      "phonePlaceholder": "555 000 00 00",
+      "emailLabel": "E-Mail",
+      "emailPlaceholder": "beispiel@mail.com",
+      "transferDetailTitle": "Transferdetails",
+      "optionalInfo": "Optionale Infos",
+      "pickupDetailLabel": "Abholadresse / Hotelname",
+      "pickupDetailPlaceholder": "Hotel, Lobby, Block oder Türnummer",
+      "dropoffDetailLabel": "Zieladresse / Hotelname",
+      "dropoffDetailPlaceholder": "Hotel, Terminal, Villa oder Adresse",
+      "noteLabel": "Reservierungsnotiz",
+      "notePlaceholder": "Flugnummer, spezieller Begrüßungswunsch oder zusätzliche Anfragen.",
+      "noteMaxChars": "Maximal 1000 Zeichen.",
+      "extraRequestsTitle": "Zusätzliche Anfragen",
+      "extraRequestsDesc": "Hinterlassen Sie zusätzliche Notizen für Ihre Reservierung.",
+      "babySeatTitle": "Ich möchte einen Kindersitz",
+      "babySeatDesc": "Kinderwagen, Kindersitz oder Sitzerhöhung auswählen",
+      "vehicleExtraTitle": "Ich möchte ein Extra im Fahrzeug",
+      "vehicleExtraDesc": "Feier-, Blumen- oder Getränkepaket auswählen",
+      "itemsSelected": "Artikel ausgewählt",
+      "extrasSelected": "Extras ausgewählt",
+      "summaryTitle": "Reservierungszusammenfassung",
+      "submitButton": "Reservierung Abschließen",
+      "loadingButton": "Wird bearbeitet...",
+      "noCountryResults": "Land nicht gefunden.",
+      "preferredCountries": "Favoriten",
+      "allCountries": "Alle Länder",
+      "searchCountryPlaceholder": "Land oder Code suchen..."
+    },
+    "step4": {
+      "title": "Reservierung Bestätigt",
+      "description": "Ihre Reise wurde erfolgreich geplant. Vielen Dank, dass Sie sich für uns entschieden haben.",
+      "pnrLabel": "IHR PNR-CODE",
+      "saveWarning": "Bitte notieren Sie sich Ihren PNR-Code. Mit diesem Code können Sie Ihren Reservierungsstatus auf der Suchseite überprüfen.",
+      "summaryTitle": "Zusammenfassung der Reise",
+      "newReservationButton": "Neue Reservierung vornehmen"
+    },
+    "addonModal": {
+      "babySeatTitle": "Auswahl Kindersitz",
+      "babySeatDesc": "Maximal 3 Einheiten pro Option. Die Auswahl wird automatisch zum Gesamtpreis hinzugefügt.",
+      "vehicleExtraTitle": "Auswahl Fahrzeug-Extras",
+      "vehicleExtraDesc": "Wählen Sie aus zusätzlichen Paketen, um Ihre Reise zu personalisieren.",
+      "badge": "Zusatzanfrage",
+      "close": "Schließen",
+      "perItem": "/ stück",
+      "totalTitle": "Modal-Summe",
+      "selectionCount": "Artikel ausgewählt",
+      "confirmBtn": "Auswahl bestätigen"
+    },
+    "summary": {
+      "vehicle": "Fahrzeug",
+      "route": "Strecke",
+      "tripType": "Fahrtart",
+      "oneWay": "Einfache Fahrt",
+      "roundTrip": "Hin- und Rückfahrt",
+      "date": "Datum",
+      "passenger": "Passagiere",
+      "pickup": "Abholort",
+      "dropoff": "Zielort",
+      "note": "Notiz",
+      "extras": "Zusätzliche Anfragen",
+      "totalPrice": "Gesamte Fahrtkosten",
+      "totalDesc": "Dieser Betrag beinhaltet das gewählte Fahrzeug, die Fahrtart und etwaige Extras.",
+      "infoCheck": "Überprüfen Sie Ihre Daten und schließen Sie die Reservierung in einem Schritt ab.",
+      "totalLabelMobile": "Gesamt"
+    },
+    "validation": {
+      "nameMin": "Name muss mindestens 2 Zeichen lang sein.",
+      "nameMax": "Name ist zu lang.",
+      "phoneMin": "Telefonnummer ist zu kurz.",
+      "phoneMax": "Telefonnummer ist zu lang.",
+      "phoneRegex": "Telefonnummer darf nur aus Ziffern bestehen.",
+      "emailInvalid": "Gültige E-Mail-Adresse eingeben.",
+      "pickupMax": "Detail der Abholadresse ist zu lang.",
+      "dropoffMax": "Detail der Zieladresse ist zu lang.",
+      "noteMax": "Reservierungsnotiz ist zu lang."
+    },
+    "steps": {
+      "step1": "Strecke",
+      "step2": "Fahrzeug",
+      "step3": "Kontakt"
+    },
+    "alerts": {
+      "missingFieldsStep1": "Bitte Strecke, Datum und Uhrzeit auswählen.",
+      "noRoute": "Für diese Strecke wurde kein passendes Fahrzeug gefunden.",
+      "success": "Ihre Reservierung wurde erfolgreich erstellt! PNR: {pnr}",
+      "error": "Fehler beim Erstellen der Reservierung.",
+      "networkError": "Serververbindung fehlgeschlagen. Bitte erneut versuchen."
     }
   },
   "TestimonialSection": {
@@ -319,5 +408,31 @@
   "RootLayout": {
     "title": "VIP Booking App",
     "description": "Premium-Reservierungs- und Reiseerlebnis."
+  },
+  "PnrSearchPage": {
+    "title1": "Reservierung",
+    "title2": "Suchen",
+    "description": "Sie können den aktuellen Status Ihrer Reservierung sofort mit Ihrem PNR-Code und Ihrer E-Mail-Adresse überprüfen.",
+    "pnrLabel": "PNR-Code",
+    "pnrPlaceholder": "2740",
+    "emailLabel": "E-Mail-Adresse",
+    "emailPlaceholder": "beispiel@mail.com",
+    "searchButton": "Suchen",
+    "transferStatus": "Transferstatus",
+    "dateTimeLabel": "Datum & Uhrzeit",
+    "totalAmountLabel": "Gesamtbetrag",
+    "transferRouteLabel": "Transferstrecke",
+    "roundTrip": "Hin- und Rückfahrt",
+    "oneWay": "Einfache Fahrt",
+    "status": {
+      "PENDING": "Wartet auf Bestätigung",
+      "CONFIRMED": "Bestätigt",
+      "CANCELLED": "Storniert",
+      "COMPLETED": "Abgeschlossen"
+    },
+    "alerts": {
+      "networkError": "Verbindung zum Server fehlgeschlagen. Bitte versuchen Sie es erneut.",
+      "notFound": "Für die angegebenen Informationen wurde keine Reservierung gefunden. Bitte überprüfen Sie Ihre Daten und versuchen Sie es erneut."
+    }
   }
 }

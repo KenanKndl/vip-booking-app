@@ -24,7 +24,6 @@ type ExchangeRates = {
     eurToUsd: number;
 };
 
-// Arkadaşının eklediği 'bg' özellikleri dinamik yapıya (PALETTES) entegre edildi
 const PALETTES = [
     { dot: "bg-[#22D3EE]", border: "border-[#22D3EE]/35", text: "text-[#22D3EE]", bg: "bg-[#22D3EE]/10" }, 
     { dot: "bg-[#C084FC]", border: "border-[#C084FC]/35", text: "text-[#C084FC]", bg: "bg-[#C084FC]/10" }, 
@@ -46,11 +45,9 @@ export function PricingSection({
 }) {
     const t = useTranslations("PricingSection");
     
-    // Hem masaüstü hem de mobil için ayrı state'ler tutuluyor
     const [activeIndex, setActiveIndex] = useState(0);
     const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
     
-    // Kur işlemleri
     const { currency } = useCurrencyStore();
     const [mounted, setMounted] = useState(false);
 
@@ -62,7 +59,6 @@ export function PricingSection({
         return null; 
     }
 
-    // Aktif grupların dinamik atamaları
     const activeGroup = routeGroups[activeIndex];
     const activeTone = getLocationTone(activeIndex);
 
@@ -72,7 +68,7 @@ export function PricingSection({
     return (
         <>
             {/* ========================================== */}
-            {/* 📱 MOBİL VERSİYON (Arkadaşının Tasarımı) */}
+            {/* 📱 MOBİL VERSİYON */}
             {/* ========================================== */}
             <section
                 id="pricing"
@@ -90,7 +86,6 @@ export function PricingSection({
                         </p>
                     </div>
 
-                    {/* Yatay Kaydırılabilir Sekmeler */}
                     <div className="mt-7 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                         <div className="flex min-w-max gap-2">
                             {routeGroups.map((group, index) => {
@@ -120,7 +115,6 @@ export function PricingSection({
                         </div>
                     </div>
 
-                    {/* Mobilde Seçili Rotanın Detayları */}
                     <div className="mt-5 rounded-[1.75rem] border border-white/10 bg-white/[0.025] p-4">
                         <AnimatePresence mode="wait">
                             <motion.div
@@ -136,7 +130,7 @@ export function PricingSection({
                                             className={`h-2.5 w-2.5 rounded-full ${mobileActiveTone.dot}`}
                                         />
                                         <p className="text-xs font-medium uppercase tracking-[0.18em] text-white/35">
-                                            Kalkış noktası
+                                            {t("departurePoint")}
                                         </p>
                                     </div>
 
@@ -145,7 +139,7 @@ export function PricingSection({
                                     </h3>
 
                                     <p className="mt-2 text-sm leading-6 text-white/40">
-                                        Sık tercih edilen rotalar için başlangıç transfer ücretleri.
+                                        {t("popularRoutesDesc")}
                                     </p>
                                 </div>
 
@@ -156,9 +150,10 @@ export function PricingSection({
                                             route={route}
                                             index={index}
                                             fromLabel={mobileActiveGroup.label}
-                                            compact={true} // Mobil için sıkıştırılmış görünüm
+                                            compact={true} 
                                             exchangeRates={exchangeRates}
                                             activeCurrency={mounted ? currency : "EUR"}
+                                            startingFromLabel={t("startingFrom")}
                                         />
                                     ))}
                                 </div>
@@ -167,9 +162,7 @@ export function PricingSection({
                                     <div className="flex items-start gap-3">
                                         <Info className="mt-0.5 h-4 w-4 shrink-0 text-white/30" />
                                         <p className="text-sm leading-6 text-white/45">
-                                            Fiyatlar başlangıç transfer ücretidir. Araç tipi,
-                                            yolcu sayısı ve gidiş-dönüş seçimine göre rezervasyon
-                                            adımında netleşir.
+                                            {t("priceInfoText")}
                                         </p>
                                     </div>
 
@@ -187,7 +180,7 @@ export function PricingSection({
             </section>
 
             {/* ========================================== */}
-            {/* 💻 MASAÜSTÜ VERSİYON (Bizim Düzenlememiz) */}
+            {/* 💻 MASAÜSTÜ VERSİYON */}
             {/* ========================================== */}
             <section
                 id="pricing-desktop"
@@ -214,7 +207,7 @@ export function PricingSection({
                                         <button
                                             key={group.id}
                                             type="button"
-                                            onClick={() => setActiveIndex(index)} // Kaydırma (scroll) hatası giderildi, artık tıklanabilir!
+                                            onClick={() => setActiveIndex(index)}
                                             className={`group flex items-center justify-between rounded-2xl border px-4 py-3 text-left transition duration-300 ${
                                                 isActive
                                                     ? `${tone.border} bg-white/[0.045]`
@@ -243,7 +236,7 @@ export function PricingSection({
                                                         : "text-white/30 group-hover:text-white/45"
                                                 }`}
                                             >
-                                                {group.routes.length} popüler rota
+                                                {t("popularRoutesCount", { count: group.routes.length })}
                                                 <ArrowRight
                                                     className={`h-3.5 w-3.5 transition duration-300 ${
                                                         isActive
@@ -274,7 +267,7 @@ export function PricingSection({
                                                     className={`h-2.5 w-2.5 rounded-full ${activeTone.dot}`}
                                                 />
                                                 <p className="text-sm font-medium text-white/40">
-                                                    Kalkış noktası
+                                                    {t("departurePoint")}
                                                 </p>
                                             </div>
 
@@ -284,7 +277,7 @@ export function PricingSection({
                                         </div>
 
                                         <p className="max-w-sm text-sm leading-6 text-white/40 sm:text-right">
-                                            Sık tercih edilen rotalar için başlangıç transfer ücretleri.
+                                            {t("popularRoutesDesc")}
                                         </p>
                                     </div>
 
@@ -300,6 +293,7 @@ export function PricingSection({
                                                         compact={false}
                                                         exchangeRates={exchangeRates} 
                                                         activeCurrency={mounted ? currency : "EUR"} 
+                                                        startingFromLabel={t("startingFrom")}
                                                     />
                                                 ))}
                                             </div>
@@ -310,7 +304,7 @@ export function PricingSection({
                                         <div className="flex items-start gap-3">
                                             <Info className="mt-0.5 h-4 w-4 shrink-0 text-white/30" />
                                             <p className="text-sm leading-6 text-white/45">
-                                                Fiyatlar başlangıç transfer ücretidir. Araç tipi, yolcu sayısı ve gidiş-dönüş seçimine göre rezervasyon adımında netleşir.
+                                                {t("priceInfoText")}
                                             </p>
                                         </div>
 
@@ -338,6 +332,7 @@ function RoutePriceRow({
     compact = false,
     exchangeRates,
     activeCurrency,
+    startingFromLabel
 }: {
     route: RouteItem;
     index: number;
@@ -345,8 +340,8 @@ function RoutePriceRow({
     compact?: boolean;
     exchangeRates?: ExchangeRates;
     activeCurrency: string;
+    startingFromLabel: string;
 }) {
-    // Kur ve Sembol Hesaplama (Hem mobil hem masaüstü için geçerli)
     let displayPrice = route.price;
     let symbol = "€";
 
@@ -361,7 +356,6 @@ function RoutePriceRow({
         symbol = "£";
     }
 
-    // Mobil İçin Sıkıştırılmış Görünüm
     if (compact) {
         return (
             <motion.article
@@ -387,7 +381,7 @@ function RoutePriceRow({
 
                     <div className="flex items-baseline justify-between gap-3">
                         <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-white/25">
-                            Başlangıç
+                            {startingFromLabel}
                         </span>
                         <span className="text-xl font-semibold tracking-tight text-white">
                             {symbol}{displayPrice.toLocaleString("en-US")}
@@ -398,7 +392,6 @@ function RoutePriceRow({
         );
     }
 
-    // Masaüstü İçin Standart Görünüm
     return (
         <motion.article
             initial={{ opacity: 0, y: 6 }}
@@ -423,7 +416,7 @@ function RoutePriceRow({
 
                 <div className="flex shrink-0 items-baseline gap-3 text-right">
                     <span className="hidden text-[11px] font-medium uppercase tracking-[0.14em] text-white/25 sm:inline">
-                        Başlangıç
+                        {startingFromLabel}
                     </span>
                     <span className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
                         {symbol}{displayPrice.toLocaleString("en-US")}

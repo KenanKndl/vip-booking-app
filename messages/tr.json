@@ -175,7 +175,8 @@
     "nav": {
       "about": "Hakkımızda",
       "gallery": "Galeri",
-      "contact": "İletişim"
+      "contact": "İletişim",
+      "pnrSearch": "PNR Sorgula"
     },
     "buttons": {
       "book": "Rezervasyon Yap"
@@ -199,58 +200,147 @@
     },
     "destinationLabel": "Varış Noktası",
     "infoText": "Fiyatlarımıza otoyol, köprü geçişleri ve tünel ücretleri dahildir. Listede olmayan farklı bir lokasyon veya özel turlarınız için anında özel teklif alabilirsiniz.",
-    "quoteButton": "Özel Teklif Al"
+    "quoteButton": "Özel Teklif Al",
+    "departurePoint": "Kalkış noktası",
+    "popularRoutesDesc": "Sık tercih edilen rotalar için başlangıç transfer ücretleri.",
+    "priceInfoText": "Fiyatlar başlangıç transfer ücretidir. Araç tipi, yolcu sayısı ve gidiş-dönüş seçimine göre rezervasyon adımında netleşir.",
+    "popularRoutesCount": "{count} popüler rota",
+    "startingFrom": "Başlangıç"
   },
   "ReservationSection": {
-    "alerts": {
-      "missingFieldsStep1": "Lütfen nereden, nereye, tarih ve saat alanlarını eksiksiz doldurun.",
-      "noRoute": "Seçtiğiniz güzergah için aktif bir güzergah bulunmamaktadır.",
-      "missingFieldsStep3": "Lütfen ad soyad ve telefon bilgilerinizi giriniz.",
-      "success": "Rezervasyonunuz Başarıyla Tamamlandı! PNR Kodunuz: {pnr}",
-      "error": "Rezervasyon sırasında bir hata oluştu.",
-      "networkError": "Sunucu ile iletişim kurulamadı."
-    },
-    "steps": {
-      "step1": "Rota & Tarih",
-      "step2": "Araç Seçimi",
-      "step3": "Ödeme"
-    },
+    "mainTitle1": "Transferinizi ",
+    "mainTitle2": "planlayın.",
+    "mainDescription": "Güzergahınızı, yolcu bilgilerinizi ve araç seçiminizi birkaç adımda tamamlayın.",
     "step1": {
-      "title": "Yolculuğunuzu Planlayın",
+      "title": "Rezervasyon",
       "fromLabel": "Nereden",
-      "fromPlaceholder": "Alınış noktası seçin",
+      "fromPlaceholder": "Nereden alınacaksınız?",
       "toLabel": "Nereye",
-      "toPlaceholder": "Varış noktası seçin",
+      "toPlaceholder": "Nereye gideceksiniz?",
       "dateLabel": "Tarih",
       "timeLabel": "Saat",
       "adultsLabel": "Yetişkin",
-      "adultsSuffix": "Yetişkin",
       "childrenLabel": "Çocuk",
-      "childrenSuffix": "Çocuk",
-      "findButton": "Uygun Araçları Bul"
+      "adultsHelper": "12 yaş ve üzeri",
+      "childrenHelper": "0 - 11 yaş",
+      "totalPassengers": "Toplam yolcu:",
+      "findButton": "Araç Bul",
+      "searchPlaceholder": "Ara...",
+      "noResults": "Sonuç bulunamadı."
     },
     "step2": {
-      "title": "Size Uygun Araçlar",
+      "title": "Araç Seçimi",
       "passengerSuffix": "Yolcu",
       "goBack": "Geri Dön",
-      "paxSuffix": "Kişi",
-      "luggageSuffix": "Bagaj",
-      "featuresLabel": "Araç Özellikleri",
-      "priceLabel": "Tek Yön Fiyatı",
-      "selectButton": "Seç ve İlerle",
+      "infoTitle": "Fiyatlar yolculuğun toplam ücretidir.",
+      "infoDesc": "Gösterilen tutarlar kişi başı değildir. Seçtiğiniz araç ve güzergah için toplam transfer ücretini ifade eder.",
       "capacityErrorTitle": "Kapasite Aşımı",
-      "capacityErrorDesc": "Seçtiğiniz toplam {total} yolcu için tek bir araçta uygun kapasitemiz bulunmamaktadır. Lütfen yolcu sayısını azaltın veya bizimle doğrudan iletişime geçin."
+      "capacityErrorDesc": "Seçtiğiniz güzergahta {total} kişi için uygun araç bulunamadı.",
+      "paxSuffix": "Kişi",
+      "luggageSuffix": "Valiz",
+      "featuresLabel": "Özellikler",
+      "noImage": "Görsel yok",
+      "priceWarning": "Aşağıdaki fiyatlar kişi başı değil, seçilen araç için toplam yolculuk ücretidir.",
+      "oneWay": "Tek yön",
+      "oneWayDesc": "Sadece seçilen güzergah",
+      "roundTrip": "Gidiş dönüş",
+      "roundTripDesc": "Gidiş ve dönüş toplamı",
+      "totalPriceLabel": "Toplam ücret"
     },
     "step3": {
-      "title": "Son Adım: İletişim Bilgileri",
+      "title": "İletişim & Onay",
       "goBack": "Geri Dön",
-      "contactInfoTitle": "İletişim Bilgileriniz",
-      "namePlaceholder": "Ad Soyad",
-      "phonePlaceholder": "Telefon Numarası",
-      "emailPlaceholder": "E-Posta Adresi",
-      "summaryTitle": "Özet",
-      "loadingButton": "Lütfen Bekleyin...",
-      "submitButton": "Rezervasyonu Tamamla"
+      "contactInfoTitle": "İletişim Bilgileri",
+      "namePlaceholder": "Adınız Soyadınız",
+      "phoneLabel": "Telefon",
+      "phonePlaceholder": "555 000 00 00",
+      "emailLabel": "E-posta",
+      "emailPlaceholder": "ornek@mail.com",
+      "transferDetailTitle": "Transfer detayı",
+      "optionalInfo": "Opsiyonel bilgiler",
+      "pickupDetailLabel": "Alınacak adres / hotel adı",
+      "pickupDetailPlaceholder": "Otel, lobi, blok veya kapı no",
+      "dropoffDetailLabel": "Bırakılacak adres / hotel adı",
+      "dropoffDetailPlaceholder": "Otel, terminal, villa veya adres",
+      "noteLabel": "Rezervasyon notu",
+      "notePlaceholder": "Uçuş numarası, özel karşılama notu veya ek talebinizi yazabilirsiniz.",
+      "noteMaxChars": "Maksimum 1000 karakter.",
+      "extraRequestsTitle": "Ek talepler",
+      "extraRequestsDesc": "İsterseniz rezervasyonunuza birkaç ek not bırakın.",
+      "babySeatTitle": "Bebek koltuğu istiyorum",
+      "babySeatDesc": "Puset, bebek koltuğu veya yükseltici seçin",
+      "vehicleExtraTitle": "Araç içinde ekstra istiyorum",
+      "vehicleExtraDesc": "Kutlama, çiçek veya içecek paketi seçin",
+      "itemsSelected": "adet seçildi",
+      "extrasSelected": "ekstra seçildi",
+      "summaryTitle": "Rezervasyon Özeti",
+      "submitButton": "Rezervasyonu Tamamla",
+      "loadingButton": "İşleniyor...",
+      "noCountryResults": "Ülke bulunamadı.",
+      "preferredCountries": "Sık kullanılanlar",
+      "allCountries": "Tüm ülkeler",
+      "searchCountryPlaceholder": "Ülke veya kod ara..."
+    },
+
+  "step4": {
+      "title": "Rezervasyon Onaylandı",
+      "description": "Yolculuğunuz başarıyla planlandı. Bizi tercih ettiğiniz için teşekkür ederiz.",
+      "pnrLabel": "PNR KODUNUZ",
+      "saveWarning": "Lütfen PNR kodunuzu not ediniz. Ana sayfadaki sorgulama ekranından bu kod ile rezervasyonunuzun durumunu takip edebilirsiniz.",
+      "summaryTitle": "Yolculuk Özeti",
+      "newReservationButton": "Yeni Rezervasyon Yap"
+    },
+    "addonModal": {
+      "babySeatTitle": "Bebek koltuğu seçimi",
+      "babySeatDesc": "Her seçenekten en fazla 3 adet ekleyebilirsiniz. Seçimler toplam ücrete otomatik eklenir.",
+      "vehicleExtraTitle": "Araç içi ekstra seçimi",
+      "vehicleExtraDesc": "Yolculuk deneyimini kişiselleştirmek için ekstra paketlerden seçim yapabilirsiniz.",
+      "badge": "Ek talep",
+      "close": "Kapat",
+      "perItem": "/ adet",
+      "totalTitle": "Modal toplamı",
+      "selectionCount": "adet seçim",
+      "confirmBtn": "Seçimi onayla"
+    },
+    "summary": {
+      "vehicle": "Araç",
+      "route": "Güzergah",
+      "tripType": "Yolculuk tipi",
+      "oneWay": "Tek yön",
+      "roundTrip": "Gidiş dönüş",
+      "date": "Tarih",
+      "passenger": "Yolcu",
+      "pickup": "Alınacak yer",
+      "dropoff": "Bırakılacak yer",
+      "note": "Not",
+      "extras": "Ek talepler",
+      "totalPrice": "Toplam yolculuk ücreti",
+      "totalDesc": "Bu tutara seçili araç, yolculuk tipi ve varsa ek talepler dahildir.",
+      "infoCheck": "Bilgilerinizi kontrol edip rezervasyonunuzu tek adımda tamamlayabilirsiniz.",
+      "totalLabelMobile": "Toplam"
+    },
+    "validation": {
+      "nameMin": "Ad soyad en az 2 karakter olmalı.",
+      "nameMax": "Ad soyad çok uzun.",
+      "phoneMin": "Telefon numarası çok kısa.",
+      "phoneMax": "Telefon numarası çok uzun.",
+      "phoneRegex": "Telefon numarası sadece rakamlardan oluşmalı.",
+      "emailInvalid": "Geçerli bir e-posta adresi girin.",
+      "pickupMax": "Alınacak adres detayı çok uzun.",
+      "dropoffMax": "Bırakılacak adres detayı çok uzun.",
+      "noteMax": "Rezervasyon notu çok uzun."
+    },
+    "steps": {
+      "step1": "Güzergah",
+      "step2": "Araç Seçimi",
+      "step3": "İletişim & Onay"
+    },
+    "alerts": {
+      "missingFieldsStep1": "Lütfen güzergah, tarih ve saat seçin.",
+      "noRoute": "Bu güzergah için uygun araç bulunamadı.",
+      "success": "Rezervasyonunuz başarıyla oluşturuldu! PNR: {pnr}",
+      "error": "Rezervasyon oluşturulurken bir hata oluştu.",
+      "networkError": "Sunucuyla iletişim kurulamadı. Lütfen tekrar deneyin."
     }
   },
   "TestimonialSection": {
@@ -319,5 +409,33 @@
   "RootLayout": {
     "title": "VIP Booking App",
     "description": "Premium rezervasyon ve seyahat deneyimi."
+  },
+
+  "PnrSearchPage": {
+    "title1": "Rezervasyon",
+    "title2": "Sorgulama",
+    "description": "Sistemimizden size verilen PNR kodu ve e-posta adresiniz ile rezervasyonunuzun güncel durumunu anında öğrenebilirsiniz.",
+    "pnrLabel": "PNR Kodu",
+    "pnrPlaceholder": "2740",
+    "emailLabel": "E-posta Adresiniz",
+    "emailPlaceholder": "ornek@mail.com",
+    "searchButton": "Sorgula",
+    "transferStatus": "Transfer Durumu",
+    "dateTimeLabel": "Tarih & Saat",
+    "totalAmountLabel": "Toplam Tutar",
+    "transferRouteLabel": "Transfer Rotası",
+    "roundTrip": "Gidiş-Dönüş",
+    "oneWay": "Tek Yön",
+    "status": {
+      "PENDING": "Onay Bekliyor",
+      "CONFIRMED": "Onaylandı",
+      "CANCELLED": "İptal Edildi",
+      "COMPLETED": "Tamamlandı"
+    },
+    "alerts": {
+      "networkError": "Sunucuya bağlanılamadı. Lütfen tekrar deneyin.",
+      "notFound": "Girdiğiniz bilgilere ait bir rezervasyon bulunamadı. Lütfen bilgilerinizi kontrol edip tekrar deneyin."
+    }
   }
 }
+

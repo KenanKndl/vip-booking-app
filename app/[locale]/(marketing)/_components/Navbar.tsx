@@ -13,13 +13,14 @@ import {
 import { useRouter, usePathname } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 
-// YENİ: Global Currency Store'umuzu içeri aktarıyoruz
 import { useCurrencyStore } from "@/store/useCurrencyStore"; 
 
+// YENİ: PNR Sorgula linki doğrudan konfigürasyona eklendi (Daha temiz kod)
 const navConfig = [
     { key: "about", href: "/hakkimizda" },
     { key: "gallery", href: "/galeri" },
     { key: "contact", href: "/iletisim" },
+    { key: "pnrSearch", href: "/sorgula" }, 
 ];
 
 const languages = [
@@ -44,7 +45,6 @@ export function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     
-    // YENİ: Döviz türünü artık lokal useState ile değil, Global Zustand Store ile yönetiyoruz!
     const selectedCurrency = useCurrencyStore((state) => state.currency);
     const setSelectedCurrency = useCurrencyStore((state) => state.setCurrency);
 
@@ -98,13 +98,6 @@ export function Navbar() {
                                 {t(`nav.${item.key}`)}
                             </Link>
                         ))}
-                        {/* YENİ EKLENEN SORGULAMA LİNKİ (Masaüstü) */}
-                        <Link
-                            href="/sorgula"
-                            className="py-2 text-sm font-medium text-white/55 transition-colors duration-200 hover:text-white"
-                        >
-                            PNR Sorgula
-                        </Link>
                     </nav>
                 </div>
 
@@ -153,7 +146,7 @@ export function Navbar() {
                             {currencies.map((currency) => (
                                 <DropdownMenuItem
                                     key={currency.code}
-                                    onSelect={() => setSelectedCurrency(currency.code as 'EUR' | 'USD' | 'TRY')} // Store tipine uygun atama
+                                    onSelect={() => setSelectedCurrency(currency.code as 'EUR' | 'USD' | 'TRY')}
                                     className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 !text-white outline-none transition-colors hover:!bg-white/10 hover:!text-white focus:!bg-white/10 focus:!text-white data-[highlighted]:!bg-white/10 data-[highlighted]:!text-white [&_span]:!text-white"
                                 >
                                     <span className="text-base font-bold text-white/70 w-4 text-center">{currency.symbol}</span>
@@ -229,14 +222,6 @@ export function Navbar() {
                                         {t(`nav.${item.key}`)}
                                     </Link>
                                 ))}
-                                {/* YENİ EKLENEN SORGULAMA LİNKİ (Mobil) */}
-                                <Link
-                                    href="/sorgula"
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className="text-lg font-medium text-white/70 transition-colors hover:text-white"
-                                >
-                                    PNR Sorgula
-                                </Link>
 
                                 <div className="my-2 h-px w-full bg-white/5" />
 
@@ -278,7 +263,7 @@ export function Navbar() {
                                                 <button
                                                     key={currency.code}
                                                     type="button"
-                                                    onClick={() => setSelectedCurrency(currency.code as 'EUR' | 'USD' | 'TRY')} // Store tipine uygun atama
+                                                    onClick={() => setSelectedCurrency(currency.code as 'EUR' | 'USD' | 'TRY')}
                                                     className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors flex items-center gap-1 ${
                                                         isActive
                                                             ? "bg-white text-black"

@@ -46,6 +46,8 @@ type SearchSelectProps = {
     value: string;
     placeholder: string;
     options: string[];
+    searchPlaceholder: string;
+    noResultsText: string;
     onChange: (value: string) => void;
 };
 
@@ -62,70 +64,16 @@ type AddonItem = {
 
 type AddonQuantities = Record<string, number>;
 
-const reservationStep3Schema = z.object({
-    name: z
-        .string()
-        .trim()
-        .min(2, "Ad soyad en az 2 karakter olmalı.")
-        .max(80, "Ad soyad çok uzun."),
-
-    phoneDigits: z
-        .string()
-        .min(7, "Telefon numarası çok kısa.")
-        .max(15, "Telefon numarası çok uzun.")
-        .regex(/^\d+$/, "Telefon numarası sadece rakamlardan oluşmalı."),
-
-    email: z
-        .string()
-        .trim()
-        .optional()
-        .refine(
-            (value) => !value || z.string().email().safeParse(value).success,
-            {
-                message: "Geçerli bir e-posta adresi girin.",
-            }
-        ),
-
-    pickupAddressDetail: z
-        .string()
-        .trim()
-        .max(160, "Alınacak adres detayı çok uzun.")
-        .optional(),
-
-    dropoffAddressDetail: z
-        .string()
-        .trim()
-        .max(160, "Bırakılacak adres detayı çok uzun.")
-        .optional(),
-
-    reservationNote: z
-        .string()
-        .trim()
-        .max(1000, "Rezervasyon notu çok uzun.")
-        .optional(),
-});
-
 function getPhoneDigits(value: string) {
     return value.replace(/\D/g, "").slice(0, 15);
 }
 
 function formatPhoneInput(value: string) {
     const digits = getPhoneDigits(value);
-
     if (digits.length <= 3) return digits;
-
-    if (digits.length <= 6) {
-        return `${digits.slice(0, 3)} ${digits.slice(3)}`;
-    }
-
-    if (digits.length <= 10) {
-        return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
-    }
-
-    return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(
-        6,
-        10
-    )} ${digits.slice(10)}`;
+    if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
+    if (digits.length <= 10) return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+    return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6, 10)} ${digits.slice(10)}`;
 }
 
 const createInitialAddonQuantities = (items: AddonItem[]) =>
@@ -139,66 +87,13 @@ const getSelectedAddonItems = (items: AddonItem[], quantities: AddonQuantities) 
         .map((item) => ({ ...item, quantity: quantities[item.id] || 0 }))
         .filter((item) => item.quantity > 0);
 
+const pageVariants: Variants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.08 } } };
+const fadeUpVariants: Variants = { hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } } };
+const stepVariants: Variants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" } }, exit: { opacity: 0, y: -8, transition: { duration: 0.2, ease: "easeIn" } } };
 
-const pageVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.08,
-        },
-    },
-};
-
-const fadeUpVariants: Variants = {
-    hidden: {
-        opacity: 0,
-        y: 16,
-    },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: {
-            duration: 0.45,
-            ease: "easeOut",
-        },
-    },
-};
-
-const stepVariants: Variants = {
-    hidden: {
-        opacity: 0,
-        y: 12,
-    },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: {
-            duration: 0.35,
-            ease: "easeOut",
-        },
-    },
-    exit: {
-        opacity: 0,
-        y: -8,
-        transition: {
-            duration: 0.2,
-            ease: "easeIn",
-        },
-    },
-};
-
-const inputClass =
-    "w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm text-white outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus:border-white/30 focus:bg-black/30";
-
-const contactInputClass =
-    "h-12 w-full min-w-0 rounded-2xl border border-white/10 bg-black/20 px-4 text-sm text-white outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus:border-white/30 focus:bg-black/30";
-
-const contactTextareaClass =
-    "min-h-[112px] w-full resize-none rounded-2xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm leading-6 text-white outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus:border-white/30 focus:bg-black/30";
-
-const labelClass =
-    "flex items-center gap-2 pl-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/45 sm:text-xs sm:tracking-[0.18em]";
+const inputClass = "w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm text-white outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus:border-white/30 focus:bg-black/30";
+const contactInputClass = "h-12 w-full min-w-0 rounded-2xl border border-white/10 bg-black/20 px-4 text-sm text-white outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus:border-white/30 focus:bg-black/30";
+const labelClass = "flex items-center gap-2 pl-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/45 sm:text-xs sm:tracking-[0.18em]";
 
 export function ReservationSection({
     dbRoutes = [],
@@ -207,7 +102,25 @@ export function ReservationSection({
     const t = useTranslations("ReservationSection");
     const locale = useLocale();
 
+    const reservationStep3Schema = useMemo(() => z.object({
+        name: z.string().trim()
+            .min(2, t("validation.nameMin"))
+            .max(80, t("validation.nameMax")),
+        phoneDigits: z.string()
+            .min(7, t("validation.phoneMin"))
+            .max(15, t("validation.phoneMax"))
+            .regex(/^\d+$/, t("validation.phoneRegex")),
+        email: z.string().trim().optional().refine(
+            (value) => !value || z.string().email().safeParse(value).success,
+            { message: t("validation.emailInvalid") }
+        ),
+        pickupAddressDetail: z.string().trim().max(160, t("validation.pickupMax")).optional(),
+        dropoffAddressDetail: z.string().trim().max(160, t("validation.dropoffMax")).optional(),
+        reservationNote: z.string().trim().max(1000, t("validation.noteMax")).optional(),
+    }), [t]);
+
     const [step, setStep] = useState(1);
+    const [successPnr, setSuccessPnr] = useState<string | null>(null);
 
     const [pickup, setPickup] = useState("");
     const [dropoff, setDropoff] = useState("");
@@ -218,16 +131,12 @@ export function ReservationSection({
 
     const [selectedRoute, setSelectedRoute] = useState<any>(null);
     const [selectedPricing, setSelectedPricing] = useState<any>(null);
-    const [selectedTripType, setSelectedTripType] =
-        useState<TripType>("oneWay");
+    const [selectedTripType, setSelectedTripType] = useState<TripType>("oneWay");
 
     const displayCurrency = useCurrencyStore((state) => state.currency);
-
     const countryDropdownRef = useRef<HTMLDivElement | null>(null);
 
-    const [selectedPhoneCountry, setSelectedPhoneCountry] =
-        useState<PhoneCountry>(preferredPhoneCountries[0]);
-
+    const [selectedPhoneCountry, setSelectedPhoneCountry] = useState<PhoneCountry>(preferredPhoneCountries[0]);
     const [isPhoneDropdownOpen, setIsPhoneDropdownOpen] = useState(false);
     const [phoneCountrySearch, setPhoneCountrySearch] = useState("");
     const [hasTriedSubmit, setHasTriedSubmit] = useState(false);
@@ -258,7 +167,7 @@ export function ReservationSection({
                         const item: AddonItem = {
                             id: extra.id,
                             title: extra.name?.[locale] || extra.name?.tr || "Ekstra",
-                            description: extra.name?.en || "", // İsteğe bağlı açıklama
+                            description: extra.name?.en || "", 
                             priceEur: extra.price,
                             icon: extra.category === "BABY_SEAT" ? Baby : Plus,
                         };
@@ -277,85 +186,41 @@ export function ReservationSection({
         fetchExtras();
     }, [locale]);
 
-    const pickupLocations = useMemo(
-        () => Array.from(new Set(dbRoutes.map((r) => r.pickup))).filter(Boolean),
-        [dbRoutes]
-    ) as string[];
-
-    const dropoffLocations = useMemo(
-        () =>
-            Array.from(new Set(dbRoutes.map((r) => r.dropoff))).filter(Boolean),
-        [dbRoutes]
-    ) as string[];
+    const pickupLocations = useMemo(() => Array.from(new Set(dbRoutes.map((r) => r.pickup))).filter(Boolean) as string[], [dbRoutes]);
+    const dropoffLocations = useMemo(() => Array.from(new Set(dbRoutes.map((r) => r.dropoff))).filter(Boolean) as string[], [dbRoutes]);
 
     const otherPhoneCountries = useMemo(() => {
-        return allPhoneCountries
-            .filter(
-                (country) =>
-                    !preferredPhoneCountries.some(
-                        (preferred) => preferred.code === country.code
-                    )
-            )
-            .sort((a, b) => a.label.localeCompare(b.label));
+        return allPhoneCountries.filter((country) => !preferredPhoneCountries.some((preferred) => preferred.code === country.code)).sort((a, b) => a.label.localeCompare(b.label));
     }, []);
 
     const filteredPreferredCountries = useMemo(() => {
         const query = phoneCountrySearch.trim().toLowerCase();
-
         if (!query) return preferredPhoneCountries;
-
-        return preferredPhoneCountries.filter((country) => {
-            return (
-                country.label.toLowerCase().includes(query) ||
-                country.code.toLowerCase().includes(query) ||
-                country.dialCode.includes(query)
-            );
-        });
+        return preferredPhoneCountries.filter((country) => country.label.toLowerCase().includes(query) || country.code.toLowerCase().includes(query) || country.dialCode.includes(query));
     }, [phoneCountrySearch]);
 
     const filteredOtherCountries = useMemo(() => {
         const query = phoneCountrySearch.trim().toLowerCase();
-
         if (!query) return otherPhoneCountries;
-
-        return otherPhoneCountries.filter((country) => {
-            return (
-                country.label.toLowerCase().includes(query) ||
-                country.code.toLowerCase().includes(query) ||
-                country.dialCode.includes(query)
-            );
-        });
+        return otherPhoneCountries.filter((country) => country.label.toLowerCase().includes(query) || country.code.toLowerCase().includes(query) || country.dialCode.includes(query));
     }, [otherPhoneCountries, phoneCountrySearch]);
 
-    const hasCountryResults =
-        filteredPreferredCountries.length > 0 ||
-        filteredOtherCountries.length > 0;
-
+    const hasCountryResults = filteredPreferredCountries.length > 0 || filteredOtherCountries.length > 0;
     const totalPassengers = adults + children;
 
     const availablePricings = useMemo(() => {
         if (!selectedRoute) return [];
-
         return selectedRoute.prices.filter((pricing: any) => {
             const car = pricing.vehicle;
             if (!car.isActive) return false;
-
-            const maxCapacity =
-                parseInt(String(car.pax).replace(/[^\d]/g, "")) || 6;
-
+            const maxCapacity = parseInt(String(car.pax).replace(/[^\d]/g, "")) || 6;
             return totalPassengers <= maxCapacity;
         });
     }, [selectedRoute, totalPassengers]);
 
     const getTripBasePrice = (pricing: any, tripType: TripType) => {
         if (tripType === "oneWay") return Number(pricing.price);
-
-        return Number(
-            pricing.roundTripPrice ??
-            pricing.returnPrice ??
-            pricing.roundTripPriceEur ??
-            Number(pricing.price) * 2
-        );
+        return Number(pricing.roundTripPrice ?? pricing.returnPrice ?? pricing.roundTripPriceEur ?? Number(pricing.price) * 2);
     };
 
     const getFormattedPrice = (baseEurPrice: number) => {
@@ -363,145 +228,67 @@ export function ReservationSection({
             const calculated = baseEurPrice * exchangeRates.eurToTl;
             return `₺ ${calculated.toFixed(2).replace(/\.00$/, "")}`;
         }
-
         if (displayCurrency === "USD") {
             const calculated = baseEurPrice * exchangeRates.eurToUsd;
             return `$ ${calculated.toFixed(2).replace(/\.00$/, "")}`;
         }
-
         return `€ ${baseEurPrice}`;
     };
 
-    const selectedBasePrice = selectedPricing
-        ? getTripBasePrice(selectedPricing, selectedTripType)
-        : 0;
-
-    const selectedBabySeatItems = useMemo(
-        () => getSelectedAddonItems(babySeatOptions, babySeatQuantities),
-        [babySeatQuantities]
-    );
-
-    const selectedVehicleExtraItems = useMemo(
-        () => getSelectedAddonItems(vehicleExtraOptions, vehicleExtraQuantities),
-        [vehicleExtraQuantities]
-    );
-
-    const babySeatTotalPrice = selectedBabySeatItems.reduce(
-        (total, item) => total + item.priceEur * item.quantity,
-        0
-    );
-
-    const vehicleExtraTotalPrice = selectedVehicleExtraItems.reduce(
-        (total, item) => total + item.priceEur * item.quantity,
-        0
-    );
+    const selectedBasePrice = selectedPricing ? getTripBasePrice(selectedPricing, selectedTripType) : 0;
+    const selectedBabySeatItems = useMemo(() => getSelectedAddonItems(babySeatOptions, babySeatQuantities), [babySeatOptions, babySeatQuantities]);
+    const selectedVehicleExtraItems = useMemo(() => getSelectedAddonItems(vehicleExtraOptions, vehicleExtraQuantities), [vehicleExtraOptions, vehicleExtraQuantities]);
+    const babySeatTotalPrice = selectedBabySeatItems.reduce((total, item) => total + item.priceEur * item.quantity, 0);
+    const vehicleExtraTotalPrice = selectedVehicleExtraItems.reduce((total, item) => total + item.priceEur * item.quantity, 0);
 
     const addonTotalPrice = babySeatTotalPrice + vehicleExtraTotalPrice;
     const reservationTotalPrice = selectedBasePrice + addonTotalPrice;
 
-    const totalBabySeatCount = selectedBabySeatItems.reduce(
-        (total, item) => total + item.quantity,
-        0
-    );
-
-    const totalVehicleExtraCount = selectedVehicleExtraItems.reduce(
-        (total, item) => total + item.quantity,
-        0
-    );
+    const totalBabySeatCount = selectedBabySeatItems.reduce((total, item) => total + item.quantity, 0);
+    const totalVehicleExtraCount = selectedVehicleExtraItems.reduce((total, item) => total + item.quantity, 0);
 
     const hasBabySeatSelection = totalBabySeatCount > 0;
     const hasVehicleExtraSelection = totalVehicleExtraCount > 0;
-
     const phoneDigits = getPhoneDigits(phone);
 
     const reservationValidationResult = reservationStep3Schema.safeParse({
-        name,
-        phoneDigits,
-        email,
-        pickupAddressDetail,
-        dropoffAddressDetail,
-        reservationNote,
+        name, phoneDigits, email, pickupAddressDetail, dropoffAddressDetail, reservationNote,
     });
 
-    const reservationFieldErrors = reservationValidationResult.success
-        ? {}
-        : reservationValidationResult.error.flatten().fieldErrors;
-
+    const reservationFieldErrors = reservationValidationResult.success ? {} : reservationValidationResult.error.flatten().fieldErrors;
     const isReservationFormValid = reservationValidationResult.success;
 
     useEffect(() => {
-        const shouldHideWhatsApp =
-            step === 3 || isBabySeatModalOpen || isVehicleExtraModalOpen;
-
-        if (!shouldHideWhatsApp) {
-            document.body.classList.remove("has-reservation-mobile-cta");
-            return;
-        }
-
+        const shouldHideWhatsApp = step === 3 || step === 4 || isBabySeatModalOpen || isVehicleExtraModalOpen;
+        if (!shouldHideWhatsApp) { document.body.classList.remove("has-reservation-mobile-cta"); return; }
         document.body.classList.add("has-reservation-mobile-cta");
-
-        return () => {
-            document.body.classList.remove("has-reservation-mobile-cta");
-        };
+        return () => { document.body.classList.remove("has-reservation-mobile-cta"); };
     }, [step, isBabySeatModalOpen, isVehicleExtraModalOpen]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (
-                countryDropdownRef.current &&
-                !countryDropdownRef.current.contains(event.target as Node)
-            ) {
-                setIsPhoneDropdownOpen(false);
-            }
+            if (countryDropdownRef.current && !countryDropdownRef.current.contains(event.target as Node)) { setIsPhoneDropdownOpen(false); }
         };
-
         document.addEventListener("mousedown", handleClickOutside);
-
-        return () =>
-            document.removeEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
     useEffect(() => {
         const hasOpenModal = isBabySeatModalOpen || isVehicleExtraModalOpen;
-
         if (!hasOpenModal) return;
-
         const previousOverflow = document.body.style.overflow;
-
         document.body.style.overflow = "hidden";
         document.body.classList.add("has-open-modal");
-
-        return () => {
-            document.body.style.overflow = previousOverflow;
-            document.body.classList.remove("has-open-modal");
-        };
+        return () => { document.body.style.overflow = previousOverflow; document.body.classList.remove("has-open-modal"); };
     }, [isBabySeatModalOpen, isVehicleExtraModalOpen]);
 
-    const handleSelectPhoneCountry = (country: PhoneCountry) => {
-        setSelectedPhoneCountry(country);
-        setIsPhoneDropdownOpen(false);
-        setPhoneCountrySearch("");
-    };
+    const handleSelectPhoneCountry = (country: PhoneCountry) => { setSelectedPhoneCountry(country); setIsPhoneDropdownOpen(false); setPhoneCountrySearch(""); };
+    const handlePhoneChange = (value: string) => { setPhone(formatPhoneInput(value)); };
 
-    const handlePhoneChange = (value: string) => {
-        setPhone(formatPhoneInput(value));
-    };
-
-    const handleAddonQuantityChange = (
-        type: "babySeat" | "vehicleExtra",
-        id: string,
-        value: number
-    ) => {
+    const handleAddonQuantityChange = (type: "babySeat" | "vehicleExtra", id: string, value: number) => {
         const safeValue = Math.min(3, Math.max(0, value));
-        const setter =
-            type === "babySeat"
-                ? setBabySeatQuantities
-                : setVehicleExtraQuantities;
-
-        setter((prev) => ({
-            ...prev,
-            [id]: safeValue,
-        }));
+        const setter = type === "babySeat" ? setBabySeatQuantities : setVehicleExtraQuantities;
+        setter((prev) => ({ ...prev, [id]: safeValue }));
     };
 
     const handleFindVehicles = () => {
@@ -509,59 +296,25 @@ export function ReservationSection({
             alert(t("alerts.missingFieldsStep1"));
             return;
         }
-
-        const matchedRoute = dbRoutes.find(
-            (route) => route.pickup === pickup && route.dropoff === dropoff
-        );
-
+        const matchedRoute = dbRoutes.find((route) => route.pickup === pickup && route.dropoff === dropoff);
         if (!matchedRoute || matchedRoute.prices.length === 0) {
             alert(t("alerts.noRoute"));
             return;
         }
-
-        setSelectedRoute(matchedRoute);
-        setSelectedPricing(null);
-        setSelectedTripType("oneWay");
-        setStep(2);
+        setSelectedRoute(matchedRoute); setSelectedPricing(null); setSelectedTripType("oneWay"); setStep(2);
     };
 
-    const handleSelectVehicle = (pricing: any, tripType: TripType) => {
-        setSelectedPricing(pricing);
-        setSelectedTripType(tripType);
-        setStep(3);
-    };
+    const handleSelectVehicle = (pricing: any, tripType: TripType) => { setSelectedPricing(pricing); setSelectedTripType(tripType); setStep(3); };
 
     const handleCompleteReservation = async () => {
         setHasTriedSubmit(true);
-
-        const result = reservationStep3Schema.safeParse({
-            name,
-            phoneDigits,
-            email,
-            pickupAddressDetail,
-            dropoffAddressDetail,
-            reservationNote,
-        });
-
-        if (!result.success) {
-            return;
-        }
+        const result = reservationStep3Schema.safeParse({ name, phoneDigits, email, pickupAddressDetail, dropoffAddressDetail, reservationNote });
+        if (!result.success) return;
 
         setIsSubmitting(true);
-
-        const finalPrice =
-            displayCurrency === "TRY"
-                ? reservationTotalPrice * exchangeRates.eurToTl
-                : displayCurrency === "USD"
-                    ? reservationTotalPrice * exchangeRates.eurToUsd
-                    : reservationTotalPrice;
-
-        const finalCurrencySymbol =
-            displayCurrency === "TRY"
-                ? "₺"
-                : displayCurrency === "USD"
-                    ? "$"
-                    : "€";
+        
+        const finalPrice = displayCurrency === "TRY" ? reservationTotalPrice * exchangeRates.eurToTl : displayCurrency === "USD" ? reservationTotalPrice * exchangeRates.eurToUsd : reservationTotalPrice;
+        const finalCurrencySymbol = displayCurrency === "TRY" ? "₺" : displayCurrency === "USD" ? "$" : "€";
 
         const payload = {
             pickupDateTime: new Date(`${date}T${time}:00`).toISOString(),
@@ -572,40 +325,26 @@ export function ReservationSection({
             customerName: name.trim(),
             customerPhone: `${selectedPhoneCountry.dialCode}${phoneDigits}`,
             customerEmail: email.trim(),
-            
-            // 🔴 ÇÖZÜM BURADA: İsimleri veritabanı şemasıyla (Backend ile) birebir eşleştirdik
+            originalPrice: Number(finalPrice.toFixed(2)),
+            originalCurrency: finalCurrencySymbol,
             pickupAddress: pickupAddressDetail.trim(),
             dropoffAddress: dropoffAddressDetail.trim(),
             extraNotes: reservationNote.trim(),
-            
-            // (Ekstralar zaten başarılı çalışıyor, dokunmuyoruz)
             selectedExtras: [
-                ...selectedBabySeatItems.map((item) => ({
-                    extraId: item.id,
-                    quantity: item.quantity,
-                    priceAtThatTime: item.priceEur,
-                })),
-                ...selectedVehicleExtraItems.map((item) => ({
-                    extraId: item.id,
-                    quantity: item.quantity,
-                    priceAtThatTime: item.priceEur,
-                }))
+                ...selectedBabySeatItems.map((item) => ({ extraId: item.id, quantity: item.quantity, priceAtThatTime: item.priceEur })),
+                ...selectedVehicleExtraItems.map((item) => ({ extraId: item.id, quantity: item.quantity, priceAtThatTime: item.priceEur }))
             ],
             tripType: selectedTripType === "oneWay" ? "ONE_WAY" : "ROUND_TRIP",
         };
 
         try {
-            const response = await fetch("/api/client/reservations", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
-            });
-
+            const response = await fetch("/api/client/reservations", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
             const data = await response.json();
-
+            
             if (data.success) {
-                alert(t("alerts.success", { pnr: data.data.pnrCode }));
-                window.location.reload();
+                setSuccessPnr(data.data.pnrCode);
+                setStep(4);
+                window.scrollTo({ top: 0, behavior: "smooth" });
             } else {
                 alert(data.error || t("alerts.error"));
             }
@@ -617,298 +356,132 @@ export function ReservationSection({
     };
 
     return (
-        <section
-            id="booking"
-            className="min-h-screen bg-[#0d0d0d] px-4 pb-40 pt-28 text-white sm:px-6 sm:pb-24 lg:px-8 lg:pb-28 lg:pt-32"
-        >
-            <motion.div
-                variants={pageVariants}
-                initial="hidden"
-                animate="visible"
-                className="mx-auto max-w-6xl"
-            >
+        <section id="booking" className="min-h-screen bg-[#0d0d0d] px-4 pb-40 pt-28 text-white sm:px-6 sm:pb-24 lg:px-8 lg:pb-28 lg:pt-32">
+            <motion.div variants={pageVariants} initial="hidden" animate="visible" className="mx-auto max-w-6xl">
+                
+                {/* HEADINGS */}
                 <motion.div variants={fadeUpVariants} className="max-w-3xl">
                     <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/35 sm:text-xs sm:tracking-[0.35em]">
-                        Rezervasyon
+                        {t("step1.title")}
                     </p>
-
                     <h1 className="mt-4 text-3xl font-semibold tracking-tight text-white sm:mt-5 sm:text-5xl lg:text-6xl">
-                        Transferinizi{" "}
-                        <span className="text-white/45">planlayın.</span>
+                        {t("mainTitle1")} <span className="text-white/45">{t("mainTitle2")}</span>
                     </h1>
-
                     <p className="mt-4 max-w-2xl text-sm leading-7 text-white/45 sm:mt-5 sm:text-base">
-                        Güzergahınızı, yolcu bilgilerinizi ve araç seçiminizi
-                        birkaç adımda tamamlayın.
+                        {t("mainDescription")}
                     </p>
                 </motion.div>
 
-                <motion.div
-                    variants={fadeUpVariants}
-                    className="mt-8 rounded-[1.5rem] border border-white/10 bg-white/[0.035] p-3 sm:mt-10 sm:rounded-[2rem] sm:p-5 lg:p-6"
-                >
-                    <StepHeader step={step} t={t} />
+                <motion.div variants={fadeUpVariants} className="mt-8 rounded-[1.5rem] border border-white/10 bg-white/[0.035] p-3 sm:mt-10 sm:rounded-[2rem] sm:p-5 lg:p-6">
+                    
+                    {step < 4 && <StepHeader step={step} t={t} />}
 
-                    <div className="mt-5 rounded-[1.25rem] border border-white/10 bg-black/20 p-4 sm:mt-8 sm:rounded-[1.5rem] sm:p-6 lg:p-8">
+                    <div className={`${step < 4 ? 'mt-5' : 'mt-0'} rounded-[1.25rem] border border-white/10 bg-black/20 p-4 sm:${step < 4 ? 'mt-8' : 'mt-0'} sm:rounded-[1.5rem] sm:p-6 lg:p-8`}>
                         <AnimatePresence mode="wait">
+                            
+                            {/* ADIM 1 */}
                             {step === 1 && (
-                                <motion.div
-                                    key="step1"
-                                    variants={stepVariants}
-                                    initial="hidden"
-                                    animate="visible"
-                                    exit="exit"
-                                    className="grid gap-8"
-                                >
-                                    <div>
-                                        <h2 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
-                                            {t("step1.title")}
-                                        </h2>
-                                        <p className="mt-2 text-sm leading-6 text-white/45">
-                                            Alış ve varış noktalarınızı seçerek
-                                            uygun araçları görüntüleyin.
-                                        </p>
-                                    </div>
-
+                                <motion.div key="step1" variants={stepVariants} initial="hidden" animate="visible" exit="exit" className="grid gap-8">
                                     <div className="grid gap-5 md:grid-cols-2">
                                         <SearchSelect
-                                            label={t("step1.fromLabel")}
-                                            icon={MapPin}
-                                            value={pickup}
-                                            placeholder={t(
-                                                "step1.fromPlaceholder"
-                                            )}
-                                            options={pickupLocations}
-                                            onChange={setPickup}
+                                            label={t("step1.fromLabel")} icon={MapPin} value={pickup} placeholder={t("step1.fromPlaceholder")}
+                                            options={pickupLocations} onChange={setPickup}
+                                            searchPlaceholder={t("step1.searchPlaceholder")} noResultsText={t("step1.noResults")}
                                         />
-
                                         <SearchSelect
-                                            label={t("step1.toLabel")}
-                                            icon={MapPin}
-                                            value={dropoff}
-                                            placeholder={t(
-                                                "step1.toPlaceholder"
-                                            )}
-                                            options={dropoffLocations}
-                                            onChange={setDropoff}
+                                            label={t("step1.toLabel")} icon={MapPin} value={dropoff} placeholder={t("step1.toPlaceholder")}
+                                            options={dropoffLocations} onChange={setDropoff}
+                                            searchPlaceholder={t("step1.searchPlaceholder")} noResultsText={t("step1.noResults")}
                                         />
                                     </div>
-
                                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                                         <div className="grid gap-2">
-                                            <label className={labelClass}>
-                                                <Calendar className="h-3.5 w-3.5" />
-                                                {t("step1.dateLabel")}
-                                            </label>
-
-                                            <input
-                                                type="date"
-                                                value={date}
-                                                onChange={(e) =>
-                                                    setDate(e.target.value)
-                                                }
-                                                className={`${inputClass} [color-scheme:dark]`}
-                                            />
+                                            <label className={labelClass}><Calendar className="h-3.5 w-3.5" />{t("step1.dateLabel")}</label>
+                                            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className={`${inputClass} [color-scheme:dark]`} />
                                         </div>
-
                                         <div className="grid gap-2">
-                                            <label className={labelClass}>
-                                                <Clock className="h-3.5 w-3.5" />
-                                                {t("step1.timeLabel")}
-                                            </label>
-
-                                            <input
-                                                type="time"
-                                                value={time}
-                                                onChange={(e) =>
-                                                    setTime(e.target.value)
-                                                }
-                                                className={`${inputClass} [color-scheme:dark]`}
-                                            />
+                                            <label className={labelClass}><Clock className="h-3.5 w-3.5" />{t("step1.timeLabel")}</label>
+                                            <input type="time" value={time} onChange={(e) => setTime(e.target.value)} className={`${inputClass} [color-scheme:dark]`} />
                                         </div>
-
                                         <PassengerCounter
-                                            label={t("step1.adultsLabel")}
-                                            icon={Users}
-                                            value={adults}
-                                            min={1}
-                                            max={16}
-                                            helperText="12 yaş ve üzeri"
-                                            onChange={setAdults}
+                                            label={t("step1.adultsLabel")} icon={Users} value={adults} min={1} max={16}
+                                            helperText={t("step1.adultsHelper")} onChange={setAdults}
                                         />
-
                                         <PassengerCounter
-                                            label={t("step1.childrenLabel")}
-                                            icon={Baby}
-                                            value={children}
-                                            min={0}
-                                            max={6}
-                                            helperText="0 - 11 yaş"
-                                            onChange={setChildren}
+                                            label={t("step1.childrenLabel")} icon={Baby} value={children} min={0} max={6}
+                                            helperText={t("step1.childrenHelper")} onChange={setChildren}
                                         />
                                     </div>
-
                                     <div className="flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between sm:pt-6">
                                         <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3">
                                             <Users className="h-4 w-4 text-[#C084FC]" />
-                                            <p className="text-sm text-white/45">
-                                                Toplam yolcu:{" "}
-                                                <span className="font-semibold text-[#C084FC]">
-                                                    {totalPassengers}
-                                                </span>
-                                            </p>
+                                            <p className="text-sm text-white/45">{t("step1.totalPassengers")} <span className="font-semibold text-[#C084FC]">{totalPassengers}</span></p>
                                         </div>
-
-                                        <button
-                                            type="button"
-                                            onClick={handleFindVehicles}
-                                            className="group flex h-12 w-full items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-black transition duration-300 hover:bg-white/90 active:scale-[0.99] sm:w-auto"
-                                        >
-                                            {t("step1.findButton")}
-                                            <ChevronRight className="h-4 w-4 transition duration-300 group-hover:translate-x-0.5" />
+                                        <button type="button" onClick={handleFindVehicles} className="group flex h-12 w-full items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-black transition duration-300 hover:bg-white/90 active:scale-[0.99] sm:w-auto">
+                                            {t("step1.findButton")} <ChevronRight className="h-4 w-4 transition duration-300 group-hover:translate-x-0.5" />
                                         </button>
                                     </div>
                                 </motion.div>
                             )}
 
+                            {/* ADIM 2 */}
                             {step === 2 && selectedRoute && (
-                                <motion.div
-                                    key="step2"
-                                    variants={stepVariants}
-                                    initial="hidden"
-                                    animate="visible"
-                                    exit="exit"
-                                    className="grid gap-8"
-                                >
+                                <motion.div key="step2" variants={stepVariants} initial="hidden" animate="visible" exit="exit" className="grid gap-8">
                                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                                         <div>
-                                            <h2 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
-                                                {t("step2.title")}
-                                            </h2>
-
-                                            <p className="mt-2 text-sm leading-6 text-white/45">
-                                                {pickup} → {dropoff} ·{" "}
-                                                {totalPassengers}{" "}
-                                                {t("step2.passengerSuffix")}
-                                            </p>
+                                            <h2 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">{t("step2.title")}</h2>
+                                            <p className="mt-2 text-sm leading-6 text-white/45">{pickup} → {dropoff} · {totalPassengers} {t("step2.passengerSuffix")}</p>
                                         </div>
-
-                                        <button
-                                            type="button"
-                                            onClick={() => setStep(1)}
-                                            className="flex h-10 w-fit items-center gap-2 px-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/55 transition hover:text-white"
-                                        >
-                                            <ChevronLeft className="h-3.5 w-3.5" />
-                                            {t("step2.goBack")}
+                                        <button type="button" onClick={() => setStep(1)} className="flex h-10 w-fit items-center gap-2 px-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/55 transition hover:text-white">
+                                            <ChevronLeft className="h-3.5 w-3.5" /> {t("step2.goBack")}
                                         </button>
                                     </div>
 
                                     <div className="rounded-[1.25rem] border border-white/10 bg-white/[0.03] p-3.5 sm:p-4">
                                         <div className="flex items-start gap-3">
-                                            <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#FACC15]/20 bg-[#FACC15]/10 text-[#FACC15]">
-                                                <Info className="h-4 w-4" />
-                                            </div>
-
+                                            <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#FACC15]/20 bg-[#FACC15]/10 text-[#FACC15]"><Info className="h-4 w-4" /></div>
                                             <div>
-                                                <p className="text-sm font-semibold text-white">
-                                                    Fiyatlar yolculuğun toplam
-                                                    ücretidir.
-                                                </p>
-                                                <p className="mt-1 text-sm leading-6 text-white/45">
-                                                    Gösterilen tutarlar kişi
-                                                    başı değildir. Seçtiğiniz
-                                                    araç ve güzergah için toplam
-                                                    transfer ücretini ifade eder.
-                                                </p>
+                                                <p className="text-sm font-semibold text-white">{t("step2.infoTitle")}</p>
+                                                <p className="mt-1 text-sm leading-6 text-white/45">{t("step2.infoDesc")}</p>
                                             </div>
                                         </div>
                                     </div>
 
                                     {availablePricings.length > 0 ? (
                                         <div className="grid gap-4 sm:gap-5">
-                                            {availablePricings.map(
-                                                (pricing: any) => {
-                                                    const car = pricing.vehicle;
-                                                    const oneWayPrice =
-                                                        getTripBasePrice(
-                                                            pricing,
-                                                            "oneWay"
-                                                        );
-                                                    const roundTripPrice =
-                                                        getTripBasePrice(
-                                                            pricing,
-                                                            "roundTrip"
-                                                        );
-
-                                                    return (
-                                                        <VehicleCard
-                                                            key={pricing.id}
-                                                            pricing={pricing}
-                                                            car={car}
-                                                            oneWayPrice={getFormattedPrice(
-                                                                oneWayPrice
-                                                            )}
-                                                            roundTripPrice={getFormattedPrice(
-                                                                roundTripPrice
-                                                            )}
-                                                            t={t}
-                                                            locale={locale}
-                                                            onSelect={(
-                                                                tripType
-                                                            ) =>
-                                                                handleSelectVehicle(
-                                                                    pricing,
-                                                                    tripType
-                                                                )
-                                                            }
-                                                        />
-                                                    );
-                                                }
-                                            )}
+                                            {availablePricings.map((pricing: any) => {
+                                                const car = pricing.vehicle;
+                                                const oneWayPrice = getTripBasePrice(pricing, "oneWay");
+                                                const roundTripPrice = getTripBasePrice(pricing, "roundTrip");
+                                                return (
+                                                    <VehicleCard
+                                                        key={pricing.id} pricing={pricing} car={car}
+                                                        oneWayPrice={getFormattedPrice(oneWayPrice)}
+                                                        roundTripPrice={getFormattedPrice(roundTripPrice)}
+                                                        t={t} locale={locale} onSelect={(tripType) => handleSelectVehicle(pricing, tripType)}
+                                                    />
+                                                );
+                                            })}
                                         </div>
                                     ) : (
                                         <div className="flex min-h-[260px] flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-white/10 bg-white/[0.025] px-6 text-center">
                                             <Users2 className="h-11 w-11 text-white/20" />
-                                            <h3 className="mt-5 text-xl font-semibold text-white">
-                                                {t("step2.capacityErrorTitle")}
-                                            </h3>
-                                            <p className="mt-2 max-w-md text-sm leading-6 text-white/45">
-                                                {t("step2.capacityErrorDesc", {
-                                                    total: totalPassengers,
-                                                })}
-                                            </p>
+                                            <h3 className="mt-5 text-xl font-semibold text-white">{t("step2.capacityErrorTitle")}</h3>
+                                            <p className="mt-2 max-w-md text-sm leading-6 text-white/45">{t("step2.capacityErrorDesc", { total: totalPassengers })}</p>
                                         </div>
                                     )}
                                 </motion.div>
                             )}
 
+                            {/* ADIM 3 */}
                             {step === 3 && selectedPricing && (
-                                <motion.div
-                                    key="step3"
-                                    variants={stepVariants}
-                                    initial="hidden"
-                                    animate="visible"
-                                    exit="exit"
-                                    className="grid gap-6"
-                                >
+                                <motion.div key="step3" variants={stepVariants} initial="hidden" animate="visible" exit="exit" className="grid gap-6">
                                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                                         <div>
-                                            <h2 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
-                                                {t("step3.title")}
-                                            </h2>
-                                            <p className="mt-2 text-sm leading-6 text-white/45">
-                                                Rezervasyonu tamamlamak için
-                                                iletişim bilgilerinizi girin.
-                                            </p>
+                                            <h2 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">{t("step3.title")}</h2>
                                         </div>
-
-                                        <button
-                                            type="button"
-                                            onClick={() => setStep(2)}
-                                            className="flex h-10 w-fit items-center gap-2 px-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/55 transition hover:text-white"
-                                        >
-                                            <ChevronLeft className="h-3.5 w-3.5" />
-                                            {t("step3.goBack")}
+                                        <button type="button" onClick={() => setStep(2)} className="flex h-10 w-fit items-center gap-2 px-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/55 transition hover:text-white">
+                                            <ChevronLeft className="h-3.5 w-3.5" /> {t("step3.goBack")}
                                         </button>
                                     </div>
 
@@ -916,221 +489,69 @@ export function ReservationSection({
                                         <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.03] p-4 sm:rounded-[1.5rem] sm:p-6">
                                             <div className="grid gap-4">
                                                 <div className="grid gap-2">
-                                                    <label className={labelClass}>
-                                                        <User className="h-3.5 w-3.5" />
-                                                        {t("step3.contactInfoTitle")}
-                                                    </label>
-
-                                                    <input
-                                                        type="text"
-                                                        value={name}
-                                                        onChange={(e) =>
-                                                            setName(e.target.value)
-                                                        }
-                                                        placeholder={t(
-                                                            "step3.namePlaceholder"
-                                                        )}
-                                                        autoComplete="name"
-                                                        className={`${contactInputClass} ${hasTriedSubmit &&
-                                                            reservationFieldErrors.name
-                                                            ? "border-red-400/50 focus:border-red-400/60"
-                                                            : ""
-                                                            }`}
-                                                    />
-
-                                                    {hasTriedSubmit &&
-                                                        reservationFieldErrors.name?.[0] && (
-                                                            <p className="pl-1 text-xs text-red-300">
-                                                                {reservationFieldErrors.name[0]}
-                                                            </p>
-                                                        )}
+                                                    <label className={labelClass}><User className="h-3.5 w-3.5" />{t("step3.contactInfoTitle")}</label>
+                                                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t("step3.namePlaceholder")} autoComplete="name" className={`${contactInputClass} ${hasTriedSubmit && reservationFieldErrors.name ? "border-red-400/50 focus:border-red-400/60" : ""}`} />
+                                                    {hasTriedSubmit && reservationFieldErrors.name?.[0] && <p className="pl-1 text-xs text-red-300">{reservationFieldErrors.name[0]}</p>}
                                                 </div>
 
                                                 <div className="grid gap-2">
-                                                    <label className={labelClass}>
-                                                        <Phone className="h-3.5 w-3.5" />
-                                                        Telefon
-                                                    </label>
-
-                                                    <div
-                                                        className="relative"
-                                                        ref={countryDropdownRef}
-                                                    >
-                                                        <div
-                                                            className={`flex overflow-hidden rounded-2xl border bg-black/20 transition duration-200 hover:bg-black/25 focus-within:bg-black/30 ${hasTriedSubmit &&
-                                                                reservationFieldErrors.phoneDigits
-                                                                ? "border-red-400/50 focus-within:border-red-400/60"
-                                                                : "border-white/10 hover:border-white/15 focus-within:border-white/30"
-                                                                }`}
-                                                        >
-                                                            <button
-                                                                type="button"
-                                                                onClick={() =>
-                                                                    setIsPhoneDropdownOpen(
-                                                                        (prev) => !prev
-                                                                    )
-                                                                }
-                                                                className="flex min-w-[106px] items-center justify-center gap-1.5 border-r border-white/10 px-3 py-3.5 text-sm font-semibold text-white/70 outline-none transition hover:bg-white/[0.04] hover:text-white sm:min-w-[126px] sm:gap-2 sm:px-4"
-                                                            >
-                                                                <span
-                                                                    className={`${selectedPhoneCountry.flagClass} bg-transparent text-base outline-none shadow-none`}
-                                                                />
-                                                                <span>
-                                                                    {selectedPhoneCountry.dialCode}
-                                                                </span>
-                                                                <ChevronDown
-                                                                    className={`h-3.5 w-3.5 text-white/35 transition duration-200 ${isPhoneDropdownOpen
-                                                                        ? "rotate-180"
-                                                                        : ""
-                                                                        }`}
-                                                                />
+                                                    <label className={labelClass}><Phone className="h-3.5 w-3.5" />{t("step3.phoneLabel")}</label>
+                                                    <div className="relative" ref={countryDropdownRef}>
+                                                        <div className={`flex overflow-hidden rounded-2xl border bg-black/20 transition duration-200 hover:bg-black/25 focus-within:bg-black/30 ${hasTriedSubmit && reservationFieldErrors.phoneDigits ? "border-red-400/50 focus-within:border-red-400/60" : "border-white/10 hover:border-white/15 focus-within:border-white/30"}`}>
+                                                            <button type="button" onClick={() => setIsPhoneDropdownOpen((prev) => !prev)} className="flex min-w-[106px] items-center justify-center gap-1.5 border-r border-white/10 px-3 py-3.5 text-sm font-semibold text-white/70 outline-none transition hover:bg-white/[0.04] hover:text-white sm:min-w-[126px] sm:gap-2 sm:px-4">
+                                                                <span className={`${selectedPhoneCountry.flagClass} bg-transparent text-base outline-none shadow-none`} />
+                                                                <span>{selectedPhoneCountry.dialCode}</span>
+                                                                <ChevronDown className={`h-3.5 w-3.5 text-white/35 transition duration-200 ${isPhoneDropdownOpen ? "rotate-180" : ""}`} />
                                                             </button>
-
-                                                            <input
-                                                                type="tel"
-                                                                value={phone}
-                                                                onChange={(e) =>
-                                                                    handlePhoneChange(
-                                                                        e.target.value
-                                                                    )
-                                                                }
-                                                                placeholder={t(
-                                                                    "step3.phonePlaceholder"
-                                                                )}
-                                                                inputMode="numeric"
-                                                                autoComplete="tel"
-                                                                className="min-w-0 w-full bg-transparent px-3 py-3.5 text-sm text-white outline-none placeholder:text-white/25 sm:px-4"
-                                                            />
+                                                            <input type="tel" value={phone} onChange={(e) => handlePhoneChange(e.target.value)} placeholder={t("step3.phonePlaceholder")} inputMode="numeric" autoComplete="tel" className="min-w-0 w-full bg-transparent px-3 py-3.5 text-sm text-white outline-none placeholder:text-white/25 sm:px-4" />
                                                         </div>
-
                                                         {isPhoneDropdownOpen && (
                                                             <div className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111111] shadow-2xl shadow-black/40 sm:w-[360px]">
                                                                 <div className="border-b border-white/10 p-2">
                                                                     <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-3">
                                                                         <Search className="h-4 w-4 shrink-0 text-[#22D3EE]/70" />
-
-                                                                        <input
-                                                                            value={phoneCountrySearch}
-                                                                            onChange={(e) =>
-                                                                                setPhoneCountrySearch(
-                                                                                    e.target.value
-                                                                                )
-                                                                            }
-                                                                            placeholder="Ülke veya kod ara..."
-                                                                            className="h-10 w-full bg-transparent text-sm text-white outline-none placeholder:text-white/30"
-                                                                            autoFocus
-                                                                        />
+                                                                        <input value={phoneCountrySearch} onChange={(e) => setPhoneCountrySearch(e.target.value)} placeholder={t("step3.searchCountryPlaceholder")} className="h-10 w-full bg-transparent text-sm text-white outline-none placeholder:text-white/30" autoFocus />
                                                                     </div>
                                                                 </div>
-
                                                                 <div className="max-h-[52svh] overflow-y-auto p-1.5 sm:max-h-[320px]">
-                                                                    {!hasCountryResults && (
-                                                                        <div className="px-4 py-8 text-center text-sm text-white/40">
-                                                                            Ülke bulunamadı.
-                                                                        </div>
-                                                                    )}
-
+                                                                    {!hasCountryResults && <div className="px-4 py-8 text-center text-sm text-white/40">{t("step3.noCountryResults")}</div>}
                                                                     {filteredPreferredCountries.length > 0 && (
                                                                         <div>
-                                                                            <p className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/30">
-                                                                                Sık kullanılanlar
-                                                                            </p>
-
+                                                                            <p className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/30">{t("step3.preferredCountries")}</p>
                                                                             <div className="grid gap-1">
-                                                                                {filteredPreferredCountries.map(
-                                                                                    (country) => {
-                                                                                        const isActive =
-                                                                                            selectedPhoneCountry.code ===
-                                                                                            country.code;
-
-                                                                                        return (
-                                                                                            <button
-                                                                                                key={country.code}
-                                                                                                type="button"
-                                                                                                onClick={() =>
-                                                                                                    handleSelectPhoneCountry(
-                                                                                                        country
-                                                                                                    )
-                                                                                                }
-                                                                                                className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-white outline-none transition hover:bg-white/10"
-                                                                                            >
-                                                                                                <span
-                                                                                                    className={`${country.flagClass} bg-transparent text-base outline-none shadow-none`}
-                                                                                                />
-
-                                                                                                <div className="min-w-0 flex-1">
-                                                                                                    <p className="truncate text-sm font-medium text-white">
-                                                                                                        {country.label}
-                                                                                                    </p>
-
-                                                                                                    <p className="text-xs text-white/40">
-                                                                                                        {country.code}{" "}
-                                                                                                        {country.dialCode}
-                                                                                                    </p>
-                                                                                                </div>
-
-                                                                                                {isActive && (
-                                                                                                    <Check className="h-4 w-4 shrink-0 text-[#22D3EE]" />
-                                                                                                )}
-                                                                                            </button>
-                                                                                        );
-                                                                                    }
-                                                                                )}
+                                                                                {filteredPreferredCountries.map((country) => {
+                                                                                    const isActive = selectedPhoneCountry.code === country.code;
+                                                                                    return (
+                                                                                        <button key={country.code} type="button" onClick={() => handleSelectPhoneCountry(country)} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-white outline-none transition hover:bg-white/10">
+                                                                                            <span className={`${country.flagClass} bg-transparent text-base outline-none shadow-none`} />
+                                                                                            <div className="min-w-0 flex-1">
+                                                                                                <p className="truncate text-sm font-medium text-white">{country.label}</p>
+                                                                                                <p className="text-xs text-white/40">{country.code} {country.dialCode}</p>
+                                                                                            </div>
+                                                                                            {isActive && <Check className="h-4 w-4 shrink-0 text-[#22D3EE]" />}
+                                                                                        </button>
+                                                                                    );
+                                                                                })}
                                                                             </div>
                                                                         </div>
                                                                     )}
-
-                                                                    {filteredPreferredCountries.length > 0 &&
-                                                                        filteredOtherCountries.length > 0 && (
-                                                                            <div className="my-1 h-px bg-white/10" />
-                                                                        )}
-
                                                                     {filteredOtherCountries.length > 0 && (
                                                                         <div>
-                                                                            <p className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/30">
-                                                                                Tüm ülkeler
-                                                                            </p>
-
+                                                                            <p className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/30">{t("step3.allCountries")}</p>
                                                                             <div className="grid gap-1">
-                                                                                {filteredOtherCountries.map(
-                                                                                    (country) => {
-                                                                                        const isActive =
-                                                                                            selectedPhoneCountry.code ===
-                                                                                            country.code;
-
-                                                                                        return (
-                                                                                            <button
-                                                                                                key={country.code}
-                                                                                                type="button"
-                                                                                                onClick={() =>
-                                                                                                    handleSelectPhoneCountry(
-                                                                                                        country
-                                                                                                    )
-                                                                                                }
-                                                                                                className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-white outline-none transition hover:bg-white/10"
-                                                                                            >
-                                                                                                <span
-                                                                                                    className={`${country.flagClass} bg-transparent text-base outline-none shadow-none`}
-                                                                                                />
-
-                                                                                                <div className="min-w-0 flex-1">
-                                                                                                    <p className="truncate text-sm font-medium text-white">
-                                                                                                        {country.label}
-                                                                                                    </p>
-
-                                                                                                    <p className="text-xs text-white/40">
-                                                                                                        {country.code}{" "}
-                                                                                                        {country.dialCode}
-                                                                                                    </p>
-                                                                                                </div>
-
-                                                                                                {isActive && (
-                                                                                                    <Check className="h-4 w-4 shrink-0 text-[#22D3EE]" />
-                                                                                                )}
-                                                                                            </button>
-                                                                                        );
-                                                                                    }
-                                                                                )}
+                                                                                {filteredOtherCountries.map((country) => {
+                                                                                    const isActive = selectedPhoneCountry.code === country.code;
+                                                                                    return (
+                                                                                        <button key={country.code} type="button" onClick={() => handleSelectPhoneCountry(country)} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-white outline-none transition hover:bg-white/10">
+                                                                                            <span className={`${country.flagClass} bg-transparent text-base outline-none shadow-none`} />
+                                                                                            <div className="min-w-0 flex-1">
+                                                                                                <p className="truncate text-sm font-medium text-white">{country.label}</p>
+                                                                                                <p className="text-xs text-white/40">{country.code} {country.dialCode}</p>
+                                                                                            </div>
+                                                                                            {isActive && <Check className="h-4 w-4 shrink-0 text-[#22D3EE]" />}
+                                                                                        </button>
+                                                                                    );
+                                                                                })}
                                                                             </div>
                                                                         </div>
                                                                     )}
@@ -1138,44 +559,13 @@ export function ReservationSection({
                                                             </div>
                                                         )}
                                                     </div>
-
-                                                    {hasTriedSubmit &&
-                                                        reservationFieldErrors.phoneDigits?.[0] && (
-                                                            <p className="pl-1 text-xs text-red-300">
-                                                                {reservationFieldErrors.phoneDigits[0]}
-                                                            </p>
-                                                        )}
+                                                    {hasTriedSubmit && reservationFieldErrors.phoneDigits?.[0] && <p className="pl-1 text-xs text-red-300">{reservationFieldErrors.phoneDigits[0]}</p>}
                                                 </div>
 
                                                 <div className="grid gap-2">
-                                                    <label className={labelClass}>
-                                                        <Mail className="h-3.5 w-3.5" />
-                                                        E-posta
-                                                    </label>
-
-                                                    <input
-                                                        type="email"
-                                                        value={email}
-                                                        onChange={(e) =>
-                                                            setEmail(e.target.value)
-                                                        }
-                                                        placeholder={t(
-                                                            "step3.emailPlaceholder"
-                                                        )}
-                                                        autoComplete="email"
-                                                        className={`${contactInputClass} ${hasTriedSubmit &&
-                                                            reservationFieldErrors.email
-                                                            ? "border-red-400/50 focus:border-red-400/60"
-                                                            : ""
-                                                            }`}
-                                                    />
-
-                                                    {hasTriedSubmit &&
-                                                        reservationFieldErrors.email?.[0] && (
-                                                            <p className="pl-1 text-xs text-red-300">
-                                                                {reservationFieldErrors.email[0]}
-                                                            </p>
-                                                        )}
+                                                    <label className={labelClass}><Mail className="h-3.5 w-3.5" />{t("step3.emailLabel")}</label>
+                                                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t("step3.emailPlaceholder")} autoComplete="email" className={`${contactInputClass} ${hasTriedSubmit && reservationFieldErrors.email ? "border-red-400/50 focus:border-red-400/60" : ""}`} />
+                                                    {hasTriedSubmit && reservationFieldErrors.email?.[0] && <p className="pl-1 text-xs text-red-300">{reservationFieldErrors.email[0]}</p>}
                                                 </div>
                                             </div>
 
@@ -1183,284 +573,85 @@ export function ReservationSection({
                                                 <div className="flex items-center justify-between gap-3">
                                                     <div className="flex items-center gap-2">
                                                         <span className="h-2 w-2 rounded-full bg-[#22D3EE]" />
-                                                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
-                                                            Transfer detayı
-                                                        </p>
+                                                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">{t("step3.transferDetailTitle")}</p>
                                                     </div>
-
-                                                    <span className="hidden text-xs font-medium text-white/30 sm:inline">
-                                                        Opsiyonel bilgiler
-                                                    </span>
+                                                    <span className="hidden text-xs font-medium text-white/30 sm:inline">{t("step3.optionalInfo")}</span>
                                                 </div>
 
                                                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                                                     <div className="grid gap-2">
-                                                        <label className="pl-1 text-xs font-medium text-white/45">
-                                                            Alınacak adres / hotel adı
-                                                        </label>
-
-                                                        <input
-                                                            type="text"
-                                                            value={pickupAddressDetail}
-                                                            onChange={(e) =>
-                                                                setPickupAddressDetail(e.target.value)
-                                                            }
-                                                            placeholder="Otel, lobi, blok veya kapı no"
-                                                            className={`${contactInputClass} ${hasTriedSubmit &&
-                                                                reservationFieldErrors.pickupAddressDetail
-                                                                ? "border-red-400/50 focus:border-red-400/60"
-                                                                : ""
-                                                                }`}
-                                                        />
-
-                                                        {hasTriedSubmit &&
-                                                            reservationFieldErrors.pickupAddressDetail?.[0] && (
-                                                                <p className="pl-1 text-xs text-red-300">
-                                                                    {reservationFieldErrors.pickupAddressDetail[0]}
-                                                                </p>
-                                                            )}
+                                                        <label className="pl-1 text-xs font-medium text-white/45">{t("step3.pickupDetailLabel")}</label>
+                                                        <input type="text" value={pickupAddressDetail} onChange={(e) => setPickupAddressDetail(e.target.value)} placeholder={t("step3.pickupDetailPlaceholder")} className={`${contactInputClass} ${hasTriedSubmit && reservationFieldErrors.pickupAddressDetail ? "border-red-400/50 focus:border-red-400/60" : ""}`} />
+                                                        {hasTriedSubmit && reservationFieldErrors.pickupAddressDetail?.[0] && <p className="pl-1 text-xs text-red-300">{reservationFieldErrors.pickupAddressDetail[0]}</p>}
                                                     </div>
-
                                                     <div className="grid gap-2">
-                                                        <label className="pl-1 text-xs font-medium text-white/45">
-                                                            Bırakılacak adres / hotel adı
-                                                        </label>
-
-                                                        <input
-                                                            type="text"
-                                                            value={dropoffAddressDetail}
-                                                            onChange={(e) =>
-                                                                setDropoffAddressDetail(e.target.value)
-                                                            }
-                                                            placeholder="Otel, terminal, villa veya adres"
-                                                            className={`${contactInputClass} ${hasTriedSubmit &&
-                                                                reservationFieldErrors.dropoffAddressDetail
-                                                                ? "border-red-400/50 focus:border-red-400/60"
-                                                                : ""
-                                                                }`}
-                                                        />
-
-                                                        {hasTriedSubmit &&
-                                                            reservationFieldErrors.dropoffAddressDetail?.[0] && (
-                                                                <p className="pl-1 text-xs text-red-300">
-                                                                    {reservationFieldErrors.dropoffAddressDetail[0]}
-                                                                </p>
-                                                            )}
+                                                        <label className="pl-1 text-xs font-medium text-white/45">{t("step3.dropoffDetailLabel")}</label>
+                                                        <input type="text" value={dropoffAddressDetail} onChange={(e) => setDropoffAddressDetail(e.target.value)} placeholder={t("step3.dropoffDetailPlaceholder")} className={`${contactInputClass} ${hasTriedSubmit && reservationFieldErrors.dropoffAddressDetail ? "border-red-400/50 focus:border-red-400/60" : ""}`} />
+                                                        {hasTriedSubmit && reservationFieldErrors.dropoffAddressDetail?.[0] && <p className="pl-1 text-xs text-red-300">{reservationFieldErrors.dropoffAddressDetail[0]}</p>}
                                                     </div>
                                                 </div>
 
                                                 <div className="mt-3 grid gap-2">
-                                                    <label className="pl-1 text-xs font-medium text-white/45">
-                                                        Rezervasyon notu
-                                                    </label>
-
-                                                    <textarea
-                                                        value={reservationNote}
-                                                        onChange={(e) =>
-                                                            setReservationNote(e.target.value)
-                                                        }
-                                                        placeholder="Uçuş numarası, özel karşılama notu veya ek talebinizi yazabilirsiniz."
-                                                        className={`min-h-[96px] w-full resize-none rounded-2xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm leading-6 text-white outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus:border-white/30 focus:bg-black/30 ${hasTriedSubmit &&
-                                                            reservationFieldErrors.reservationNote
-                                                            ? "border-red-400/50 focus:border-red-400/60"
-                                                            : ""
-                                                            }`}
-                                                    />
-
+                                                    <label className="pl-1 text-xs font-medium text-white/45">{t("step3.noteLabel")}</label>
+                                                    <textarea value={reservationNote} onChange={(e) => setReservationNote(e.target.value)} placeholder={t("step3.notePlaceholder")} className={`min-h-[96px] w-full resize-none rounded-2xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm leading-6 text-white outline-none transition duration-200 placeholder:text-white/25 hover:border-white/15 hover:bg-black/25 focus:border-white/30 focus:bg-black/30 ${hasTriedSubmit && reservationFieldErrors.reservationNote ? "border-red-400/50 focus:border-red-400/60" : ""}`} />
                                                     <div className="flex items-center justify-between gap-3 pl-1">
-                                                        {hasTriedSubmit &&
-                                                            reservationFieldErrors.reservationNote?.[0] ? (
-                                                            <p className="text-xs text-red-300">
-                                                                {reservationFieldErrors.reservationNote[0]}
-                                                            </p>
-                                                        ) : (
-                                                            <p className="text-xs text-white/30">
-                                                                Maksimum 1000 karakter.
-                                                            </p>
-                                                        )}
-
-                                                        <p className="text-xs text-white/25">
-                                                            {reservationNote.trim().length}/1000
-                                                        </p>
+                                                        {hasTriedSubmit && reservationFieldErrors.reservationNote?.[0] ? <p className="text-xs text-red-300">{reservationFieldErrors.reservationNote[0]}</p> : <p className="text-xs text-white/30">{t("step3.noteMaxChars")}</p>}
+                                                        <p className="text-xs text-white/25">{reservationNote.trim().length}/1000</p>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div className="mt-6 border-t border-white/10 pt-6">
-                                                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
-                                                    Ek talepler
-                                                </p>
-                                                <p className="mt-2 text-sm leading-6 text-white/45">
-                                                    İsterseniz rezervasyonunuza
-                                                    birkaç ek not bırakın.
-                                                </p>
-
+                                                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">{t("step3.extraRequestsTitle")}</p>
+                                                <p className="mt-2 text-sm leading-6 text-white/45">{t("step3.extraRequestsDesc")}</p>
                                                 <div className="mt-3 grid gap-3 sm:mt-4 sm:grid-cols-2">
-                                                    <AddonToggle
-                                                        icon={Baby}
-                                                        tone="purple"
-                                                        title="Bebek koltuğu istiyorum"
-                                                        description={
-                                                            hasBabySeatSelection
-                                                                ? `${totalBabySeatCount} adet seçildi · ${getFormattedPrice(
-                                                                    babySeatTotalPrice
-                                                                )}`
-                                                                : "Puset, bebek koltuğu veya yükseltici seçin"
-                                                        }
-                                                        active={hasBabySeatSelection}
-                                                        onClick={() =>
-                                                            setIsBabySeatModalOpen(true)
-                                                        }
-                                                    />
-
-                                                    <AddonToggle
-                                                        icon={Plus}
-                                                        tone="yellow"
-                                                        title="Araç içinde ekstra istiyorum"
-                                                        description={
-                                                            hasVehicleExtraSelection
-                                                                ? `${totalVehicleExtraCount} ekstra seçildi · ${getFormattedPrice(
-                                                                    vehicleExtraTotalPrice
-                                                                )}`
-                                                                : "Kutlama, çiçek veya içecek paketi seçin"
-                                                        }
-                                                        active={hasVehicleExtraSelection}
-                                                        onClick={() =>
-                                                            setIsVehicleExtraModalOpen(true)
-                                                        }
-                                                    />
+                                                    <AddonToggle icon={Baby} tone="purple" title={t("step3.babySeatTitle")} description={hasBabySeatSelection ? `${totalBabySeatCount} ${t("step3.itemsSelected")} · ${getFormattedPrice(babySeatTotalPrice)}` : t("step3.babySeatDesc")} active={hasBabySeatSelection} onClick={() => setIsBabySeatModalOpen(true)} />
+                                                    <AddonToggle icon={Plus} tone="yellow" title={t("step3.vehicleExtraTitle")} description={hasVehicleExtraSelection ? `${totalVehicleExtraCount} ${t("step3.extrasSelected")} · ${getFormattedPrice(vehicleExtraTotalPrice)}` : t("step3.vehicleExtraDesc")} active={hasVehicleExtraSelection} onClick={() => setIsVehicleExtraModalOpen(true)} />
                                                 </div>
                                             </div>
-
                                         </div>
 
                                         <div className="rounded-[1.35rem] border border-white/10 bg-white/[0.035] p-4 sm:rounded-[1.5rem] sm:p-6 lg:sticky lg:top-24">
-                                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
-                                                {t("step3.summaryTitle")}
-                                            </p>
-
+                                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">{t("step3.summaryTitle")}</p>
                                             <div className="mt-5 grid gap-4">
-                                                <SummaryRow
-                                                    label="Araç"
-                                                    value={
-                                                        selectedPricing.vehicle
-                                                            .name
-                                                    }
-                                                />
-                                                <SummaryRow
-                                                    label="Güzergah"
-                                                    value={`${pickup} → ${dropoff}`}
-                                                />
-                                                <SummaryRow
-                                                    label="Yolculuk tipi"
-                                                    value={
-                                                        selectedTripType ===
-                                                            "oneWay"
-                                                            ? "Tek yön"
-                                                            : "Gidiş dönüş"
-                                                    }
-                                                />
-                                                <SummaryRow
-                                                    label="Tarih"
-                                                    value={`${date} · ${time}`}
-                                                />
-                                                <SummaryRow
-                                                    label="Yolcu"
-                                                    value={`${totalPassengers}`}
-                                                />
+                                                <SummaryRow label={t("summary.vehicle")} value={selectedPricing.vehicle.name} />
+                                                <SummaryRow label={t("summary.route")} value={`${pickup} → ${dropoff}`} />
+                                                <SummaryRow label={t("summary.tripType")} value={selectedTripType === "oneWay" ? t("summary.oneWay") : t("summary.roundTrip")} />
+                                                <SummaryRow label={t("summary.date")} value={`${date} · ${time}`} />
+                                                <SummaryRow label={t("summary.passenger")} value={`${totalPassengers}`} />
                                             </div>
 
-                                            {(pickupAddressDetail ||
-                                                dropoffAddressDetail ||
-                                                reservationNote) && (
-                                                    <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
-                                                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
-                                                            Transfer detayı
-                                                        </p>
-                                                        <div className="mt-3 grid gap-3">
-                                                            {pickupAddressDetail && (
-                                                                <SummaryRow
-                                                                    label="Alınacak yer"
-                                                                    value={pickupAddressDetail}
-                                                                />
-                                                            )}
-                                                            {dropoffAddressDetail && (
-                                                                <SummaryRow
-                                                                    label="Bırakılacak yer"
-                                                                    value={dropoffAddressDetail}
-                                                                />
-                                                            )}
-                                                            {reservationNote && (
-                                                                <SummaryRow
-                                                                    label="Not"
-                                                                    value={reservationNote}
-                                                                />
-                                                            )}
-                                                        </div>
+                                            {(pickupAddressDetail || dropoffAddressDetail || reservationNote) && (
+                                                <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
+                                                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">{t("step3.transferDetailTitle")}</p>
+                                                    <div className="mt-3 grid gap-3">
+                                                        {pickupAddressDetail && <SummaryRow label={t("summary.pickup")} value={pickupAddressDetail} />}
+                                                        {dropoffAddressDetail && <SummaryRow label={t("summary.dropoff")} value={dropoffAddressDetail} />}
+                                                        {reservationNote && <SummaryRow label={t("summary.note")} value={reservationNote} />}
                                                     </div>
-                                                )}
+                                                </div>
+                                            )}
 
-                                            {(hasBabySeatSelection ||
-                                                hasVehicleExtraSelection) && (
-                                                    <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
-                                                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
-                                                            Ek talepler
-                                                        </p>
-                                                        <div className="mt-3 grid gap-3">
-                                                            {selectedBabySeatItems.map((item) => (
-                                                                <SummaryRow
-                                                                    key={item.id}
-                                                                    label={`${item.quantity} x ${item.title}`}
-                                                                    value={getFormattedPrice(
-                                                                        item.priceEur * item.quantity
-                                                                    )}
-                                                                />
-                                                            ))}
-                                                            {selectedVehicleExtraItems.map((item) => (
-                                                                <SummaryRow
-                                                                    key={item.id}
-                                                                    label={`${item.quantity} x ${item.title}`}
-                                                                    value={getFormattedPrice(
-                                                                        item.priceEur * item.quantity
-                                                                    )}
-                                                                />
-                                                            ))}
-                                                        </div>
+                                            {(hasBabySeatSelection || hasVehicleExtraSelection) && (
+                                                <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
+                                                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">{t("summary.extras")}</p>
+                                                    <div className="mt-3 grid gap-3">
+                                                        {selectedBabySeatItems.map((item) => <SummaryRow key={item.id} label={`${item.quantity} x ${item.title}`} value={getFormattedPrice(item.priceEur * item.quantity)} />)}
+                                                        {selectedVehicleExtraItems.map((item) => <SummaryRow key={item.id} label={`${item.quantity} x ${item.title}`} value={getFormattedPrice(item.priceEur * item.quantity)} />)}
                                                     </div>
-                                                )}
+                                                </div>
+                                            )}
 
                                             <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
-                                                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
-                                                    Toplam yolculuk ücreti
-                                                </p>
-                                                <p className="mt-1 text-3xl font-semibold tracking-tight text-[#FACC15]">
-                                                    {getFormattedPrice(
-                                                        reservationTotalPrice
-                                                    )}
-                                                </p>
-                                                <p className="mt-2 text-xs leading-5 text-white/40">
-                                                    Bu tutara seçili araç, yolculuk tipi
-                                                    ve varsa ek talepler dahildir.
-                                                </p>
+                                                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">{t("summary.totalPrice")}</p>
+                                                <p className="mt-1 text-3xl font-semibold tracking-tight text-[#FACC15]">{getFormattedPrice(reservationTotalPrice)}</p>
+                                                <p className="mt-2 text-xs leading-5 text-white/40">{t("summary.totalDesc")}</p>
                                             </div>
 
                                             <div className="mt-6 hidden border-t border-white/10 pb-1 pt-6 lg:block">
-                                                <p className="mb-4 text-sm leading-6 text-white/40">
-                                                    Bilgilerinizi kontrol edip rezervasyonunuzu tek adımda tamamlayabilirsiniz.
-                                                </p>
-
-                                                <button
-                                                    type="button"
-                                                    disabled={!isReservationFormValid || isSubmitting}
-                                                    onClick={handleCompleteReservation}
-                                                    className={`group inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-full px-6 text-sm font-semibold transition duration-300 ${isReservationFormValid && !isSubmitting
-                                                        ? "bg-white text-black hover:bg-white/90 active:scale-[0.99]"
-                                                        : "cursor-not-allowed bg-white/30 text-black/45"
-                                                        }`}
-                                                >
-                                                    {isSubmitting
-                                                        ? t("step3.loadingButton")
-                                                        : t("step3.submitButton")}
+                                                <p className="mb-4 text-sm leading-6 text-white/40">{t("summary.infoCheck")}</p>
+                                                <button type="button" disabled={!isReservationFormValid || isSubmitting} onClick={handleCompleteReservation} className={`group inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-full px-6 text-sm font-semibold transition duration-300 ${isReservationFormValid && !isSubmitting ? "bg-white text-black hover:bg-white/90 active:scale-[0.99]" : "cursor-not-allowed bg-white/30 text-black/45"}`}>
+                                                    {isSubmitting ? t("step3.loadingButton") : t("step3.submitButton")}
                                                     <CheckCircle2 className="h-4 w-4 transition duration-300 group-hover:scale-105" />
                                                 </button>
                                             </div>
@@ -1468,6 +659,67 @@ export function ReservationSection({
                                     </div>
                                 </motion.div>
                             )}
+                            
+                            {/* ADIM 4 (BAŞARILI EKRANI) */}
+                            {step === 4 && successPnr && (
+                                <motion.div
+                                    key="step4"
+                                    variants={stepVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                    exit="exit"
+                                    className="flex flex-col items-center text-center py-8 sm:py-12"
+                                >
+                                    <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-500/10 text-green-500 mb-6">
+                                        <CheckCircle2 className="h-10 w-10" />
+                                    </div>
+                                    
+                                    <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+                                        {t("step4.title")}
+                                    </h2>
+                                    
+                                    <p className="mt-3 text-sm leading-6 text-white/45 max-w-md mx-auto">
+                                        {t("step4.description")}
+                                    </p>
+
+                                    <div className="mt-8 w-full max-w-md rounded-[1.5rem] border border-white/10 bg-black/20 p-6 sm:p-8">
+                                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35 mb-2">
+                                            {t("step4.pnrLabel")}
+                                        </p>
+                                        
+                                        <div className="flex items-center justify-center gap-3 bg-white/5 border border-white/10 rounded-2xl py-4 mb-6">
+                                            <span className="text-3xl font-bold tracking-widest text-[#22D3EE]">
+                                                {successPnr}
+                                            </span>
+                                        </div>
+                                        
+                                        <p className="text-xs text-white/40 mb-6 px-4">
+                                            {t("step4.saveWarning")}
+                                        </p>
+
+                                        <div className="text-left border-t border-white/10 pt-6">
+                                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35 mb-4">
+                                                {t("step4.summaryTitle")}
+                                            </p>
+                                            <div className="grid gap-3">
+                                                <SummaryRow label={t("summary.route")} value={`${pickup} → ${dropoff}`} />
+                                                <SummaryRow label={t("summary.date")} value={`${date} · ${time}`} />
+                                                <SummaryRow label={t("summary.vehicle")} value={selectedPricing.vehicle.name} />
+                                                <SummaryRow label={t("summary.totalPrice")} value={getFormattedPrice(reservationTotalPrice)} />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => window.location.reload()}
+                                        className="mt-8 inline-flex h-12 items-center justify-center rounded-full bg-white px-8 text-sm font-semibold text-black transition hover:bg-white/90 active:scale-[0.98]"
+                                    >
+                                        {t("step4.newReservationButton")}
+                                    </button>
+                                </motion.div>
+                            )}
+
                         </AnimatePresence>
                     </div>
                 </motion.div>
@@ -1475,53 +727,33 @@ export function ReservationSection({
 
             <AddonSelectionModal
                 isOpen={isBabySeatModalOpen}
-                title="Bebek koltuğu seçimi"
-                description="Her seçenekten en fazla 3 adet ekleyebilirsiniz. Seçimler toplam ücrete otomatik eklenir."
-                items={babySeatOptions}
-                quantities={babySeatQuantities}
-                getFormattedPrice={getFormattedPrice}
-                onQuantityChange={(id, value) =>
-                    handleAddonQuantityChange("babySeat", id, value)
-                }
+                title={t("addonModal.babySeatTitle")} description={t("addonModal.babySeatDesc")}
+                items={babySeatOptions} quantities={babySeatQuantities} getFormattedPrice={getFormattedPrice}
+                onQuantityChange={(id, value) => handleAddonQuantityChange("babySeat", id, value)}
                 onClose={() => setIsBabySeatModalOpen(false)}
+                badgeText={t("addonModal.badge")} closeText={t("addonModal.close")} perItemText={t("addonModal.perItem")}
+                totalTitleText={t("addonModal.totalTitle")} selectionCountText={t("addonModal.selectionCount")} confirmBtnText={t("addonModal.confirmBtn")}
             />
 
             <AddonSelectionModal
                 isOpen={isVehicleExtraModalOpen}
-                title="Araç içi ekstra seçimi"
-                description="Yolculuk deneyimini kişiselleştirmek için mock ekstra paketlerden seçim yapabilirsiniz."
-                items={vehicleExtraOptions}
-                quantities={vehicleExtraQuantities}
-                getFormattedPrice={getFormattedPrice}
-                onQuantityChange={(id, value) =>
-                    handleAddonQuantityChange("vehicleExtra", id, value)
-                }
+                title={t("addonModal.vehicleExtraTitle")} description={t("addonModal.vehicleExtraDesc")}
+                items={vehicleExtraOptions} quantities={vehicleExtraQuantities} getFormattedPrice={getFormattedPrice}
+                onQuantityChange={(id, value) => handleAddonQuantityChange("vehicleExtra", id, value)}
                 onClose={() => setIsVehicleExtraModalOpen(false)}
+                badgeText={t("addonModal.badge")} closeText={t("addonModal.close")} perItemText={t("addonModal.perItem")}
+                totalTitleText={t("addonModal.totalTitle")} selectionCountText={t("addonModal.selectionCount")} confirmBtnText={t("addonModal.confirmBtn")}
             />
 
             {step === 3 && selectedPricing && (
                 <div className="fixed inset-x-0 bottom-0 z-[80] border-t border-white/10 bg-[#0d0d0d]/95 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur-xl lg:hidden">
                     <div className="mx-auto flex max-w-6xl items-center gap-3">
                         <div className="min-w-0 flex-1">
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/35">
-                                Toplam
-                            </p>
-                            <p className="truncate text-xl font-semibold tracking-tight text-[#FACC15]">
-                                {getFormattedPrice(reservationTotalPrice)}
-                            </p>
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/35">{t("summary.totalLabelMobile")}</p>
+                            <p className="truncate text-xl font-semibold tracking-tight text-[#FACC15]">{getFormattedPrice(reservationTotalPrice)}</p>
                         </div>
-
-                        <button
-                            type="button"
-                            disabled={!isReservationFormValid || isSubmitting}
-                            onClick={handleCompleteReservation}
-                            className={`inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full px-5 text-xs font-semibold transition duration-300 ${isReservationFormValid && !isSubmitting
-                                ? "bg-white text-black active:scale-[0.98]"
-                                : "cursor-not-allowed bg-white/30 text-black/45"
-                                }`}
-                        >
-                            {isSubmitting ? t("step3.loadingButton") : t("step3.submitButton")}
-                            <CheckCircle2 className="h-4 w-4" />
+                        <button type="button" disabled={!isReservationFormValid || isSubmitting} onClick={handleCompleteReservation} className={`inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full px-5 text-xs font-semibold transition duration-300 ${isReservationFormValid && !isSubmitting ? "bg-white text-black active:scale-[0.98]" : "cursor-not-allowed bg-white/30 text-black/45"}`}>
+                            {isSubmitting ? t("step3.loadingButton") : t("step3.submitButton")} <CheckCircle2 className="h-4 w-4" />
                         </button>
                     </div>
                 </div>
@@ -1536,82 +768,37 @@ function StepHeader({ step, t }: { step: number; t: any }) {
         { number: 2, label: t("steps.step2") },
         { number: 3, label: t("steps.step3") },
     ];
-
     return (
         <div className="grid gap-3">
             <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/20 p-2 sm:hidden">
                 {steps.map((item, index) => {
                     const isActive = step === item.number;
                     const isCompleted = step > item.number;
-
                     return (
                         <div key={item.number} className="flex flex-1 items-center">
                             <div className="flex flex-1 flex-col items-center gap-1.5">
-                                <div
-                                    className={`flex h-9 w-9 items-center justify-center rounded-full border text-sm font-semibold transition duration-300 ${isCompleted
-                                        ? "border-[#22D3EE] bg-[#22D3EE] text-black"
-                                        : isActive
-                                            ? "border-[#22D3EE]/35 bg-[#22D3EE]/10 text-[#22D3EE]"
-                                            : "border-white/10 bg-white/[0.03] text-white/35"
-                                        }`}
-                                >
+                                <div className={`flex h-9 w-9 items-center justify-center rounded-full border text-sm font-semibold transition duration-300 ${isCompleted ? "border-[#22D3EE] bg-[#22D3EE] text-black" : isActive ? "border-[#22D3EE]/35 bg-[#22D3EE]/10 text-[#22D3EE]" : "border-white/10 bg-white/[0.03] text-white/35"}`}>
                                     {isCompleted ? <Check className="h-4 w-4" /> : item.number}
                                 </div>
-                                <p
-                                    className={`max-w-[80px] truncate text-[10px] font-medium ${isActive || isCompleted ? "text-white" : "text-white/35"
-                                        }`}
-                                >
-                                    {item.label}
-                                </p>
+                                <p className={`max-w-[80px] truncate text-[10px] font-medium ${isActive || isCompleted ? "text-white" : "text-white/35"}`}>{item.label}</p>
                             </div>
-
-                            {index < steps.length - 1 && (
-                                <div
-                                    className={`mx-1 h-px flex-1 ${step > item.number ? "bg-[#22D3EE]/70" : "bg-white/10"
-                                        }`}
-                                />
-                            )}
+                            {index < steps.length - 1 && <div className={`mx-1 h-px flex-1 ${step > item.number ? "bg-[#22D3EE]/70" : "bg-white/10"}`} />}
                         </div>
                     );
                 })}
             </div>
-
             <div className="hidden gap-3 sm:grid sm:grid-cols-3">
                 {steps.map((item) => {
                     const isActive = step === item.number;
                     const isCompleted = step > item.number;
-
                     return (
-                        <div
-                            key={item.number}
-                            className={`flex items-center gap-3 rounded-2xl border px-4 py-3 transition duration-300 ${isActive
-                                ? "border-white/20 bg-white/[0.06]"
-                                : isCompleted
-                                    ? "border-white/10 bg-white/[0.035]"
-                                    : "border-white/10 bg-black/20"
-                                }`}
-                        >
-                            <div
-                                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-sm font-semibold transition duration-300 ${isCompleted
-                                    ? "border-[#22D3EE] bg-[#22D3EE] text-black"
-                                    : isActive
-                                        ? "border-[#22D3EE]/35 bg-[#22D3EE]/10 text-[#22D3EE]"
-                                        : "border-white/10 bg-black/20 text-white/35"
-                                    }`}
-                            >
+                        <div key={item.number} className={`flex items-center gap-3 rounded-2xl border px-4 py-3 transition duration-300 ${isActive ? "border-white/20 bg-white/[0.06]" : isCompleted ? "border-white/10 bg-white/[0.035]" : "border-white/10 bg-black/20"}`}>
+                            <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-sm font-semibold transition duration-300 ${isCompleted ? "border-[#22D3EE] bg-[#22D3EE] text-black" : isActive ? "border-[#22D3EE]/35 bg-[#22D3EE]/10 text-[#22D3EE]" : "border-white/10 bg-black/20 text-white/35"}`}>
                                 {isCompleted ? <Check className="h-4 w-4" /> : item.number}
                             </div>
-
                             <div className="min-w-0">
-                                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/35">
-                                    Adım {item.number}
-                                </p>
-                                <p
-                                    className={`mt-0.5 truncate text-sm font-medium ${isActive || isCompleted ? "text-white" : "text-white/45"
-                                        }`}
-                                >
-                                    {item.label}
-                                </p>
+                                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/35">Adım {item.number}</p>
+                                <p className={`mt-0.5 truncate text-sm font-medium ${isActive || isCompleted ? "text-white" : "text-white/45"}`}>{item.label}</p>
                             </div>
                         </div>
                     );
@@ -1621,110 +808,54 @@ function StepHeader({ step, t }: { step: number; t: any }) {
     );
 }
 
-
-function SearchSelect({
-    label,
-    icon: Icon,
-    value,
-    placeholder,
-    options,
-    onChange,
-}: SearchSelectProps) {
+function SearchSelect({ label, icon: Icon, value, placeholder, options, onChange, searchPlaceholder, noResultsText }: SearchSelectProps) {
     const wrapperRef = useRef<HTMLDivElement | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [search, setSearch] = useState("");
 
     const filteredOptions = useMemo(() => {
         const query = search.trim().toLowerCase();
-
         if (!query) return options;
-
-        return options.filter((option) =>
-            option.toLowerCase().includes(query)
-        );
+        return options.filter((option) => option.toLowerCase().includes(query));
     }, [options, search]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (
-                wrapperRef.current &&
-                !wrapperRef.current.contains(event.target as Node)
-            ) {
-                setIsOpen(false);
-            }
+            if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) { setIsOpen(false); }
         };
-
         document.addEventListener("mousedown", handleClickOutside);
-        return () =>
-            document.removeEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const handleSelect = (option: string) => {
-        onChange(option);
-        setSearch("");
-        setIsOpen(false);
-    };
+    const handleSelect = (option: string) => { onChange(option); setSearch(""); setIsOpen(false); };
 
     return (
         <div ref={wrapperRef} className="relative grid gap-2">
-            <label className={labelClass}>
-                <Icon className="h-3.5 w-3.5 shrink-0" />
-                <span className="truncate">{label}</span>
-            </label>
-
-            <button
-                type="button"
-                onClick={() => setIsOpen((prev) => !prev)}
-                className={`flex h-12 w-full items-center justify-between gap-3 rounded-2xl border border-white/10 bg-black/20 px-4 text-left text-sm outline-none transition duration-200 hover:border-white/15 hover:bg-black/25 sm:h-[50px] ${value ? "text-white" : "text-white/30"
-                    }`}
-            >
+            <label className={labelClass}><Icon className="h-3.5 w-3.5 shrink-0" /><span className="truncate">{label}</span></label>
+            <button type="button" onClick={() => setIsOpen((prev) => !prev)} className={`flex h-12 w-full items-center justify-between gap-3 rounded-2xl border border-white/10 bg-black/20 px-4 text-left text-sm outline-none transition duration-200 hover:border-white/15 hover:bg-black/25 sm:h-[50px] ${value ? "text-white" : "text-white/30"}`}>
                 <span className="truncate">{value || placeholder}</span>
-                <ChevronDown
-                    className={`h-4 w-4 shrink-0 text-white/35 transition duration-200 ${isOpen ? "rotate-180" : ""
-                        }`}
-                />
+                <ChevronDown className={`h-4 w-4 shrink-0 text-white/35 transition duration-200 ${isOpen ? "rotate-180" : ""}`} />
             </button>
-
             {isOpen && (
                 <div className="absolute left-0 top-[calc(100%+0.5rem)] z-40 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111111] shadow-2xl shadow-black/40">
                     <div className="border-b border-white/10 p-2">
                         <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-3">
                             <Search className="h-4 w-4 shrink-0 text-[#22D3EE]/70" />
-                            <input
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                placeholder="Ara..."
-                                className="h-10 w-full bg-transparent text-sm text-white outline-none placeholder:text-white/30"
-                                autoFocus
-                            />
+                            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={searchPlaceholder} className="h-10 w-full bg-transparent text-sm text-white outline-none placeholder:text-white/30" autoFocus />
                         </div>
                     </div>
-
                     <div className="max-h-[52svh] overflow-y-auto p-1.5 sm:max-h-[260px]">
                         {filteredOptions.length > 0 ? (
                             filteredOptions.map((option) => {
                                 const isActive = value === option;
-
                                 return (
-                                    <button
-                                        key={option}
-                                        type="button"
-                                        onClick={() => handleSelect(option)}
-                                        className="flex min-h-11 w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-white transition hover:bg-white/10"
-                                    >
+                                    <button key={option} type="button" onClick={() => handleSelect(option)} className="flex min-h-11 w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-white transition hover:bg-white/10">
                                         <span className="truncate">{option}</span>
-
-                                        {isActive && (
-                                            <Check className="h-4 w-4 shrink-0 text-[#22D3EE]" />
-                                        )}
+                                        {isActive && <Check className="h-4 w-4 shrink-0 text-[#22D3EE]" />}
                                     </button>
                                 );
                             })
-                        ) : (
-                            <div className="px-4 py-8 text-center text-sm text-white/40">
-                                Sonuç bulunamadı.
-                            </div>
-                        )}
+                        ) : (<div className="px-4 py-8 text-center text-sm text-white/40">{noResultsText}</div>)}
                     </div>
                 </div>
             )}
@@ -1732,142 +863,47 @@ function SearchSelect({
     );
 }
 
-
-function PassengerCounter({
-    label,
-    icon: Icon,
-    value,
-    min,
-    max,
-    helperText,
-    onChange,
-}: {
-    label: string;
-    icon: React.ElementType;
-    value: number;
-    min: number;
-    max: number;
-    helperText: string;
-    onChange: (value: number) => void;
-}) {
+function PassengerCounter({ label, icon: Icon, value, min, max, helperText, onChange }: { label: string; icon: React.ElementType; value: number; min: number; max: number; helperText: string; onChange: (value: number) => void; }) {
     const decrease = () => onChange(Math.max(min, value - 1));
     const increase = () => onChange(Math.min(max, value + 1));
-
     return (
         <div className="grid gap-2">
             <label className="flex items-center justify-between gap-3 pl-1">
-                <span className="flex min-w-0 items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/45 sm:text-xs sm:tracking-[0.18em]">
-                    <Icon className="h-3.5 w-3.5 shrink-0" />
-                    <span className="truncate">{label}</span>
-                </span>
-
-                <span className="shrink-0 text-[10px] font-medium normal-case tracking-normal text-white/35">
-                    {helperText}
-                </span>
+                <span className="flex min-w-0 items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/45 sm:text-xs sm:tracking-[0.18em]"><Icon className="h-3.5 w-3.5 shrink-0" /><span className="truncate">{label}</span></span>
+                <span className="shrink-0 text-[10px] font-medium normal-case tracking-normal text-white/35">{helperText}</span>
             </label>
-
             <div className="flex h-12 items-center justify-between rounded-2xl border border-white/10 bg-black/20 px-2 sm:h-[50px]">
-                <button
-                    type="button"
-                    onClick={decrease}
-                    disabled={value <= min}
-                    className="flex h-9 w-9 items-center justify-center rounded-full text-white/55 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-25"
-                    aria-label={`${label} azalt`}
-                >
-                    <Minus className="h-4 w-4" />
-                </button>
-
-                <p className="text-base font-semibold leading-none text-white">
-                    {value}
-                </p>
-
-                <button
-                    type="button"
-                    onClick={increase}
-                    disabled={value >= max}
-                    className="flex h-9 w-9 items-center justify-center rounded-full text-white/55 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-25"
-                    aria-label={`${label} artır`}
-                >
-                    <Plus className="h-4 w-4" />
-                </button>
+                <button type="button" onClick={decrease} disabled={value <= min} className="flex h-9 w-9 items-center justify-center rounded-full text-white/55 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-25" aria-label={label}><Minus className="h-4 w-4" /></button>
+                <p className="text-base font-semibold leading-none text-white">{value}</p>
+                <button type="button" onClick={increase} disabled={value >= max} className="flex h-9 w-9 items-center justify-center rounded-full text-white/55 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-25" aria-label={label}><Plus className="h-4 w-4" /></button>
             </div>
         </div>
     );
 }
 
-
-function VehicleCard({
-    pricing,
-    car,
-    oneWayPrice,
-    roundTripPrice,
-    t,
-    locale,
-    onSelect,
-}: {
-    pricing: any;
-    car: any;
-    oneWayPrice: string;
-    roundTripPrice: string;
-    t: any;
-    locale: string;
-    onSelect: (tripType: TripType) => void;
-}) {
+function VehicleCard({ pricing, car, oneWayPrice, roundTripPrice, t, locale, onSelect }: { pricing: any; car: any; oneWayPrice: string; roundTripPrice: string; t: any; locale: string; onSelect: (tripType: TripType) => void; }) {
     return (
         <article className="overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/[0.03] transition duration-300 hover:border-white/15 hover:bg-white/[0.045] sm:rounded-[1.5rem] lg:grid lg:grid-cols-[0.9fr_1.1fr]">
             <div className="relative min-h-[210px] overflow-hidden bg-black/30 sm:min-h-[240px] lg:min-h-[320px]">
-                {car.imageUrl ? (
-                    <img
-                        src={car.imageUrl}
-                        alt={car.name}
-                        className="h-full w-full object-cover opacity-90 transition duration-500 hover:scale-[1.02]"
-                    />
-                ) : (
-                    <div className="flex h-full min-h-[230px] items-center justify-center text-sm text-white/35">
-                        Görsel yok
-                    </div>
-                )}
-
-                <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-black/35 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-md">
-                    {car.pax} {t("step2.paxSuffix")}
-                </div>
+                {car.imageUrl ? (<img src={car.imageUrl} alt={car.name} className="h-full w-full object-cover opacity-90 transition duration-500 hover:scale-[1.02]" />) : (<div className="flex h-full min-h-[230px] items-center justify-center text-sm text-white/35">{t("step2.noImage")}</div>)}
+                <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-black/35 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-md">{car.pax} {t("step2.paxSuffix")}</div>
             </div>
-
             <div className="flex flex-col justify-between gap-6 p-4 sm:gap-8 sm:p-6">
                 <div>
-                    <h3 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
-                        {car.name}
-                    </h3>
-
+                    <h3 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">{car.name}</h3>
                     <div className="mt-3 flex flex-wrap gap-2">
-                        <span className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs font-medium text-white/50">
-                            {car.pax} {t("step2.paxSuffix")}
-                        </span>
-                        <span className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs font-medium text-white/50">
-                            {car.luggage} {t("step2.luggageSuffix")}
-                        </span>
+                        <span className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs font-medium text-white/50">{car.pax} {t("step2.paxSuffix")}</span>
+                        <span className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs font-medium text-white/50">{car.luggage} {t("step2.luggageSuffix")}</span>
                     </div>
-
                     {Array.isArray(car.features) && car.features.length > 0 && (
                         <div className="mt-5 sm:mt-6">
-                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
-                                {t("step2.featuresLabel")}
-                            </p>
-
+                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">{t("step2.featuresLabel")}</p>
                             <ul className="mt-3 grid gap-3 sm:mt-4 sm:grid-cols-2">
                                 {car.features.map((feature: any, index: number) => {
-                                    const featureText = typeof feature === 'object' && feature !== null
-                                        ? (feature[locale] || feature.tr || feature.en)
-                                        : feature;
-
+                                    const featureText = typeof feature === 'object' && feature !== null ? (feature[locale] || feature.tr || feature.en) : feature;
                                     return (
-                                        <li
-                                            key={`${pricing.id}-${index}`}
-                                            className="flex items-start gap-3 text-sm leading-5 text-white/55"
-                                        >
-                                            <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04]">
-                                                <Check className="h-3 w-3 text-white/70" />
-                                            </span>
+                                        <li key={`${pricing.id}-${index}`} className="flex items-start gap-3 text-sm leading-5 text-white/55">
+                                            <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04]"><Check className="h-3 w-3 text-white/70" /></span>
                                             <span>{featureText}</span>
                                         </li>
                                     );
@@ -1876,30 +912,14 @@ function VehicleCard({
                         </div>
                     )}
                 </div>
-
                 <div className="border-t border-white/10 pt-4 sm:pt-5">
                     <div className="mb-4 flex items-start gap-3 rounded-2xl border border-white/10 bg-black/20 p-3">
                         <Route className="mt-0.5 h-4 w-4 shrink-0 text-[#22D3EE]" />
-                        <p className="text-xs leading-5 text-white/45">
-                            Aşağıdaki fiyatlar kişi başı değil, seçilen araç
-                            için toplam yolculuk ücretidir.
-                        </p>
+                        <p className="text-xs leading-5 text-white/45">{t("step2.priceWarning")}</p>
                     </div>
-
                     <div className="grid gap-3 sm:grid-cols-2">
-                        <TripPriceOption
-                            title="Tek yön"
-                            description="Sadece seçilen güzergah"
-                            price={oneWayPrice}
-                            onClick={() => onSelect("oneWay")}
-                        />
-
-                        <TripPriceOption
-                            title="Gidiş dönüş"
-                            description="Gidiş ve dönüş toplamı"
-                            price={roundTripPrice}
-                            onClick={() => onSelect("roundTrip")}
-                        />
+                        <TripPriceOption title={t("step2.oneWay")} description={t("step2.oneWayDesc")} price={oneWayPrice} onClick={() => onSelect("oneWay")} totalPriceLabel={t("step2.totalPriceLabel")} />
+                        <TripPriceOption title={t("step2.roundTrip")} description={t("step2.roundTripDesc")} price={roundTripPrice} onClick={() => onSelect("roundTrip")} totalPriceLabel={t("step2.totalPriceLabel")} />
                     </div>
                 </div>
             </div>
@@ -1907,200 +927,63 @@ function VehicleCard({
     );
 }
 
-function TripPriceOption({
-    title,
-    description,
-    price,
-    onClick,
-}: {
-    title: string;
-    description: string;
-    price: string;
-    onClick: () => void;
-}) {
+function TripPriceOption({ title, description, price, onClick, totalPriceLabel }: { title: string; description: string; price: string; onClick: () => void; totalPriceLabel: string; }) {
     return (
-        <button
-            type="button"
-            onClick={onClick}
-            className="group rounded-2xl border border-white/10 bg-white/[0.035] p-4 text-left transition duration-300 hover:border-white/20 hover:bg-white/[0.06] active:scale-[0.99]"
-        >
+        <button type="button" onClick={onClick} className="group rounded-2xl border border-white/10 bg-white/[0.035] p-4 text-left transition duration-300 hover:border-white/20 hover:bg-white/[0.06] active:scale-[0.99]">
             <div className="flex items-start justify-between gap-3">
                 <div>
                     <p className="text-sm font-semibold text-white">{title}</p>
-                    <p className="mt-1 text-xs leading-5 text-white/40">
-                        {description}
-                    </p>
+                    <p className="mt-1 text-xs leading-5 text-white/40">{description}</p>
                 </div>
-
                 <ChevronRight className="h-4 w-4 shrink-0 text-white/30 transition duration-300 group-hover:translate-x-0.5 group-hover:text-white/70" />
             </div>
-
-            <p className="mt-5 text-2xl font-semibold tracking-tight text-white">
-                {price}
-            </p>
-
-            <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.14em] text-white/30">
-                Toplam ücret
-            </p>
+            <p className="mt-5 text-2xl font-semibold tracking-tight text-white">{price}</p>
+            <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.14em] text-white/30">{totalPriceLabel}</p>
         </button>
     );
 }
 
-function AddonSelectionModal({
-    isOpen,
-    title,
-    description,
-    items,
-    quantities,
-    getFormattedPrice,
-    onQuantityChange,
-    onClose,
-}: {
-    isOpen: boolean;
-    title: string;
-    description: string;
-    items: AddonItem[];
-    quantities: AddonQuantities;
-    getFormattedPrice: (baseEurPrice: number) => string;
-    onQuantityChange: (id: string, value: number) => void;
-    onClose: () => void;
-}) {
-    const selectedItems = useMemo(
-        () => getSelectedAddonItems(items, quantities),
-        [items, quantities]
-    );
-
-    const totalCount = selectedItems.reduce(
-        (total, item) => total + item.quantity,
-        0
-    );
-
-    const totalPrice = selectedItems.reduce(
-        (total, item) => total + item.priceEur * item.quantity,
-        0
-    );
+function AddonSelectionModal({ isOpen, title, description, items, quantities, getFormattedPrice, onQuantityChange, onClose, badgeText, closeText, perItemText, totalTitleText, selectionCountText, confirmBtnText }: { isOpen: boolean; title: string; description: string; items: AddonItem[]; quantities: AddonQuantities; getFormattedPrice: (baseEurPrice: number) => string; onQuantityChange: (id: string, value: number) => void; onClose: () => void; badgeText: string; closeText: string; perItemText: string; totalTitleText: string; selectionCountText: string; confirmBtnText: string; }) {
+    const selectedItems = useMemo(() => getSelectedAddonItems(items, quantities), [items, quantities]);
+    const totalCount = selectedItems.reduce((total, item) => total + item.quantity, 0);
+    const totalPrice = selectedItems.reduce((total, item) => total + item.priceEur * item.quantity, 0);
 
     return (
         <AnimatePresence>
             {isOpen && (
-                <motion.div
-                    className="fixed inset-0 z-[100] flex items-end justify-center bg-black/70 px-3 py-3 backdrop-blur-sm sm:items-center sm:px-4 sm:py-8"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onMouseDown={onClose}
-                >
-                    <motion.div
-                        initial={{ opacity: 0, y: 28, scale: 0.98 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 18, scale: 0.98 }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
-                        onMouseDown={(event) => event.stopPropagation()}
-                        className="flex max-h-[calc(100svh-1.5rem)] w-full max-w-4xl flex-col overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#121212] sm:max-h-[calc(100vh-4rem)] sm:rounded-[1.75rem]"
-                    >
+                <motion.div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/70 px-3 py-3 backdrop-blur-sm sm:items-center sm:px-4 sm:py-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onMouseDown={onClose}>
+                    <motion.div initial={{ opacity: 0, y: 28, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 18, scale: 0.98 }} transition={{ duration: 0.2, ease: "easeOut" }} onMouseDown={(event) => event.stopPropagation()} className="flex max-h-[calc(100svh-1.5rem)] w-full max-w-4xl flex-col overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#121212] sm:max-h-[calc(100vh-4rem)] sm:rounded-[1.75rem]">
                         <div className="flex items-start justify-between gap-4 border-b border-white/10 bg-white/[0.035] p-4 sm:gap-5 sm:p-6">
                             <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
-                                    Ek talep
-                                </p>
-                                <h3 className="mt-2 text-2xl font-semibold tracking-tight text-white">
-                                    {title}
-                                </h3>
-                                <p className="mt-2 max-w-xl text-sm leading-6 text-white/45">
-                                    {description}
-                                </p>
+                                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">{badgeText}</p>
+                                <h3 className="mt-2 text-2xl font-semibold tracking-tight text-white">{title}</h3>
+                                <p className="mt-2 max-w-xl text-sm leading-6 text-white/45">{description}</p>
                             </div>
-
-                            <button
-                                type="button"
-                                onClick={onClose}
-                                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-black/20 text-xl leading-none text-white/55 transition hover:border-white/20 hover:bg-white/10 hover:text-white"
-                                aria-label="Kapat"
-                            >
-                                ×
-                            </button>
+                            <button type="button" onClick={onClose} aria-label={closeText} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-black/20 text-xl leading-none text-white/55 transition hover:border-white/20 hover:bg-white/10 hover:text-white">×</button>
                         </div>
-
                         <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">
                             <div className="grid gap-3 md:grid-cols-2">
                                 {items.map((item) => {
                                     const quantity = quantities[item.id] || 0;
                                     const Icon = item.icon;
-
                                     return (
-                                        <div
-                                            key={item.id}
-                                            className={`rounded-2xl border p-4 transition duration-200 ${quantity > 0
-                                                ? "border-white/20 bg-white/[0.06]"
-                                                : "border-white/10 bg-black/20"
-                                                }`}
-                                        >
+                                        <div key={item.id} className={`rounded-2xl border p-4 transition duration-200 ${quantity > 0 ? "border-white/20 bg-white/[0.06]" : "border-white/10 bg-black/20"}`}>
                                             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                                                 <div className="flex items-start gap-4">
-                                                    <div
-                                                        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border ${quantity > 0
-                                                            ? "border-[#C084FC]/25 bg-[#C084FC]/10 text-[#C084FC]"
-                                                            : "border-white/10 bg-white/[0.04] text-white/65"
-                                                            }`}
-                                                    >
-                                                        <Icon className="h-5 w-5" />
-                                                    </div>
-
+                                                    <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border ${quantity > 0 ? "border-[#C084FC]/25 bg-[#C084FC]/10 text-[#C084FC]" : "border-white/10 bg-white/[0.04] text-white/65"}`}><Icon className="h-5 w-5" /></div>
                                                     <div className="min-w-0">
                                                         <div className="flex flex-wrap items-center gap-2">
-                                                            <p className="text-base font-semibold text-white">
-                                                                {item.title}
-                                                            </p>
-                                                            {item.ageRange && (
-                                                                <span className="rounded-full border border-white/10 bg-black/20 px-2.5 py-1 text-[11px] font-semibold text-white/45">
-                                                                    {item.ageRange}
-                                                                </span>
-                                                            )}
+                                                            <p className="text-base font-semibold text-white">{item.title}</p>
+                                                            {item.ageRange && <span className="rounded-full border border-white/10 bg-black/20 px-2.5 py-1 text-[11px] font-semibold text-white/45">{item.ageRange}</span>}
                                                         </div>
-                                                        <p className="mt-1 text-sm leading-6 text-white/45">
-                                                            {item.description}
-                                                        </p>
-                                                        <p className="mt-2 text-sm font-semibold text-white/80">
-                                                            {getFormattedPrice(item.priceEur)}
-                                                            <span className="ml-1 font-normal text-white/35">
-                                                                / adet
-                                                            </span>
-                                                        </p>
+                                                        <p className="mt-1 text-sm leading-6 text-white/45">{item.description}</p>
+                                                        <p className="mt-2 text-sm font-semibold text-white/80">{getFormattedPrice(item.priceEur)}<span className="ml-1 font-normal text-white/35">{perItemText}</span></p>
                                                     </div>
                                                 </div>
-
                                                 <div className="flex h-11 w-full items-center justify-between rounded-full border border-white/10 bg-black/25 px-2 sm:w-[150px]">
-                                                    <button
-                                                        type="button"
-                                                        onClick={() =>
-                                                            onQuantityChange(
-                                                                item.id,
-                                                                quantity - 1
-                                                            )
-                                                        }
-                                                        disabled={quantity <= 0}
-                                                        className="flex h-8 w-8 items-center justify-center rounded-full text-white/55 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-25"
-                                                    >
-                                                        <Minus className="h-4 w-4" />
-                                                    </button>
-
-                                                    <span className="min-w-10 text-center text-sm font-semibold text-white">
-                                                        {quantity}
-                                                    </span>
-
-                                                    <button
-                                                        type="button"
-                                                        onClick={() =>
-                                                            onQuantityChange(
-                                                                item.id,
-                                                                quantity + 1
-                                                            )
-                                                        }
-                                                        disabled={quantity >= 3}
-                                                        className="flex h-8 w-8 items-center justify-center rounded-full text-white/55 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-25"
-                                                    >
-                                                        <Plus className="h-4 w-4" />
-                                                    </button>
+                                                    <button type="button" onClick={() => onQuantityChange(item.id, quantity - 1)} disabled={quantity <= 0} className="flex h-8 w-8 items-center justify-center rounded-full text-white/55 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-25"><Minus className="h-4 w-4" /></button>
+                                                    <span className="min-w-10 text-center text-sm font-semibold text-white">{quantity}</span>
+                                                    <button type="button" onClick={() => onQuantityChange(item.id, quantity + 1)} disabled={quantity >= 3} className="flex h-8 w-8 items-center justify-center rounded-full text-white/55 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-25"><Plus className="h-4 w-4" /></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -2108,28 +991,14 @@ function AddonSelectionModal({
                                 })}
                             </div>
                         </div>
-
                         <div className="border-t border-white/10 bg-white/[0.025] p-4 sm:p-6">
                             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                                 <div>
-                                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
-                                        Modal toplamı
-                                    </p>
-                                    <p className="mt-1 text-2xl font-semibold tracking-tight text-[#FACC15]">
-                                        {getFormattedPrice(totalPrice)}
-                                    </p>
-                                    <p className="mt-1 text-xs text-white/35">
-                                        {totalCount} adet seçim
-                                    </p>
+                                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">{totalTitleText}</p>
+                                    <p className="mt-1 text-2xl font-semibold tracking-tight text-[#FACC15]">{getFormattedPrice(totalPrice)}</p>
+                                    <p className="mt-1 text-xs text-white/35">{totalCount} {selectionCountText}</p>
                                 </div>
-
-                                <button
-                                    type="button"
-                                    onClick={onClose}
-                                    className="inline-flex h-12 w-full items-center justify-center rounded-full bg-white px-6 text-sm font-semibold text-black transition hover:bg-white/90 active:scale-[0.99] sm:w-auto sm:min-w-[180px]"
-                                >
-                                    Seçimi onayla
-                                </button>
+                                <button type="button" onClick={onClose} className="inline-flex h-12 w-full items-center justify-center rounded-full bg-white px-6 text-sm font-semibold text-black transition hover:bg-white/90 active:scale-[0.99] sm:w-auto sm:min-w-[180px]">{confirmBtnText}</button>
                             </div>
                         </div>
                     </motion.div>
@@ -2139,60 +1008,20 @@ function AddonSelectionModal({
     );
 }
 
-function AddonToggle({
-    icon: Icon,
-    tone = "cyan",
-    title,
-    description,
-    active,
-    onClick,
-}: {
-    icon: React.ElementType;
-    tone?: "cyan" | "purple" | "yellow";
-    title: string;
-    description: string;
-    active: boolean;
-    onClick: () => void;
-}) {
+function AddonToggle({ icon: Icon, tone = "cyan", title, description, active, onClick }: { icon: React.ElementType; tone?: "cyan" | "purple" | "yellow"; title: string; description: string; active: boolean; onClick: () => void; }) {
     const toneClass = {
-        cyan: {
-            icon: "border-[#22D3EE]/20 bg-[#22D3EE]/10 text-[#22D3EE]",
-            active: "border-[#22D3EE]/30 bg-[#22D3EE]/10",
-        },
-        purple: {
-            icon: "border-[#C084FC]/20 bg-[#C084FC]/10 text-[#C084FC]",
-            active: "border-[#C084FC]/30 bg-[#C084FC]/10",
-        },
-        yellow: {
-            icon: "border-[#FACC15]/20 bg-[#FACC15]/12 text-[#FACC15]",
-            active: "border-[#FACC15]/30 bg-[#FACC15]/10",
-        },
+        cyan: { icon: "border-[#22D3EE]/20 bg-[#22D3EE]/10 text-[#22D3EE]", active: "border-[#22D3EE]/30 bg-[#22D3EE]/10" },
+        purple: { icon: "border-[#C084FC]/20 bg-[#C084FC]/10 text-[#C084FC]", active: "border-[#C084FC]/30 bg-[#C084FC]/10" },
+        yellow: { icon: "border-[#FACC15]/20 bg-[#FACC15]/12 text-[#FACC15]", active: "border-[#FACC15]/30 bg-[#FACC15]/10" },
     }[tone];
 
     return (
-        <button
-            type="button"
-            onClick={onClick}
-            className={`min-h-[112px] rounded-2xl border p-4 text-left transition duration-300 ${active
-                ? toneClass.active
-                : "border-white/10 bg-black/20 hover:border-white/15 hover:bg-white/[0.04]"
-                }`}
-        >
+        <button type="button" onClick={onClick} className={`min-h-[112px] rounded-2xl border p-4 text-left transition duration-300 ${active ? toneClass.active : "border-white/10 bg-black/20 hover:border-white/15 hover:bg-white/[0.04]"}`}>
             <div className="flex items-start gap-3">
-                <div
-                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border ${active
-                        ? toneClass.icon
-                        : "border-white/10 bg-white/[0.04] text-white/70"
-                        }`}
-                >
-                    <Icon className="h-4 w-4" />
-                </div>
-
+                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border ${active ? toneClass.icon : "border-white/10 bg-white/[0.04] text-white/70"}`}><Icon className="h-4 w-4" /></div>
                 <div className="min-w-0">
                     <p className="text-sm font-semibold text-white">{title}</p>
-                    <p className="mt-1 text-xs leading-5 text-white/40">
-                        {description}
-                    </p>
+                    <p className="mt-1 text-xs leading-5 text-white/40">{description}</p>
                 </div>
             </div>
         </button>
@@ -2203,10 +1032,7 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
     return (
         <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-3 last:border-b-0 last:pb-0">
             <span className="shrink-0 text-sm text-white/40">{label}</span>
-            <span className="min-w-0 break-words text-right text-sm font-medium text-white">
-                {value}
-            </span>
+            <span className="min-w-0 break-words text-right text-sm font-medium text-white">{value}</span>
         </div>
     );
 }
-

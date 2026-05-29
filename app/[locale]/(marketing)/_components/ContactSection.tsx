@@ -228,7 +228,6 @@ export function ContactSection() {
         setPhone(formatPhoneInput(value));
     };
 
-    // YENİ: Gerçek Veritabanı (Backend) Bağlantısı
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setHasTriedSubmit(true);
@@ -245,7 +244,7 @@ export function ContactSection() {
 
         setIsSubmitting(true);
 
-        // Prisma şemasındaki ContactMessage modeline birebir uygun payload
+        // Veritabanı ContactMessage modeline birebir uyan gerçek veri paketi
         const payload = {
             fullName: name.trim(),
             email: email.trim(),
@@ -263,7 +262,7 @@ export function ContactSection() {
             const data = await response.json();
 
             if (!data.success) {
-                throw new Error(data.error || "Sunucu hatası");
+                throw new Error("Contact request failed");
             }
 
             alert("Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.");

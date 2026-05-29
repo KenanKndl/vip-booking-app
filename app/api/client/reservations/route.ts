@@ -6,36 +6,24 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     
-    // Müşterinin seçtiği tarihi Date objesine çeviriyoruz
     const requestedDate = new Date(body.pickupDateTime);
 
-    // ==========================================
-    // 🛡️ DİNAMİK ÇİFTE REZERVASYON (DOUBLE-BOOKING) KALKANI
-    // ==========================================
-    // Müşterinin istediği saat, bu araç için admin tarafından 
-    // belirlenmiş (veya geçici atanan) bloke saatleri arasına denk geliyor mu?
     const conflictingReservation = await prisma.reservation.findFirst({
       where: {
         vehicleId: body.vehicleId,
-        status: { in: ['PENDING', 'CONFIRMED'] }, // Sadece Bekleyen veya Onaylanmış işleri çakışma say
-        busyFrom: { lte: requestedDate }, // bloke başlangıcı, istenen saatten önce veya eşitse
-        busyTo: { gte: requestedDate }    // bloke bitişi, istenen saatten sonra veya eşitse
+        status: { in: ['PENDING', 'CONFIRMED'] }, 
+        busyFrom: { lte: requestedDate }, 
+        busyTo: { gte: requestedDate }    
       }
     });
 
-    // Eğer çakışan bir kayıt bulunduysa, işlemi durdur ve Frontend'e hata fırlat
     if (conflictingReservation) {
       return NextResponse.json({
         success: false,
         error: 'Seçtiğiniz araç bu saat aralığında başka bir transfer için doludur. Lütfen farklı bir saat veya araç seçiniz.'
       }, { status: 400 });
     }
-    // ==========================================
 
-    // ==========================================
-    // 💰 GÜVENLİ FİYAT HESAPLAMASI (BACKEND)
-    // ==========================================
-    // 1. Temel rota ve araç fiyatını bul
     const pricing = await prisma.routePricing.findUnique({
         where: {
             routeId_vehicleId: {
@@ -47,33 +35,31 @@ export async function POST(request: Request) {
     
     let calculatedPrice = pricing?.price || 0;
 
-    // 2. Gidiş-Dönüş ise fiyatı ikiye katla
     if (body.tripType === 'ROUND_TRIP') {
         calculatedPrice *= 2;
     }
 
-    // 3. Ekstraları topla (Ekstra Fiyatı * Adet)
     if (body.selectedExtras && Array.isArray(body.selectedExtras)) {
         const extrasTotal = body.selectedExtras.reduce((sum: number, item: any) => {
             return sum + (Number(item.priceAtThatTime) * Number(item.quantity));
         }, 0);
         calculatedPrice += extrasTotal;
     }
-    // ==========================================
 
-    // Benzersiz bir PNR kodu üret (Örn: VIP4892)
+    // YENİ: O anki güncel kurları veritabanından çek (Snapshot için)
+    const adminSettings = await prisma.adminSettings.findFirst();
+    const currentRateTry = adminSettings?.eurToTl ? Number(adminSettings.eurToTl) : 35.0;
+    const currentRateUsd = adminSettings?.eurToUsd ? Number(adminSettings.eurToUsd) : 1.08;
+
     const pnrCode = "VIP" + Math.floor(1000 + Math.random() * 9000);
-
-    // Yönetici henüz onaylamadığı için, sistem aracı geçici olarak korumaya alır.
-    // Varsayılan olarak transfer saatinden itibaren 2 saat boyunca bu aracı başkasına kapattık.
     const defaultBusyTo = new Date(requestedDate.getTime() + 2 * 60 * 60 * 1000);
 
     const newReservation = await prisma.reservation.create({
       data: {
         pnrCode,
         pickupDateTime: requestedDate,
-        busyFrom: requestedDate,       // Geçici blok başlangıcı
-        busyTo: defaultBusyTo,         // Geçici blok bitişi
+        busyFrom: requestedDate,       
+        busyTo: defaultBusyTo,         
         adultCount: Number(body.adultCount),
         childCount: Number(body.childCount),
         routeId: body.routeId,
@@ -82,18 +68,25 @@ export async function POST(request: Request) {
         customerPhone: body.customerPhone,
         customerEmail: body.customerEmail,
 
-        // YENİ: Arayüzden gelen adres ve detaylar
         tripType: body.tripType || 'ONE_WAY',
         pickupAddress: body.pickupAddress || null,
         dropoffAddress: body.dropoffAddress || null,
-        extraNotes: body.extraNotes || null,
         
-        // YENİ: Seçilen ekstraların JSON olarak kaydedilmesi
+        extraNotes: body.extraNotes || null,
+        customerNote: body.customerNote || null, 
+        
         selectedExtras: body.selectedExtras || [], 
 
-        // GÜNCELLEME: Frontend'den gelen fiyat yerine backend'in güvenli hesapladığı fiyat
         totalPrice: calculatedPrice, 
-        currency: body.currency || 'EUR',
+        currency: 'EUR',
+        
+        originalPrice: body.originalPrice ? Number(body.originalPrice) : (body.totalPrice ? Number(body.totalPrice) : null),
+        originalCurrency: body.originalCurrency || body.currency || null,
+
+        // YENİ: Finansal Snapshot Kaydı
+        exchangeRateTry: currentRateTry,
+        exchangeRateUsd: currentRateUsd,
+
         status: 'PENDING'
       }
     });

@@ -23,13 +23,11 @@ enum GalleryCategory {
   SPECIAL
 }
 
-// YENİ: Ekstra ürünlerin kategorileri
 enum ExtraCategory {
   GENERAL
   BABY_SEAT
 }
 
-// YENİ: Yolculuk Tipi (Tek Yön / Gidiş-Dönüş)
 enum TripType {
   ONE_WAY
   ROUND_TRIP
@@ -61,7 +59,7 @@ model Route {
   reservations Reservation[]
 
   @@unique([pickup, dropoff])
-  @@index([isActive]) // Optimizasyon: Sadece aktif rotaları çekerken hızlandırır
+  @@index([isActive]) 
 }
 
 // 5. Filo ve Araçlar
@@ -71,25 +69,22 @@ model Vehicle {
   type          String
   pax           Int
   luggage       Int
-  
-  // GÜNCELLEME: Çoklu dil destekli JSON (Örn: [{ "id": "f1", "tr": "Wifi", "en": "Wifi" }])
   features      Json
-  
   imageUrl      String?
   isActive      Boolean  @default(true)
   
   prices        RoutePricing[]
   reservations  Reservation[]
 
-  @@index([isActive]) // Optimizasyon: Aktif araç listelemeyi hızlandırır
+  @@index([isActive])
 }
 
-// 6. Fiyatlandırma (Her zaman EURO bazlı)
+// 6. Fiyatlandırma 
 model RoutePricing {
   id        String   @id @default(uuid())
   routeId   String
   vehicleId String
-  price     Float    // Bu değer artık her zaman EURO cinsindendir
+  price     Float    
   currency  String   @default("EUR") 
 
   route     Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
@@ -98,20 +93,19 @@ model RoutePricing {
   @@unique([routeId, vehicleId])
 }
 
-// YENİ 7. Ekstralar ve Donanımlar (Upselling)
+// 7. Ekstralar ve Donanımlar 
 model Extra {
   id          String        @id @default(uuid())
-  // JSON Formatı: { "tr": "Puset", "en": "Stroller", "de": "Kinderwagen", "ru": "Коляска" }
   name        Json          
-  price       Float         // Euro bazlı ekstra fiyatı
-  imageUrl    String?       // Ekstra ürün görseli
+  price       Float         
+  imageUrl    String?
   isActive    Boolean       @default(true)
-  category    ExtraCategory // GENERAL veya BABY_SEAT
+  category    ExtraCategory 
   
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
-  @@index([isActive, category]) // Optimizasyon: Müşteri ekranında kategoriye göre aktif ekstraları anında getirir
+  @@index([isActive, category]) 
 }
 
 // 8. Rezervasyonlar
@@ -130,27 +124,29 @@ model Reservation {
   route           Route    @relation(fields: [routeId], references: [id])
   vehicle         Vehicle  @relation(fields: [vehicleId], references: [id])
 
-  // İletişim Bilgileri
   customerName    String
   customerPhone   String
   customerEmail   String
 
-  // YENİ: Arayüzden Gelen Transfer Detayları
-  tripType        TripType @default(ONE_WAY) // Tek Yön / Gidiş Dönüş
-  pickupAddress   String?  // Alınacak adres / hotel adı
-  dropoffAddress  String?  // Bırakılacak adres / hotel adı
+  tripType        TripType @default(ONE_WAY) 
+  pickupAddress   String?  
+  dropoffAddress  String?  
 
-  // Ekstra Notlar ve Detaylar
-  extraNotes      String?  // Rezervasyon notu (Uçuş numarası vb.)
+  extraNotes      String?  
+  customerNote    String?  
 
-  // YENİ: Seçilen Ekstraların JSON formatında tutulması
-  // Format: [{ "extraId": "uuid", "quantity": 2, "priceAtThatTime": 15 }]
   selectedExtras  Json?
 
-  // Ödeme ve Durum
-  totalPrice      Float    // Araç Fiyatı + (Ekstra Fiyatları Toplamı)
+  totalPrice      Float    
   currency        String   @default("EUR")
   status          ReservationStatus @default(PENDING)
+  
+  originalPrice   Float?   
+  originalCurrency String? 
+
+  // YENİ: Finansal Snapshot (O anki kurların kopyası)
+  exchangeRateTry Float?
+  exchangeRateUsd Float?
   
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -166,5 +162,19 @@ model GalleryImage {
   category  GalleryCategory
   createdAt DateTime        @default(now())
 
-  @@index([category]) // Optimizasyon: Galeride kategoriye tıklandığında hızlı filtreleme sağlar
+  @@index([category]) 
+}
+
+// 10. Gelen Mesajlar 
+model ContactMessage {
+  id        String   @id @default(uuid())
+  fullName  String
+  email     String
+  phone     String
+  message   String   @db.Text 
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt]) 
+  @@index([isRead]) 
 }

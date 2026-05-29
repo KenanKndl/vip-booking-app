@@ -98,6 +98,13 @@ export function Navbar() {
                                 {t(`nav.${item.key}`)}
                             </Link>
                         ))}
+                        {/* YENİ EKLENEN SORGULAMA LİNKİ (Masaüstü) */}
+                        <Link
+                            href="/sorgula"
+                            className="py-2 text-sm font-medium text-white/55 transition-colors duration-200 hover:text-white"
+                        >
+                            PNR Sorgula
+                        </Link>
                     </nav>
                 </div>
 
@@ -222,6 +229,14 @@ export function Navbar() {
                                         {t(`nav.${item.key}`)}
                                     </Link>
                                 ))}
+                                {/* YENİ EKLENEN SORGULAMA LİNKİ (Mobil) */}
+                                <Link
+                                    href="/sorgula"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="text-lg font-medium text-white/70 transition-colors hover:text-white"
+                                >
+                                    PNR Sorgula
+                                </Link>
 
                                 <div className="my-2 h-px w-full bg-white/5" />
 

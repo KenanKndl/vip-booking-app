@@ -228,6 +228,7 @@ export function ContactSection() {
         setPhone(formatPhoneInput(value));
     };
 
+    // YENİ: Gerçek Veritabanı (Backend) Bağlantısı
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setHasTriedSubmit(true);
@@ -244,29 +245,28 @@ export function ContactSection() {
 
         setIsSubmitting(true);
 
+        // Prisma şemasındaki ContactMessage modeline birebir uygun payload
         const payload = {
-            name: name.trim(),
+            fullName: name.trim(),
             email: email.trim(),
             phone: `${selectedPhoneCountry.dialCode}${phoneDigits}`,
-            countryCode: selectedPhoneCountry.code,
             message: message.trim(),
         };
 
         try {
-            console.log("Contact form payload:", payload);
+            const response = await fetch("/api/client/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+            
+            const data = await response.json();
 
-            // API hazır olduğunda buraya bağlayabilirsin:
-            // const response = await fetch("/api/contact", {
-            //     method: "POST",
-            //     headers: { "Content-Type": "application/json" },
-            //     body: JSON.stringify(payload),
-            // });
-            //
-            // if (!response.ok) {
-            //     throw new Error("Contact request failed");
-            // }
+            if (!data.success) {
+                throw new Error(data.error || "Sunucu hatası");
+            }
 
-            alert("Mesajınız başarıyla hazırlandı.");
+            alert("Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.");
 
             setName("");
             setEmail("");
@@ -275,7 +275,7 @@ export function ContactSection() {
             setIsHumanChecked(false);
             setHasTriedSubmit(false);
         } catch {
-            alert("Mesaj gönderilirken bir hata oluştu.");
+            alert("Mesaj gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
         } finally {
             setIsSubmitting(false);
         }

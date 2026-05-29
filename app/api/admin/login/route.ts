@@ -11,7 +11,8 @@ function getCorsHeaders(origin: string | null) {
 
   return {
     'Access-Control-Allow-Origin': currentOrigin,
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    // DÜZELTME: Tarayıcıların katı kurallarına takılmamak için tüm metodlara izin veriyoruz.
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Access-Control-Allow-Credentials': 'true',
   };
@@ -34,8 +35,8 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     
-    // DÜZELTME: Vite (Frontend) giriş formu 'email' yerine 'username' gönderiyor olabilir.
-    // Bu yüzden iki ihtimali de yakalayarak işlemi garantiye alıyoruz.
+    // Vite (Frontend) giriş formu 'email' yerine 'username' gönderiyor olabilir.
+    // İki ihtimali de yakalayarak işlemi garantiye alıyoruz.
     const { email, username, password } = body;
     const loginIdentifier = email || username;
 
@@ -47,7 +48,6 @@ export async function POST(request: Request) {
     }
 
     // Veritabanında admin kullanıcısını sorgula
-    // (Olası Prisma @unique hatalarını önlemek için findFirst kullandık)
     const admin = await prisma.adminSettings.findFirst({
       where: { adminEmail: loginIdentifier },
     });
@@ -69,7 +69,6 @@ export async function POST(request: Request) {
     }
 
     // Token (Dijital Bilet) üretme
-    // Not: ENV dosyası okunamazsa diye güvenli bir string fallback eklendi.
     const secretKey = process.env.JWT_SECRET || 'jwt_gizli_anahtar_yedek';
     const secret = new TextEncoder().encode(secretKey);
     
@@ -78,7 +77,7 @@ export async function POST(request: Request) {
       .setExpirationTime('6h')
       .sign(secret);
 
-    // Giriş başarılı! Token'ı Vite panelinin saklaması için JSON olarak döndürüyoruz
+    // Giriş başarılı!
     return NextResponse.json(
       { 
         success: true, 

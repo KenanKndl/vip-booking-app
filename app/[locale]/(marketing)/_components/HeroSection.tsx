@@ -58,7 +58,8 @@ export function HeroSection() {
         <section className="min-h-[100svh] overflow-hidden bg-[#0d0d0d]">
             <div className="mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-center px-4 pt-20 sm:px-6 sm:pt-28 lg:px-8 lg:pt-32">
                 <div className="relative flex min-h-[calc(100svh-5rem)] items-center justify-center overflow-hidden px-0 pb-10 pt-8 sm:min-h-[560px] sm:px-6 sm:pb-16 sm:pt-10 md:min-h-[580px] md:px-12 md:pb-20 md:pt-12">
-                    <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center text-center">
+                    {/* GÜNCELLEME: Kutunun maksimum genişliği serbest bırakıldı (max-w-[95vw] lg:max-w-7xl) */}
+                    <div className="relative z-10 mx-auto flex w-full max-w-[95vw] lg:max-w-7xl flex-col items-center text-center">
                         <motion.div
                             className="flex w-full flex-col items-center gap-5"
                             variants={containerVariants}
@@ -68,11 +69,12 @@ export function HeroSection() {
                             {/* Desktop Başlık */}
                             <motion.h1
                                 variants={itemVariants}
-                                className="hidden max-w-4xl text-5xl font-bold leading-[1.05] tracking-tight text-white sm:block md:text-7xl lg:text-8xl"
+                                className="hidden w-full max-w-none text-4xl font-bold leading-[1.05] tracking-tight text-white sm:block md:text-6xl lg:text-7xl xl:text-[5.5rem]"
                             >
                                 {t("desktopTitlePrefix")}
 
-                                <div className="relative mx-auto flex h-[1.15em] w-full justify-center overflow-hidden">
+                                {/* GÜNCELLEME: Animasyon kutusuna tekrar yükseklik (h-[1.15em]) verildi */}
+                                <div className="relative mx-auto mt-2 flex h-[1.15em] w-full justify-center overflow-hidden">
                                     <AnimatePresence mode="popLayout">
                                         <motion.span
                                             key={index}
@@ -84,6 +86,7 @@ export function HeroSection() {
                                                 stiffness: 320,
                                                 damping: 32,
                                             }}
+                                            /* GÜNCELLEME: Alt satıra geçmesi yasaklandı (whitespace-nowrap) */
                                             className="block whitespace-nowrap text-center"
                                         >
                                             <span className={currentPhrase.color}>
@@ -100,13 +103,14 @@ export function HeroSection() {
                             {/* Mobil Başlık */}
                             <motion.h1
                                 variants={itemVariants}
-                                className="block max-w-[21rem] text-[2.3rem] font-bold leading-[1.06] tracking-tight text-white sm:hidden"
+                                /* GÜNCELLEME: Mobilde font ekran boyutuna göre dinamik ölçeklensin diye (text-[7.5vw]) kullanıldı */
+                                className="block w-full max-w-[95vw] text-[7.5vw] font-bold leading-[1.06] tracking-tight text-white sm:hidden"
                             >
-                                <span className="block">
+                                <span className="mb-1 block">
                                     {t("mobileTitlePrefix")}
                                 </span>
 
-                                <div className="relative mx-auto flex h-[1.15em] w-full justify-center overflow-hidden">
+                                <div className="relative mx-auto flex h-[1.2em] w-full justify-center overflow-hidden">
                                     <AnimatePresence mode="popLayout">
                                         <motion.span
                                             key={index}
@@ -118,6 +122,7 @@ export function HeroSection() {
                                                 stiffness: 320,
                                                 damping: 32,
                                             }}
+                                            /* GÜNCELLEME: Alt satıra geçmesi yasaklandı (whitespace-nowrap) */
                                             className="block whitespace-nowrap text-center"
                                         >
                                             <span className={currentPhrase.color}>

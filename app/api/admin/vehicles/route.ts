@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 // İki proje arası (Vite -> Next.js) iletişim izni (CORS)
 function getCorsHeaders(origin: string | null) {
-  const allowedOrigins = ['http://localhost:5173', 'https://admin.route26.com'];
+  const allowedOrigins = ['http://localhost:5173', 'https://admin.matildaviptravel.com'];
   const currentOrigin = origin && allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
 
   return {

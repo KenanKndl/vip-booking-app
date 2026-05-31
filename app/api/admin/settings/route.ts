@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 
 // CORS başlıkları (Vite admin panelinden gelen isteklere güvenli izin vermek için)
 function getCorsHeaders(origin: string | null) {
-  const allowedOrigins = ['http://localhost:5173', 'https://admin.route26.com'];
+  const allowedOrigins = ['http://localhost:5173', 'https://admin.matildaviptravel.com'];
   const currentOrigin = origin && allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
 
   return {

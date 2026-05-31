@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server';
 // CORS başlıklarını ortak bir fonksiyon olarak tanımlıyoruz
 function getCorsHeaders(origin: string | null) {
   // Geliştirme aşamasında Vite portuna, canlıda ise admin subdomainine izin verecek esnek yapı
-  const allowedOrigins = ['http://localhost:5173', 'https://admin.route26.com']; 
+  const allowedOrigins = ['http://localhost:5173', 'https://admin.matildaviptravel.com']; 
   const currentOrigin = origin && allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
 
   return {

@@ -6,13 +6,16 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
+    // İşlemi garantiye almak için önce eski/yarım kalmış ayarları temizliyoruz
+    await prisma.adminSettings.deleteMany();
+
     // Şifreyi kırılmaz formata çeviriyoruz
-    const hashedPassword = await bcrypt.hash('admin', 10);
+    const hashedPassword = await bcrypt.hash('12345678', 10);
 
     // Veritabanına admini yazıyoruz
     const admin = await prisma.adminSettings.create({
       data: {
-        adminEmail: 'admin',
+        adminEmail: 'admin@matildavip.com', // Paneldeki girişine uygun hale getirdik
         hashedPassword: hashedPassword,
         whatsappNumber: '+905551234567',
       },
@@ -20,10 +23,10 @@ export async function GET() {
 
     return NextResponse.json({ 
       success: true, 
-      message: '✅ Admin başarıyla eklendi!', 
+      message: '✅ Admin başarıyla eklendi! Artık giriş yapabilirsiniz.', 
       email: admin.adminEmail 
     });
-  } catch (error) {
-    return NextResponse.json({ success: false, error: 'Kayıt zaten var veya bir hata oluştu.' });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, error: 'Bir hata oluştu: ' + error.message });
   }
 }

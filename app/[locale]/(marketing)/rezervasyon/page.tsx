@@ -15,19 +15,36 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export const dynamic = "force-dynamic";
 
 export default async function RezervasyonPage() {
-    // YENİ: Sadece isActive: true olan aktif rotaları çekiyoruz
+    // Sadece ekranda gösterilecek verileri nokta atışı çekiyoruz (85MB -> birkaç KB'a düşecek)
     const routes = await prisma.route.findMany({
         where: { isActive: true }, 
-        include: {
+        select: {
+            id: true,
+            pickup: true,
+            dropoff: true,
             prices: {
-                include: {
-                    vehicle: true
+                select: {
+                    id: true,
+                    price: true,
+                    roundTripPrice: true,
+                    roundTripPriceEur: true,
+                    returnPrice: true,
+                    vehicle: {
+                        select: {
+                            id: true,
+                            isActive: true,
+                            name: true,
+                            pax: true,
+                            luggage: true,
+                            features: true,
+                            imageUrl: true
+                        }
+                    }
                 }
             }
         }
     });
 
-    // Veritabanından kurları çekiyoruz
     const settings = await prisma.adminSettings.findFirst();
     
     const exchangeRates = {

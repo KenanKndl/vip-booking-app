@@ -29,9 +29,12 @@
       "companyLabel": "Şirket Ünvanı",
       "companyName": "VIP Booking Turizm Taşımacılık Sanayi Ve Tic.Ltd.Şti",
       "addressLabel": "Adres",
-      "addressValue": "Güzelyurt Mah. 26065 sokak No:6, Aksu / Antalya",
+      "addressValue": "Güzelyurt Mah., İncik Pınarı Cad., No:25 Aksu / Antalya",
       "phoneLabel": "Telefon",
-      "emailLabel": "E-Posta"
+      "emailLabel": "E-Posta",
+      "phoneDesc": "Rezervasyon ve transfer talepleriniz için arayabilirsiniz.",
+      "emailDesc": "Rezervasyon, teklif ve genel sorularınız için yazabilirsiniz.",
+      "companyDesc": "VIP transfer ve özel ulaşım hizmetleri."
     },
     "form": {
       "nameLabel": "Ad Soyad",
@@ -42,7 +45,33 @@
       "phonePlaceholder": "555 000 00 00",
       "messageLabel": "Mesaj",
       "messagePlaceholder": "Mesajınızı buraya yazabilirsiniz...",
-      "submitButton": "Mesajı Gönder"
+      "submitButton": "Mesajı Gönder",
+      "formHeaderPrefix": "Size en kısa sürede dönüş yapalım.",
+      "formHeaderHighlight": "Transfer talebinizi",
+      "formHeaderSuffix": "detaylıca iletebilirsiniz.",
+      "searchCountryPlaceholder": "Ülke veya kod ara...",
+      "noCountryResults": "Ülke bulunamadı.",
+      "preferredCountries": "Sık kullanılanlar",
+      "allCountries": "Tüm ülkeler",
+      "minChar": "En az 10 karakter.",
+      "robotTitle": "Ben robot değilim",
+      "robotDesc": "Mesaj göndermeden önce onaylayın.",
+      "sending": "Gönderiliyor..."
+    },
+    "alerts": {
+      "success": "Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.",
+      "error": "Mesaj gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin."
+    },
+    "validation": {
+      "nameMin": "Ad soyad en az 2 karakter olmalı.",
+      "nameMax": "Ad soyad çok uzun.",
+      "emailInvalid": "Geçerli bir e-posta adresi girin.",
+      "phoneMin": "Telefon numarası çok kısa.",
+      "phoneMax": "Telefon numarası çok uzun.",
+      "phoneRegex": "Telefon numarası sadece rakamlardan oluşmalı.",
+      "messageMin": "Mesaj en az 10 karakter olmalı.",
+      "messageMax": "Mesaj çok uzun.",
+      "humanCheck": "Mesaj göndermeden önce onaylamalısınız."
     }
   },
   "CookieConsentBanner": {
@@ -114,7 +143,7 @@
     "description": "Havalimanı, şehir içi ve özel etkinlik transferleriniz için güvenilir, konforlu ve profesyonel VIP ulaşım deneyimi.",
     "quickLinksTitle": "Hızlı Linkler",
     "contactTitle": "İletişim Bilgileri",
-    "address": "Antalya Havalimanı, Lara, Belek, Kemer ve şehir içi VIP transfer hizmetleri",
+    "address": "Güzelyurt Mah., İncik Pınarı Cad., No:25 Aksu / Antalya",
     "copyright": "© 2026 VIP Booking. Tüm hakları saklıdır.",
     "privacyPolicy": "Gizlilik Politikası",
     "termsOfUse": "Kullanım Şartları",
@@ -435,6 +464,102 @@
     "alerts": {
       "networkError": "Sunucuya bağlanılamadı. Lütfen tekrar deneyin.",
       "notFound": "Girdiğiniz bilgilere ait bir rezervasyon bulunamadı. Lütfen bilgilerinizi kontrol edip tekrar deneyin."
+    }
+  },
+  "PrivacyPolicyPage": {
+    "title": "Gizlilik Politikası",
+    "description": "VIP Booking web sitesi ve rezervasyon süreçlerinde kişisel verilerin nasıl işlendiğine ilişkin bilgilendirme.",
+    "backToHome": "Ana sayfaya dön",
+    "legalNotice": "Yasal Bilgilendirme",
+    "lastUpdate": "Son güncelleme: 26 Mayıs 2026",
+    "warning": "Bu metin genel bilgilendirme amacıyla hazırlanmıştır. Şirketinizin gerçek veri işleme süreçlerine göre bir hukuk uzmanı tarafından kontrol edilmesi önerilir.",
+    "sections": {
+      "1": {
+        "title": "1. Veri Sorumlusu",
+        "content": "Bu gizlilik politikası, VIP Booking Turizm Taşımacılık Sanayi Ve Tic.Ltd.Şti tarafından sunulan web sitesi, rezervasyon ve iletişim süreçlerinde kişisel verilerin nasıl işlendiğini açıklamak amacıyla hazırlanmıştır."
+      },
+      "2": {
+        "title": "2. Toplanan Kişisel Veriler",
+        "content": "Rezervasyon, iletişim veya teklif talebi süreçlerinde ad soyad, telefon numarası, e-posta adresi, alınış ve varış noktası, rezervasyon tarihi, yolcu bilgileri, özel talepler ve mesaj içerikleri gibi bilgiler işlenebilir."
+      },
+      "3": {
+        "title": "3. Kişisel Verilerin İşlenme Amaçları",
+        "content": "Kişisel verileriniz; rezervasyon taleplerinin alınması, transfer hizmetinin planlanması, müşteri iletişiminin sağlanması, teklif oluşturulması, hizmet kalitesinin artırılması ve yasal yükümlülüklerin yerine getirilmesi amacıyla işlenir."
+      },
+      "4": {
+        "title": "4. Kişisel Verilerin Aktarılması",
+        "content": "Kişisel verileriniz, hizmetin sağlanması için gerekli olması halinde operasyon ekibi, sürücüler, teknik hizmet sağlayıcılar ve yetkili kamu kurumları ile sınırlı şekilde paylaşılabilir. Verileriniz üçüncü kişilerle gereksiz veya amaç dışı şekilde paylaşılmaz."
+      },
+      "5": {
+        "title": "5. Saklama Süresi",
+        "content": "Kişisel verileriniz, işlenme amacı için gerekli olan süre boyunca ve ilgili mevzuatta öngörülen yasal saklama süreleri kapsamında muhafaza edilir. Sürenin sona ermesi halinde veriler silinir, yok edilir veya anonim hale getirilir."
+      },
+      "6": {
+        "title": "6. Çerez Kullanımı",
+        "content": "Web sitemizde zorunlu çerezler, tercih çerezleri, analitik çerezler ve pazarlama çerezleri kullanılabilir. Zorunlu çerezler sitenin güvenli ve doğru çalışması için gereklidir. Tercih, analitik ve pazarlama çerezleri kullanıcı tercihine bağlı olarak aktif edilir."
+      },
+      "7": {
+        "title": "7. Çerez Tercihleri",
+        "content": "Çerez tercihlerinizi web sitesinin alt kısmında yer alan 'Çerez Tercihleri' bağlantısı üzerinden dilediğiniz zaman değiştirebilirsiniz. Zorunlu çerezler kapatılamaz; diğer çerez kategorileri isteğinize bağlı olarak açılıp kapatılabilir."
+      },
+      "8": {
+        "title": "8. Haklarınız",
+        "content": "Kişisel verilerinizle ilgili olarak bilgi talep etme, düzeltme isteme, silinmesini veya yok edilmesini isteme, işleme faaliyetlerine itiraz etme ve mevzuat kapsamındaki diğer haklarınızı kullanma hakkına sahipsiniz."
+      },
+      "9": {
+        "title": "9. İletişim",
+        "content": "Gizlilik politikası ve kişisel verilerinizle ilgili talepleriniz için reservation@vipbooking.com adresi üzerinden bizimle iletişime geçebilirsiniz."
+      }
+    }
+  },
+  "TermsOfUsePage": {
+    "title": "Kullanım Şartları",
+    "description": "VIP Booking web sitesi, rezervasyon ve transfer hizmetlerinden yararlanırken geçerli olan temel kullanım koşulları.",
+    "backToHome": "Ana sayfaya dön",
+    "legalNotice": "Yasal Bilgilendirme",
+    "lastUpdate": "Son güncelleme: 26 Mayıs 2026",
+    "warning": "Bu metin genel bilgilendirme amacıyla hazırlanmıştır. Rezervasyon, iptal, iade ve sorumluluk süreçlerinizin gerçek işleyişine göre hukuk uzmanı tarafından kontrol edilmesi önerilir.",
+    "sections": {
+      "1": {
+        "title": "1. Genel Hükümler",
+        "content": "Bu kullanım şartları, VIP Booking web sitesi üzerinden sunulan rezervasyon, teklif alma, iletişim ve transfer hizmetlerine ilişkin temel kuralları düzenler. Web sitesini kullanan kullanıcılar bu şartları kabul etmiş sayılır."
+      },
+      "2": {
+        "title": "2. Hizmet Kapsamı",
+        "content": "VIP Booking; havalimanı transferi, şehir içi transfer, özel etkinlik transferi ve benzeri VIP ulaşım hizmetleri sunar. Hizmet kapsamı, seçilen güzergah, araç tipi, yolcu sayısı ve rezervasyon detaylarına göre değişiklik gösterebilir."
+      },
+      "3": {
+        "title": "3. Rezervasyon Süreci",
+        "content": "Kullanıcılar rezervasyon oluştururken tarih, saat, alınış ve varış noktası, yolcu sayısı, iletişim bilgileri ve varsa özel taleplerini eksiksiz ve doğru şekilde iletmelidir. Eksik veya hatalı bilgi nedeniyle oluşabilecek aksaklıklardan kullanıcı sorumludur."
+      },
+      "4": {
+        "title": "4. Fiyatlandırma",
+        "content": "Web sitesinde gösterilen fiyatlar seçilen güzergah, araç tipi, yolculuk tipi ve ek taleplere göre değişebilir. Nihai ücret, rezervasyon adımında veya teklif sürecinde kullanıcıya bildirilir. Listelenen fiyatlar aksi belirtilmedikçe başlangıç veya toplam transfer ücreti niteliğinde olabilir."
+      },
+      "5": {
+        "title": "5. Ek Talepler",
+        "content": "Bebek koltuğu, araç içi ekstra ürünler, özel karşılama veya benzeri talepler müsaitlik durumuna bağlı olarak sağlanır. Ek talepler için ayrıca ücret alınabilir ve bu ücret rezervasyon toplamına yansıtılabilir."
+      },
+      "6": {
+        "title": "6. İptal ve Değişiklikler",
+        "content": "Rezervasyon iptali veya değişiklik talepleri mümkün olan en kısa sürede VIP Booking ekibine iletilmelidir. İptal ve değişiklik koşulları, hizmetin türüne, rezervasyon saatine ve operasyon durumuna göre değişiklik gösterebilir."
+      },
+      "7": {
+        "title": "7. Kullanıcı Sorumlulukları",
+        "content": "Kullanıcı, web sitesi üzerinden ilettiği bilgilerin doğru ve güncel olduğunu kabul eder. Yanlış konum, tarih, saat veya iletişim bilgisi verilmesi nedeniyle oluşabilecek gecikme, iptal veya hizmet aksaklıklarından kullanıcı sorumludur."
+      },
+      "8": {
+        "title": "8. Sorumluluk Sınırları",
+        "content": "VIP Booking, hizmeti planlanan şekilde sunmak için gerekli özeni gösterir. Ancak trafik, hava koşulları, yol kapanmaları, uçuş değişiklikleri, mücbir sebepler veya üçüncü kişilerden kaynaklanan gecikmelerden dolayı sorumluluk sınırlı olabilir."
+      },
+      "9": {
+        "title": "9. Fikri Mülkiyet",
+        "content": "Web sitesinde yer alan tasarım, metin, görsel, logo, marka ve diğer içerikler ilgili hak sahiplerine aittir. Bu içerikler izinsiz şekilde kopyalanamaz, çoğaltılamaz veya ticari amaçla kullanılamaz."
+      },
+      "10": {
+        "title": "10. İletişim",
+        "content": "Kullanım şartları veya hizmet süreçleriyle ilgili sorularınız için reservation@vipbooking.com adresi üzerinden bizimle iletişime geçebilirsiniz."
+      }
     }
   }
 }

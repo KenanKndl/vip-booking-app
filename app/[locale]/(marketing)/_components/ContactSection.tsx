@@ -69,37 +69,6 @@ const inputClass =
 const labelClass =
     "pl-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/45 sm:tracking-[0.18em]";
 
-const contactFormSchema = z.object({
-    name: z
-        .string()
-        .trim()
-        .min(2, "Ad soyad en az 2 karakter olmalı.")
-        .max(80, "Ad soyad çok uzun."),
-
-    email: z
-        .string()
-        .trim()
-        .email("Geçerli bir e-posta adresi girin."),
-
-    phoneDigits: z
-        .string()
-        .min(7, "Telefon numarası çok kısa.")
-        .max(15, "Telefon numarası çok uzun.")
-        .regex(/^\d+$/, "Telefon numarası sadece rakamlardan oluşmalı."),
-
-    message: z
-        .string()
-        .trim()
-        .min(10, "Mesaj en az 10 karakter olmalı.")
-        .max(1000, "Mesaj çok uzun."),
-
-    isHumanChecked: z
-        .boolean()
-        .refine((value) => value === true, {
-            message: "Mesaj göndermeden önce onaylamalısınız.",
-        }),
-});
-
 function getPhoneDigits(value: string) {
     return value.replace(/\D/g, "").slice(0, 15);
 }
@@ -125,6 +94,37 @@ function formatPhoneInput(value: string) {
 
 export function ContactSection() {
     const t = useTranslations("ContactSection");
+
+    const contactFormSchema = useMemo(() => z.object({
+        name: z
+            .string()
+            .trim()
+            .min(2, t("validation.nameMin"))
+            .max(80, t("validation.nameMax")),
+
+        email: z
+            .string()
+            .trim()
+            .email(t("validation.emailInvalid")),
+
+        phoneDigits: z
+            .string()
+            .min(7, t("validation.phoneMin"))
+            .max(15, t("validation.phoneMax"))
+            .regex(/^\d+$/, t("validation.phoneRegex")),
+
+        message: z
+            .string()
+            .trim()
+            .min(10, t("validation.messageMin"))
+            .max(1000, t("validation.messageMax")),
+
+        isHumanChecked: z
+            .boolean()
+            .refine((value) => value === true, {
+                message: t("validation.humanCheck"),
+            }),
+    }), [t]);
 
     const countryDropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -244,7 +244,6 @@ export function ContactSection() {
 
         setIsSubmitting(true);
 
-        // Veritabanı ContactMessage modeline birebir uyan gerçek veri paketi
         const payload = {
             fullName: name.trim(),
             email: email.trim(),
@@ -265,7 +264,7 @@ export function ContactSection() {
                 throw new Error("Contact request failed");
             }
 
-            alert("Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.");
+            alert(t("alerts.success"));
 
             setName("");
             setEmail("");
@@ -274,7 +273,7 @@ export function ContactSection() {
             setIsHumanChecked(false);
             setHasTriedSubmit(false);
         } catch {
-            alert("Mesaj gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
+            alert(t("alerts.error"));
         } finally {
             setIsSubmitting(false);
         }
@@ -287,10 +286,9 @@ export function ContactSection() {
             iconColor: "text-[#22D3EE]",
             iconBg: "bg-[#22D3EE]/10",
             label: t("info.phoneLabel"),
-            title: "+90 553 685 67 67",
-            description:
-                "Rezervasyon ve transfer talepleriniz için arayabilirsiniz.",
-            href: "tel:+905536856767",
+            title: "+90 533 238 29 64",
+            description: t("info.phoneDesc"),
+            href: "tel:+905332382964",
         },
         {
             key: "email",
@@ -298,10 +296,9 @@ export function ContactSection() {
             iconColor: "text-[#C084FC]",
             iconBg: "bg-[#C084FC]/10",
             label: t("info.emailLabel"),
-            title: "reservation@vipbooking.com",
-            description:
-                "Rezervasyon, teklif ve genel sorularınız için yazabilirsiniz.",
-            href: "mailto:reservation@vipbooking.com",
+            title: "matildaviptravel@gmail.com",
+            description: t("info.emailDesc"),
+            href: "mailto:matildaviptravel@gmail.com",
         },
         {
             key: "company",
@@ -310,7 +307,7 @@ export function ContactSection() {
             iconBg: "bg-[#FACC15]/12",
             label: t("info.companyLabel"),
             title: t("info.companyName"),
-            description: "VIP transfer ve özel ulaşım hizmetleri.",
+            description: t("info.companyDesc"),
             href: null,
         },
     ];
@@ -354,11 +351,11 @@ export function ContactSection() {
                             </h2>
 
                             <p className="max-w-xl text-sm leading-6 text-white/45">
-                                Size en kısa sürede dönüş yapalım.{" "}
+                                {t("form.formHeaderPrefix")}{" "}
                                 <span className="font-medium text-[#22D3EE]">
-                                    Transfer talebinizi
+                                    {t("form.formHeaderHighlight")}
                                 </span>{" "}
-                                detaylıca iletebilirsiniz.
+                                {t("form.formHeaderSuffix")}
                             </p>
                         </div>
 
@@ -502,7 +499,7 @@ export function ContactSection() {
                                                                 e.target.value
                                                             )
                                                         }
-                                                        placeholder="Ülke veya kod ara..."
+                                                        placeholder={t("form.searchCountryPlaceholder")}
                                                         className="h-10 w-full bg-transparent text-sm text-white outline-none placeholder:text-white/30"
                                                         autoFocus
                                                     />
@@ -512,7 +509,7 @@ export function ContactSection() {
                                             <div className="max-h-[52svh] overflow-y-auto p-1.5 sm:max-h-[320px]">
                                                 {!hasCountryResults && (
                                                     <div className="px-4 py-8 text-center text-sm text-white/40">
-                                                        Ülke bulunamadı.
+                                                        {t("form.noCountryResults")}
                                                     </div>
                                                 )}
 
@@ -520,7 +517,7 @@ export function ContactSection() {
                                                     0 && (
                                                         <div>
                                                             <p className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/30">
-                                                                Sık kullanılanlar
+                                                                {t("form.preferredCountries")}
                                                             </p>
 
                                                             <div className="grid gap-1">
@@ -586,7 +583,7 @@ export function ContactSection() {
                                                     0 && (
                                                         <div>
                                                             <p className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/30">
-                                                                Tüm ülkeler
+                                                                {t("form.allCountries")}
                                                             </p>
 
                                                             <div className="grid gap-1">
@@ -680,7 +677,7 @@ export function ContactSection() {
                                         </p>
                                     ) : (
                                         <p className="text-xs text-white/30">
-                                            En az 10 karakter.
+                                            {t("form.minChar")}
                                         </p>
                                     )}
 
@@ -714,11 +711,11 @@ export function ContactSection() {
 
                                     <div className="min-w-0">
                                         <p className="text-sm font-medium text-white">
-                                            Ben robot değilim
+                                            {t("form.robotTitle")}
                                         </p>
 
                                         <p className="mt-0.5 text-xs text-white/35">
-                                            Mesaj göndermeden önce onaylayın.
+                                            {t("form.robotDesc")}
                                         </p>
                                     </div>
                                 </div>
@@ -750,7 +747,7 @@ export function ContactSection() {
                             >
                                 <span>
                                     {isSubmitting
-                                        ? "Gönderiliyor..."
+                                        ? t("form.sending")
                                         : t("form.submitButton")}
                                 </span>
                                 <Send className="h-4 w-4 transition duration-300 group-hover:translate-x-0.5" />
@@ -838,7 +835,7 @@ export function ContactSection() {
 
                             <div className="relative min-h-[240px] flex-1 border-t border-white/10 bg-black/20 sm:min-h-[320px] lg:min-h-[360px]">
                                 <iframe
-                                    src="https://maps.google.com/maps?q=G%C3%BCzelyurt%20Mah.%2026065%20sokak%20No:6%20Aksu%20Antalya&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                                    src="https://maps.google.com/maps?q=G%C3%BCzelyurt%20Mah.%2C%20%C4%B0ncik%20P%C4%B1nar%C4%B1%20Cad.%2C%20No%3A25%20Aksu%20%2F%20Antalya&t=&z=15&ie=UTF8&iwloc=&output=embed"
                                     width="100%"
                                     height="100%"
                                     style={{ border: 0 }}

@@ -1,0 +1,563 @@
+{
+  "AboutSection": {
+    "openingSub": "Leer ons kennen voordat uw reis begint.",
+    "openingTitle1": "WIE",
+    "openingTitle2": "ZIJN WIJ?",
+    "sectionHeader": "Wie Zijn Wij?",
+    "feature1": {
+      "stat": "10+ Jaar",
+      "title": "Premium Ervaring in de Sector",
+      "description": "Als VIP Booking hebben wij er gedurende onze meer dan tien jaar lange geschiedenis altijd naar gestreefd om verder te gaan dan gewone transportdiensten. Wij brengen onze gasten niet alleen van de ene naar de andere plaats, maar laten u luxe, elegantie en absolute exclusiviteit in de puurste vorm ervaren vanaf de planningsfase tot het moment van aankomst. Met onze visionaire serviceaanpak met oog voor detail behandelen we elke route als een kunstwerk en herdefiniëren we moderne reisnormen om uw verwachtingen telkens weer te overtreffen."
+    },
+    "feature2": {
+      "stat": "24/7",
+      "title": "Ononderbroken VIP Service",
+      "description": "We werken met een compromisloos tijdbeheer, absolute stiptheid en foutloze logistieke planningsprincipes volgens wereldwijde normen. Ongeacht het tijdstip, hoeveel uw vlucht is vertraagd of waar ter wereld u zich bevindt, staat ons 24/7 operationele centrum met superieure technologische apparatuur tot uw dienst; met onze professionele chauffeurs, opgeleid in geavanceerde rijtechnieken, crisisbeheer en protocollen. Van luchthavenontvangst tot kritieke zakelijke bijeenkomsten en internationale speciale evenementen, we plannen met de grootste professionaliteit elk detail en mogelijk scenario voor uw reis."
+    },
+    "feature3": {
+      "stat": "100%",
+      "title": "Veiligheid en Tevredenheid",
+      "description": "De veiligheid en absolute gemoedsrust van u, uw gezin en gewaardeerde zakenpartners zijn onze meest onvoorwaardelijke en heilige prioriteit. Alle voertuigen in onze ultra-luxe uitgebreide vloot zijn uitgerust met de hoogste internationale actieve en passieve veiligheidsprotocollen, en elke reis wordt feilloos uitgevoerd op basis van volledige privacy en hoge veiligheid. Dankzij multimediasystemen, premium versnaperingen en het geïsoleerde interieur dat speciaal is ontworpen voor uw comfort, kunt u ontsnappen aan de chaos van de buitenwereld en simpelweg achterover leunen en genieten van het moment, de luxe en een veilige reis."
+    }
+  },
+  "ContactSection": {
+    "subTitle": "Contact",
+    "titlePart1": "Neem ",
+    "titlePart2": "contact op.",
+    "description": "U kunt op elk moment contact opnemen met ons professionele team voor transferaanvragen, speciale evenementen of vragen.",
+    "info": {
+      "companyLabel": "Bedrijfsnaam",
+      "companyName": "VIP Booking Turizm Taşımacılık Sanayi Ve Tic.Ltd.Şti",
+      "addressLabel": "Adres",
+      "addressValue": "Guzelyurt Wijk, Incik Pinari Straat, Nr:25 Aksu / Antalya",
+      "phoneLabel": "Telefoon",
+      "emailLabel": "E-mail",
+      "phoneDesc": "U kunt ons bellen voor uw reserverings- en transferaanvragen.",
+      "emailDesc": "U kunt ons schrijven voor reserveringen, offertes en algemene vragen.",
+      "companyDesc": "VIP transfer en privévervoer."
+    },
+    "form": {
+      "nameLabel": "Naam en Achternaam",
+      "namePlaceholder": "Uw naam en achternaam",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "voorbeeld@mail.com",
+      "phoneLabel": "Telefoon",
+      "phonePlaceholder": "555 000 00 00",
+      "messageLabel": "Bericht",
+      "messagePlaceholder": "U kunt hier uw bericht schrijven...",
+      "submitButton": "Bericht Verzenden",
+      "formHeaderPrefix": "We nemen zo snel mogelijk contact met u op.",
+      "formHeaderHighlight": "Stuur uw transferaanvraag",
+      "formHeaderSuffix": "in detail.",
+      "searchCountryPlaceholder": "Zoek land of code...",
+      "noCountryResults": "Land niet gevonden.",
+      "preferredCountries": "Veelgebruikt",
+      "allCountries": "Alle landen",
+      "minChar": "Minimaal 10 tekens.",
+      "robotTitle": "Ik ben geen robot",
+      "robotDesc": "Bevestig alstublieft voordat u verzendt.",
+      "sending": "Verzenden..."
+    },
+    "alerts": {
+      "success": "Uw bericht is succesvol verzonden. We nemen zo snel mogelijk contact met u op.",
+      "error": "Er is een fout opgetreden bij het verzenden van het bericht. Probeer het later opnieuw."
+    },
+    "validation": {
+      "nameMin": "Naam moet minimaal 2 tekens bevatten.",
+      "nameMax": "Naam is te lang.",
+      "emailInvalid": "Voer een geldig e-mailadres in.",
+      "phoneMin": "Telefoonnummer is te kort.",
+      "phoneMax": "Telefoonnummer is te lang.",
+      "phoneRegex": "Telefoonnummer mag alleen uit cijfers bestaan.",
+      "messageMin": "Bericht moet minimaal 10 tekens bevatten.",
+      "messageMax": "Bericht is te lang.",
+      "humanCheck": "U moet bevestigen voordat u een bericht verzendt."
+    }
+  },
+  "CookieConsentBanner": {
+    "bannerTitle": "Cookievoorkeuren",
+    "bannerDescription": "Wij gebruiken cookies om uw ervaring op onze website te verbeteren. U kunt uw voorkeuren te allen tijde wijzigen.",
+    "rejectAll": "Alles weigeren",
+    "manage": "Beheren",
+    "acceptAll": "Alles accepteren",
+    "dialogTitle": "Cookievoorkeuren",
+    "dialogDescription": "Essentiële cookies zijn altijd actief. Andere cookiecategorieën kunnen naar wens worden in- of uitgeschakeld.",
+    "essentialTitle": "Essentiële cookies",
+    "essentialDescription": "Noodzakelijk voor het veilig en correct functioneren van de site. Kunnen niet worden uitgeschakeld.",
+    "preferencesTitle": "Voorkeurscookies",
+    "preferencesDescription": "Worden gebruikt om uw keuzes zoals taalvoorkeur te onthouden.",
+    "analyticsTitle": "Analytische cookies",
+    "analyticsDescription": "Helpen ons begrijpen hoe bezoekers de site gebruiken.",
+    "marketingTitle": "Marketingcookies",
+    "marketingDescription": "Worden gebruikt om advertenties en remarketinginspanningen te personaliseren.",
+    "savePreferences": "Keuze opslaan"
+  },
+  "CookieSettingsTrigger": {
+    "label": "Cookievoorkeuren"
+  },
+  "ExploreSection": {
+    "titlePart1": "Leer ons kennen ",
+    "titlePart2": "voordat uw reis begint.",
+    "description": "Ontdek onze voertuigen, referenties en recente berichten op één plek. Bekijk ons merk, onze werkwijze en ervaring duidelijker voordat u reserveert.",
+    "chips": {
+      "chip1": "Premium vloot",
+      "chip2": "Zakelijke referenties",
+      "chip3": "Recente berichten"
+    },
+    "vehicles": {
+      "title": "Onze Voertuigen",
+      "description": "Bekijk onze comfortabele en goed onderhouden voertuigen die geschikt zijn voor een speciale transferervaring.",
+      "action": "Vloot bekijken",
+      "details": {
+        "detail1": "Mercedes Vito & V-Klasse",
+        "detail2": "Luchthaven- en stadstransfer",
+        "detail3": "Comfortgerichte voertuigkeuze"
+      }
+    },
+    "references": {
+      "title": "Onze Partners",
+      "description": "Bekijk ons werk met hotels, evenementenbedrijven en zakelijke partners.",
+      "action": "Referenties bekijken",
+      "details": {
+        "detail1": "Hotels en toerismemerken",
+        "detail2": "Evenementenbedrijven",
+        "detail3": "Zakelijke transportoplossingen"
+      }
+    },
+    "social": {
+      "title": "Volg ons.",
+      "badge": "Actueel",
+      "description": "U kunt onze voertuigen, transferervaringen en aankondigingen volgen op onze socialemedia-accounts.",
+      "details": {
+        "detail1": "Berichten over voertuigen en transfers",
+        "detail2": "Actuele aankondigingen",
+        "detail3": "Inhoud van evenementen en reizen"
+      }
+    }
+  },
+  "FloatingWhatsAppButton": {
+    "ariaLabel": "Neem contact op via WhatsApp"
+  },
+  "Footer": {
+    "brandName": "VIP BOOKING",
+    "description": "Betrouwbare, comfortabele en professionele VIP-vervoerservaring voor uw luchthaven-, stads- en speciale evenemententransfers.",
+    "quickLinksTitle": "Snelle Links",
+    "contactTitle": "Contactgegevens",
+    "address": "Guzelyurt Wijk, Incik Pinari Straat, Nr:25 Aksu / Antalya",
+    "copyright": "© 2026 VIP Booking. Alle rechten voorbehouden.",
+    "privacyPolicy": "Privacybeleid",
+    "termsOfUse": "Gebruiksvoorwaarden",
+    "links": {
+      "about": "Over Ons",
+      "vehicles": "Onze Voertuigen",
+      "gallery": "Galerij",
+      "reservations": "Reserveringen",
+      "contact": "Contact"
+    }
+  },
+  "GallerySection": {
+    "subtitle": "Visuele Ervaring",
+    "titlePart1": "Ontdek het comfort ",
+    "titlePart2": "dat op u wacht.",
+    "defaultImageTitle": "VIP Transfer Ervaring",
+    "emptyTitle": "Nog geen foto's geüpload",
+    "emptyDescription": "U kunt foto's aan deze categorie toevoegen via het beheerderspaneel.",
+    "categories": {
+      "all": "Alle",
+      "interior": "Interieur",
+      "exterior": "Exterieur",
+      "special": "Speciale Momenten",
+      "other": "Overige"
+    }
+  },
+  "HeroSection": {
+    "desktopTitlePrefix": "Veilig, comfortabel en",
+    "mobileTitlePrefix": "Veilig en comfortabel",
+    "description": "Boek uw rit eenvoudig met luxe voertuigen, professionele chauffeurs en stipt vervoer voor uw luchthaven-, stads- en speciale evenemententransfers.",
+    "buttons": {
+      "book": "Boek Nu",
+      "fleet": "Bekijk Vloot"
+    },
+    "trusted": {
+      "prefix": "Vertrouwd door ",
+      "highlight": "honderden",
+      "suffix": " merken en partners"
+    },
+    "animatedPhrases": {
+      "phrase1": {
+        "highlight": "persoonlijke",
+        "suffix": " transfer."
+      },
+      "phrase2": {
+        "highlight": "premium",
+        "suffix": " reis."
+      },
+      "phrase3": {
+        "highlight": "perfecte",
+        "suffix": " ervaring."
+      }
+    }
+  },
+  "Navbar": {
+    "brandName": "MATILDA",
+    "brandSub": "VIP Transfer",
+    "nav": {
+      "about": "Over Ons",
+      "gallery": "Galerij",
+      "contact": "Contact",
+      "pnrSearch": "PNR Zoeken"
+    },
+    "buttons": {
+      "book": "Boek Nu"
+    },
+    "mobile": {
+      "openMenu": "Menu openen",
+      "closeMenu": "Menu sluiten",
+      "languageSelection": "Taalkeuze",
+      "currencySelection": "Valuta"
+    }
+  },
+  "PricingSection": {
+    "subtitle": "Transparante Prijzen",
+    "titlePart1": "Exclusieve routes,",
+    "titlePart2": "duidelijke prijzen.",
+    "description": "Geen verrassingen of extra kosten. Bekijk onze vastgestelde VIP Vito-transfertarieven voor onze populaire routes.",
+    "tabs": {
+      "IST": "Istanbul Luchthaven",
+      "SAW": "Sabiha Gökçen",
+      "CITY": "In de Stad"
+    },
+    "destinationLabel": "Bestemming",
+    "infoText": "Onze prijzen zijn inclusief tol voor snelwegen, bruggen en tunnels. Voor een andere locatie dan op de lijst of uw speciale tours kunt u direct een offerte op maat ontvangen.",
+    "quoteButton": "Offerte Aanvragen",
+    "departurePoint": "Vertrekpunt",
+    "popularRoutesDesc": "Starttarieven voor transfers voor populaire routes.",
+    "priceInfoText": "Prijzen zijn starttarieven voor transfers. Deze worden definitief tijdens de reservering op basis van het voertuigtype, het aantal passagiers en de keuze voor een retour.",
+    "popularRoutesCount": "{count} populaire routes",
+    "startingFrom": "Vanaf"
+  },
+  "ReservationSection": {
+    "mainTitle1": "Plan uw ",
+    "mainTitle2": "transfer.",
+    "mainDescription": "Voltooi uw route, passagiersgegevens en voertuigkeuze in slechts enkele stappen.",
+    "step1": {
+      "title": "Reservering",
+      "fromLabel": "Van",
+      "fromPlaceholder": "Ophaallocatie?",
+      "toLabel": "Naar",
+      "toPlaceholder": "Bestemming?",
+      "dateLabel": "Datum",
+      "timeLabel": "Tijd",
+      "adultsLabel": "Volwassenen",
+      "childrenLabel": "Kinderen",
+      "adultsHelper": "12 jaar en ouder",
+      "childrenHelper": "0 - 11 jaar",
+      "totalPassengers": "Totaal passagiers:",
+      "findButton": "Voertuig Zoeken",
+      "searchPlaceholder": "Zoeken...",
+      "noResults": "Geen resultaten gevonden."
+    },
+    "step2": {
+      "title": "Voertuigkeuze",
+      "passengerSuffix": "Passagiers",
+      "goBack": "Ga Terug",
+      "infoTitle": "Prijzen zijn de totale reiskosten.",
+      "infoDesc": "De weergegeven bedragen zijn niet per persoon. Het is de totale transferprijs voor het gekozen voertuig en de route.",
+      "capacityErrorTitle": "Capaciteit Overschreden",
+      "capacityErrorDesc": "Geen geschikt voertuig gevonden voor {total} personen op uw route.",
+      "paxSuffix": "Personen",
+      "luggageSuffix": "Bagage",
+      "featuresLabel": "Kenmerken",
+      "noImage": "Geen afbeelding",
+      "priceWarning": "Onderstaande prijzen zijn niet per persoon, maar de totale reiskosten voor het gekozen voertuig.",
+      "oneWay": "Enkele reis",
+      "oneWayDesc": "Alleen de geselecteerde route",
+      "roundTrip": "Retour",
+      "roundTripDesc": "Totaal van heen en terug",
+      "totalPriceLabel": "Totale prijs"
+    },
+    "step3": {
+      "title": "Contact & Bevestiging",
+      "goBack": "Ga Terug",
+      "contactInfoTitle": "Contactgegevens",
+      "namePlaceholder": "Uw Naam en Achternaam",
+      "phoneLabel": "Telefoon",
+      "phonePlaceholder": "555 000 00 00",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "voorbeeld@mail.com",
+      "transferDetailTitle": "Transferdetails",
+      "optionalInfo": "Optionele informatie",
+      "pickupDetailLabel": "Ophaaladres / hotelnaam",
+      "pickupDetailPlaceholder": "Hotel, lobby, blok of huisnummer",
+      "dropoffDetailLabel": "Afleveradres / hotelnaam",
+      "dropoffDetailPlaceholder": "Hotel, terminal, villa of adres",
+      "noteLabel": "Reserveringsnotitie",
+      "notePlaceholder": "Vluchtnummer, speciale begroetingsnotitie of extra verzoeken.",
+      "noteMaxChars": "Maximaal 1000 tekens.",
+      "extraRequestsTitle": "Extra verzoeken",
+      "extraRequestsDesc": "Laat indien gewenst enkele extra notities achter voor uw reservering.",
+      "babySeatTitle": "Ik wil een babyzitje",
+      "babySeatDesc": "Kies kinderwagen, babyzitje of stoelverhoger",
+      "vehicleExtraTitle": "Ik wil extra's in het voertuig",
+      "vehicleExtraDesc": "Kies feest-, bloemen- of drankenpakket",
+      "itemsSelected": "items geselecteerd",
+      "extrasSelected": "extra's geselecteerd",
+      "summaryTitle": "Reserveringsoverzicht",
+      "submitButton": "Reservering Voltooien",
+      "loadingButton": "Verwerken...",
+      "noCountryResults": "Land niet gevonden.",
+      "preferredCountries": "Favorieten",
+      "allCountries": "Alle landen",
+      "searchCountryPlaceholder": "Zoek land of code..."
+    },
+    "step4": {
+      "title": "Reservering Bevestigd",
+      "description": "Uw reis is succesvol gepland. Bedankt dat u voor ons heeft gekozen.",
+      "pnrLabel": "UW PNR CODE",
+      "saveWarning": "Noteer alstublieft uw PNR-code. U kunt de status van uw reservering met deze code volgen op het zoekscherm op de startpagina.",
+      "summaryTitle": "Reisoverzicht",
+      "newReservationButton": "Maak Nieuwe Reservering"
+    },
+    "addonModal": {
+      "babySeatTitle": "Keuze babyzitje",
+      "babySeatDesc": "U kunt maximaal 3 van elke optie toevoegen. Selecties worden automatisch bij de totale prijs opgeteld.",
+      "vehicleExtraTitle": "Keuze extra's voertuig",
+      "vehicleExtraDesc": "U kunt uit extra pakketten kiezen om uw reiservaring te personaliseren.",
+      "badge": "Extra verzoek",
+      "close": "Sluiten",
+      "perItem": "/ stuk",
+      "totalTitle": "Totaal modal",
+      "selectionCount": "selecties",
+      "confirmBtn": "Selectie bevestigen"
+    },
+    "summary": {
+      "vehicle": "Voertuig",
+      "route": "Route",
+      "tripType": "Type reis",
+      "oneWay": "Enkele reis",
+      "roundTrip": "Retour",
+      "date": "Datum",
+      "passenger": "Passagier",
+      "pickup": "Ophaallocatie",
+      "dropoff": "Afleverlocatie",
+      "note": "Notitie",
+      "extras": "Extra verzoeken",
+      "totalPrice": "Totale reiskosten",
+      "totalDesc": "Dit bedrag is inclusief het gekozen voertuig, reistype en eventuele extra verzoeken.",
+      "infoCheck": "U kunt uw gegevens controleren en uw reservering in één stap voltooien.",
+      "totalLabelMobile": "Totaal"
+    },
+    "validation": {
+      "nameMin": "Naam en achternaam moet minimaal 2 tekens lang zijn.",
+      "nameMax": "Naam en achternaam is te lang.",
+      "phoneMin": "Telefoonnummer is te kort.",
+      "phoneMax": "Telefoonnummer is te lang.",
+      "phoneRegex": "Telefoonnummer mag alleen uit cijfers bestaan.",
+      "emailInvalid": "Voer een geldig e-mailadres in.",
+      "pickupMax": "Ophaaladres is te lang.",
+      "dropoffMax": "Afleveradres is te lang.",
+      "noteMax": "Reserveringsnotitie is te lang."
+    },
+    "steps": {
+      "step1": "Route",
+      "step2": "Voertuigkeuze",
+      "step3": "Contact & Bevestiging"
+    },
+    "alerts": {
+      "missingFieldsStep1": "Selecteer route, datum en tijd.",
+      "noRoute": "Geen geschikt voertuig gevonden voor deze route.",
+      "success": "Uw reservering is succesvol aangemaakt! PNR: {pnr}",
+      "error": "Er is een fout opgetreden bij het aanmaken van de reservering.",
+      "networkError": "Kan niet communiceren met de server. Probeer het opnieuw."
+    }
+  },
+  "TestimonialSection": {
+    "titlePart1": "VIP ervaringen ",
+    "titlePart2": "van onze gasten.",
+    "description": "Bekijk de ervaringen van onze gasten die ons hebben gekozen voor verschillende reizen, van luchthaventransfers tot speciale evenementen.",
+    "scrollHint": "Scroll om beoordelingen te ontdekken",
+    "testimonials": {
+      "t1": {
+        "name": "Ahmet Yilmaz",
+        "role": "Zakenman",
+        "text": "Ik had een voertuig nodig voor mijn vergaderingen de hele dag. De netheid van het voertuig, de wifi-snelheid en de professionaliteit van de kapitein waren van wereldklasse. Ik zal zeker weer voor hen kiezen."
+      },
+      "t2": {
+        "name": "Selin Karaca",
+        "role": "Architect",
+        "text": "We werden opgehaald vanaf de luchthaven van Antalya voor onze late vlucht. Het voertuig was precies op tijd en de rit was zo soepel dat ik in slaap viel. Een geweldige ervaring."
+      },
+      "t3": {
+        "name": "Caner & Cansu",
+        "role": "Huwelijksreis Koppel",
+        "text": "We huurden een voertuig uit de Maybach-serie voor onze huwelijksreis. De champagneservice, het sterrenplafond en de luxe details in de auto zorgden voor een geweldige start van onze vakantie."
+      },
+      "t4": {
+        "name": "Murat Demir",
+        "role": "Reisbureau",
+        "text": "We vertrouwen onze VIP-gasten al jaren blindelings aan hen toe. Het operationele team is erg snel en de voertuigen zijn altijd brandschoon. Een van onze beste partners in de branche."
+      },
+      "t5": {
+        "name": "Elena Petrova",
+        "role": "Toerist",
+        "text": "Onze chauffeur sprak Russisch en gaf ons geweldige tips over de stad. Dankzij het VIP-ontwerp met scheidingswand voelden we ons als gezin volledig geïsoleerd en veilig."
+      },
+      "t6": {
+        "name": "Ozan Tekin",
+        "role": "Ondernemer",
+        "text": "Geen verrassingsprijzen, geen vertragingen, geen stress. Ik kon in enkele seconden een reservering maken via de app en de betaling afronden. De beste keuze voor zakelijk vervoer."
+      }
+    }
+  },
+  "VehicleGalleryModal": {
+    "subtitle": "Voertuig Detailafbeeldingen",
+    "imageAlt": "{vehicleName} - Afbeelding {index}",
+    "enlargedAlt": "{vehicleName} - Vergroot"
+  },
+  "GalleryPage": {
+    "title": "Galerij | VIP Booking",
+    "description": "Premium interieur- en exterieuraanzichten van onze VIP transfervoertuigen, luxe reiservaring."
+  },
+  "AboutPage": {
+    "title": "Over Ons | VIP Booking",
+    "description": "De professionele visie, ervaren medewerkers en luxe transportprincipes achter onze premium VIP transferdiensten."
+  },
+  "ContactPage": {
+    "title": "Contact | VIP Booking",
+    "description": "Neem contact met ons op voor uw transferaanvragen en vragen. 24/7 VIP klantenondersteuning."
+  },
+  "ReservationPage": {
+    "title": "Reservering | VIP Booking",
+    "description": "Boek nu uw premium VIP transferdiensten. Ervaar een exclusieve reiservaring met onze luxe voertuigen en professioneel team."
+  },
+  "HomePage": {
+    "title": "VIP Booking | Luxe Transfer & Autoverhuur met Chauffeur",
+    "description": "Betrouwbare, comfortabele en professionele VIP transferdiensten in Antalya en Istanbul. Boek direct voor speciale evenementen en luchthaventransfers."
+  },
+  "RootLayout": {
+    "title": "VIP Booking App",
+    "description": "Premium reserverings- en reiservaring."
+  },
+  "PnrSearchPage": {
+    "title1": "Reservering",
+    "title2": "Zoeken",
+    "description": "U kunt direct de huidige status van uw reservering opvragen met de PNR-code uit ons systeem en uw e-mailadres.",
+    "pnrLabel": "PNR Code",
+    "pnrPlaceholder": "2740",
+    "emailLabel": "Uw E-mailadres",
+    "emailPlaceholder": "voorbeeld@mail.com",
+    "searchButton": "Zoeken",
+    "transferStatus": "Transfer Status",
+    "dateTimeLabel": "Datum & Tijd",
+    "totalAmountLabel": "Totaal Bedrag",
+    "transferRouteLabel": "Transfer Route",
+    "roundTrip": "Retour",
+    "oneWay": "Enkele Reis",
+    "status": {
+      "PENDING": "In Afwachting",
+      "CONFIRMED": "Bevestigd",
+      "CANCELLED": "Geannuleerd",
+      "COMPLETED": "Voltooid"
+    },
+    "alerts": {
+      "networkError": "Kan geen verbinding maken met de server. Probeer het opnieuw.",
+      "notFound": "Geen reservering gevonden voor de ingevoerde gegevens. Controleer uw gegevens en probeer het opnieuw."
+    }
+  },
+  "PrivacyPolicyPage": {
+    "title": "Privacybeleid",
+    "description": "Informatie over hoe persoonsgegevens worden verwerkt op de VIP Booking-website en tijdens reserveringsprocessen.",
+    "backToHome": "Terug naar home",
+    "legalNotice": "Juridische Kennisgeving",
+    "lastUpdate": "Laatste update: 26 mei 2026",
+    "warning": "Deze tekst is opgesteld voor algemene informatiedoeleinden. Het wordt aanbevolen om deze door een juridisch expert te laten controleren volgens de daadwerkelijke gegevensverwerkingsprocessen van uw bedrijf.",
+    "sections": {
+      "1": {
+        "title": "1. Verwerkingsverantwoordelijke",
+        "content": "Dit privacybeleid is opgesteld om uit te leggen hoe persoonsgegevens worden verwerkt op de website en bij reserveringsprocessen van VIP Booking Turizm Taşımacılık Sanayi Ve Tic.Ltd.Şti."
+      },
+      "2": {
+        "title": "2. Verzamelde Persoonsgegevens",
+        "content": "Informatie zoals naam, achternaam, telefoonnummer, e-mailadres, ophaal- en afleverlocaties, reserveringsdatum, passagiersgegevens en speciale verzoeken kunnen worden verwerkt."
+      },
+      "3": {
+        "title": "3. Doeleinden van de Verwerking",
+        "content": "Uw persoonsgegevens worden verwerkt om reserveringsaanvragen te ontvangen, transferdiensten te plannen, klantcommunicatie te waarborgen, offertes te maken, de servicekwaliteit te verbeteren en aan wettelijke verplichtingen te voldoen."
+      },
+      "4": {
+        "title": "4. Overdracht van Persoonsgegevens",
+        "content": "Uw persoonsgegevens kunnen beperkt worden gedeeld met het operationele team, chauffeurs, technische dienstverleners en bevoegde openbare instanties als dit nodig is om de dienst te verlenen."
+      },
+      "5": {
+        "title": "5. Bewaartermijn",
+        "content": "Uw persoonsgegevens worden bewaard voor de periode die nodig is voor het doel van de verwerking en binnen de wettelijke bewaartermijnen. Daarna worden de gegevens verwijderd of geanonimiseerd."
+      },
+      "6": {
+        "title": "6. Gebruik van Cookies",
+        "content": "Op onze website kunnen strikt noodzakelijke, voorkeurs-, analytische en marketingcookies worden gebruikt. Noodzakelijke cookies zijn vereist voor de veilige werking van de site."
+      },
+      "7": {
+        "title": "7. Cookievoorkeuren",
+        "content": "U kunt uw cookievoorkeuren op elk moment wijzigen via de link 'Cookievoorkeuren' onderaan de website. Noodzakelijke cookies kunnen niet worden uitgeschakeld."
+      },
+      "8": {
+        "title": "8. Uw Rechten",
+        "content": "U heeft het recht om informatie, correctie of verwijdering van uw persoonsgegevens aan te vragen, evenals bezwaar te maken tegen verwerkingsactiviteiten."
+      },
+      "9": {
+        "title": "9. Contact",
+        "content": "U kunt contact met ons opnemen via reservation@vipbooking.com voor uw verzoeken met betrekking tot het privacybeleid en uw persoonsgegevens."
+      }
+    }
+  },
+  "TermsOfUsePage": {
+    "title": "Gebruiksvoorwaarden",
+    "description": "Basisgebruiksvoorwaarden die van toepassing zijn bij het gebruik van de VIP Booking-website, reserverings- en transferdiensten.",
+    "backToHome": "Terug naar home",
+    "legalNotice": "Juridische Kennisgeving",
+    "lastUpdate": "Laatste update: 26 mei 2026",
+    "warning": "Deze tekst is opgesteld voor algemene informatiedoeleinden. Het wordt aanbevolen om deze door een juridisch expert te laten controleren volgens uw daadwerkelijke reserverings-, annulerings-, terugbetalings- en aansprakelijkheidsprocessen.",
+    "sections": {
+      "1": {
+        "title": "1. Algemene Bepalingen",
+        "content": "Deze gebruiksvoorwaarden regelen de basisregels met betrekking tot de reserverings-, offerte-, communicatie- en transferdiensten die via de VIP Booking-website worden aangeboden. Gebruikers van de website worden geacht deze voorwaarden te hebben geaccepteerd."
+      },
+      "2": {
+        "title": "2. Omvang van de Dienstverlening",
+        "content": "VIP Booking biedt VIP-transportdiensten zoals luchthaventransfers, stadstransfers en transfers voor speciale evenementen. De omvang kan variëren afhankelijk van de gekozen route, voertuigtype, aantal passagiers en reserveringsdetails."
+      },
+      "3": {
+        "title": "3. Reserveringsproces",
+        "content": "Bij het maken van een reservering moeten gebruikers de datum, tijd, ophaal- en afleverlocatie, aantal passagiers, contactgegevens en eventuele speciale verzoeken volledig en correct opgeven. De gebruiker is verantwoordelijk voor storingen als gevolg van onjuiste informatie."
+      },
+      "4": {
+        "title": "4. Prijzen",
+        "content": "De getoonde prijzen kunnen variëren afhankelijk van de geselecteerde route, voertuigtype, reistype en extra verzoeken. Het definitieve tarief wordt tijdens het reserveringsproces of de offerte medegedeeld."
+      },
+      "5": {
+        "title": "5. Extra Verzoeken",
+        "content": "Babyzitjes, extra producten in het voertuig of speciale begroetingen worden verstrekt op basis van beschikbaarheid. Voor extra verzoeken kunnen extra kosten in rekening worden gebracht."
+      },
+      "6": {
+        "title": "6. Annuleringen en Wijzigingen",
+        "content": "Verzoeken tot annulering of wijziging van de reservering dienen zo snel mogelijk aan het VIP Booking team te worden doorgegeven. Voorwaarden kunnen variëren afhankelijk van het type dienst en de reserveringstijd."
+      },
+      "7": {
+        "title": "7. Verantwoordelijkheden van de Gebruiker",
+        "content": "De gebruiker bevestigt dat de verstrekte informatie juist en actueel is. De gebruiker is verantwoordelijk voor vertragingen of annuleringen als gevolg van onjuiste locatie-, datum-, tijd- of contactgegevens."
+      },
+      "8": {
+        "title": "8. Aansprakelijkheidsbeperkingen",
+        "content": "VIP Booking streeft ernaar de service zoals gepland te leveren. De aansprakelijkheid kan echter beperkt zijn door verkeer, weersomstandigheden, wegafsluitingen, vluchtwijzigingen, overmacht of vertragingen veroorzaakt door derden."
+      },
+      "9": {
+        "title": "9. Intellectueel Eigendom",
+        "content": "De ontwerpen, teksten, afbeeldingen, logo's en merken op de website behoren toe aan de respectievelijke rechthebbenden. Deze mogen niet zonder toestemming worden gekopieerd of voor commerciële doeleinden worden gebruikt."
+      },
+      "10": {
+        "title": "10. Contact",
+        "content": "Voor vragen over de gebruiksvoorwaarden kunt u contact met ons opnemen via reservation@vipbooking.com."
+      }
+    }
+  }
+}

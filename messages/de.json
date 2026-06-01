@@ -24,25 +24,54 @@
     "subTitle": "Kontakt",
     "titlePart1": "Kontaktieren ",
     "titlePart2": "Sie uns.",
-    "description": "Sie können unser professionelles Team jederzeit für Transferanfragen, spezielle Veranstaltungen oder Fragen kontaktieren.",
+    "description": "Für Ihre Transferanfragen, besondere Veranstaltungen oder Fragen können Sie sich jederzeit an unser professionelles Team wenden.",
     "info": {
       "companyLabel": "Firmenname",
       "companyName": "VIP Booking Turizm Taşımacılık Sanayi Ve Tic.Ltd.Şti",
       "addressLabel": "Adresse",
-      "addressValue": "Güzelyurt Mah. 26065 sokak No:6, Aksu / Antalya",
+      "addressValue": "Güzelyurt Viertel, Incik Pinari Straße, Nr:25 Aksu / Antalya",
       "phoneLabel": "Telefon",
-      "emailLabel": "E-Mail"
+      "emailLabel": "E-Mail",
+      "phoneDesc": "Sie können uns für Ihre Reservierungs- und Transferanfragen anrufen.",
+      "emailDesc": "Sie können uns für Reservierungen, Angebote und allgemeine Fragen schreiben.",
+      "companyDesc": "VIP-Transfer und private Transportdienste."
     },
     "form": {
-      "nameLabel": "Vollständiger Name",
-      "namePlaceholder": "Ihr Vor- und Nachname",
+      "nameLabel": "Vor- und Nachname",
+      "namePlaceholder": "Ihr Name und Nachname",
       "emailLabel": "E-Mail",
       "emailPlaceholder": "beispiel@mail.com",
       "phoneLabel": "Telefon",
       "phonePlaceholder": "555 000 00 00",
       "messageLabel": "Nachricht",
-      "messagePlaceholder": "Sie können Ihre Nachricht hier schreiben...",
-      "submitButton": "Nachricht senden"
+      "messagePlaceholder": "Hier können Sie Ihre Nachricht schreiben...",
+      "submitButton": "Nachricht senden",
+      "formHeaderPrefix": "Wir werden uns so schnell wie möglich bei Ihnen melden.",
+      "formHeaderHighlight": "Senden Sie Ihre Transferanfrage",
+      "formHeaderSuffix": "im Detail.",
+      "searchCountryPlaceholder": "Land oder Code suchen...",
+      "noCountryResults": "Land nicht gefunden.",
+      "preferredCountries": "Häufig verwendet",
+      "allCountries": "Alle Länder",
+      "minChar": "Mindestens 10 Zeichen.",
+      "robotTitle": "Ich bin kein Roboter",
+      "robotDesc": "Bitte vor dem Senden bestätigen.",
+      "sending": "Wird gesendet..."
+    },
+    "alerts": {
+      "success": "Ihre Nachricht wurde erfolgreich gesendet. Wir werden uns so schnell wie möglich bei Ihnen melden.",
+      "error": "Beim Senden der Nachricht ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal."
+    },
+    "validation": {
+      "nameMin": "Name muss mindestens 2 Zeichen lang sein.",
+      "nameMax": "Name ist zu lang.",
+      "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+      "phoneMin": "Telefonnummer ist zu kurz.",
+      "phoneMax": "Telefonnummer ist zu lang.",
+      "phoneRegex": "Die Telefonnummer darf nur aus Ziffern bestehen.",
+      "messageMin": "Die Nachricht muss mindestens 10 Zeichen lang sein.",
+      "messageMax": "Die Nachricht ist zu lang.",
+      "humanCheck": "Sie müssen vor dem Senden bestätigen."
     }
   },
   "CookieConsentBanner": {
@@ -114,7 +143,7 @@
     "description": "Zuverlässiges, komfortables und professionelles VIP-Transporterlebnis für Ihre Flughafen-, Stadt- und Event-Transfers.",
     "quickLinksTitle": "Schnellzugriff",
     "contactTitle": "Kontaktinformationen",
-    "address": "Flughafen Antalya, Lara, Belek, Kemer und VIP-Transferservice in der Stadt",
+    "address": "Güzelyurt Viertel, Incik Pinari Straße, Nr:25 Aksu / Antalya",
     "copyright": "© 2026 VIP Booking. Alle Rechte vorbehalten.",
     "privacyPolicy": "Datenschutzerklärung",
     "termsOfUse": "Nutzungsbedingungen",
@@ -433,6 +462,102 @@
     "alerts": {
       "networkError": "Verbindung zum Server fehlgeschlagen. Bitte versuchen Sie es erneut.",
       "notFound": "Für die angegebenen Informationen wurde keine Reservierung gefunden. Bitte überprüfen Sie Ihre Daten und versuchen Sie es erneut."
+    }
+  },
+  "PrivacyPolicyPage": {
+    "title": "Datenschutzrichtlinie",
+    "description": "Informationen darüber, wie personenbezogene Daten auf der VIP Booking-Website und während des Reservierungsprozesses verarbeitet werden.",
+    "backToHome": "Zurück zur Startseite",
+    "legalNotice": "Rechtlicher Hinweis",
+    "lastUpdate": "Letzte Aktualisierung: 26. Mai 2026",
+    "warning": "Dieser Text dient allgemeinen Informationszwecken. Es wird empfohlen, ihn von einem Rechtsexperten gemäß den tatsächlichen Datenverarbeitungsprozessen Ihres Unternehmens überprüfen zu lassen.",
+    "sections": {
+      "1": {
+        "title": "1. Datenverantwortlicher",
+        "content": "Diese Datenschutzrichtlinie wurde erstellt, um zu erklären, wie personenbezogene Daten auf der Website sowie bei Reservierungs- und Kommunikationsprozessen von VIP Booking Turizm Taşımacılık Sanayi Ve Tic.Ltd.Şti verarbeitet werden."
+      },
+      "2": {
+        "title": "2. Erhobene personenbezogene Daten",
+        "content": "Informationen wie Name, Vorname, Telefonnummer, E-Mail-Adresse, Abhol- und Zielort, Reservierungsdatum, Passagierdaten, Sonderwünsche und Nachrichteninhalte können verarbeitet werden."
+      },
+      "3": {
+        "title": "3. Zwecke der Verarbeitung",
+        "content": "Ihre personenbezogenen Daten werden verarbeitet, um Reservierungsanfragen entgegenzunehmen, Transferdienste zu planen, Kundenkommunikation sicherzustellen, Angebote zu erstellen, die Servicequalität zu verbessern und gesetzliche Verpflichtungen zu erfüllen."
+      },
+      "4": {
+        "title": "4. Übermittlung personenbezogener Daten",
+        "content": "Ihre Daten können in begrenztem Umfang an das Operationsteam, Fahrer, technische Dienstleister und befugte Behörden weitergegeben werden, sofern dies zur Erbringung der Dienstleistung erforderlich ist."
+      },
+      "5": {
+        "title": "5. Speicherdauer",
+        "content": "Ihre Daten werden für den Zeitraum gespeichert, der für den Zweck der Verarbeitung erforderlich ist, und im Rahmen der gesetzlichen Aufbewahrungsfristen. Danach werden die Daten gelöscht oder anonymisiert."
+      },
+      "6": {
+        "title": "6. Verwendung von Cookies",
+        "content": "Auf unserer Website können zwingend erforderliche, Präferenz-, Analyse- und Marketing-Cookies verwendet werden. Erforderliche Cookies sind für den sicheren Betrieb der Seite notwendig."
+      },
+      "7": {
+        "title": "7. Cookie-Einstellungen",
+        "content": "Sie können Ihre Cookie-Einstellungen jederzeit über den Link 'Cookie-Einstellungen' unten auf der Website ändern. Erforderliche Cookies können nicht deaktiviert werden."
+      },
+      "8": {
+        "title": "8. Ihre Rechte",
+        "content": "Sie haben das Recht, Auskunft, Berichtigung, Löschung oder Vernichtung Ihrer personenbezogenen Daten zu verlangen sowie der Verarbeitung zu widersprechen."
+      },
+      "9": {
+        "title": "9. Kontakt",
+        "content": "Für Anfragen bezüglich der Datenschutzrichtlinie und Ihrer personenbezogenen Daten können Sie uns unter reservation@vipbooking.com kontaktieren."
+      }
+    }
+  },
+  "TermsOfUsePage": {
+    "title": "Nutzungsbedingungen",
+    "description": "Grundlegende Nutzungsbedingungen für die Nutzung der VIP Booking-Website sowie der Reservierungs- und Transferdienste.",
+    "backToHome": "Zurück zur Startseite",
+    "legalNotice": "Rechtlicher Hinweis",
+    "lastUpdate": "Letzte Aktualisierung: 26. Mai 2026",
+    "warning": "Dieser Text dient allgemeinen Informationszwecken. Es wird empfohlen, ihn von einem Rechtsexperten gemäß Ihren tatsächlichen Reservierungs-, Stornierungs-, Rückerstattungs- und Haftungsprozessen überprüfen zu lassen.",
+    "sections": {
+      "1": {
+        "title": "1. Allgemeine Bestimmungen",
+        "content": "Diese Nutzungsbedingungen regeln die grundlegenden Regeln für die über die VIP Booking-Website angebotenen Reservierungs-, Angebotsanfrage-, Kommunikations- und Transferdienste. Benutzer der Website erklären sich mit diesen Bedingungen einverstanden."
+      },
+      "2": {
+        "title": "2. Leistungsumfang",
+        "content": "VIP Booking bietet VIP-Transportdienste wie Flughafentransfers, Stadttransfers und Transfers für besondere Anlässe an. Der Leistungsumfang kann je nach gewählter Route, Fahrzeugtyp, Passagieranzahl und Reservierungsdetails variieren."
+      },
+      "3": {
+        "title": "3. Reservierungsprozess",
+        "content": "Benutzer müssen Datum, Uhrzeit, Abhol- und Zielort, Passagieranzahl, Kontaktinformationen und eventuelle Sonderwünsche bei der Reservierung vollständig und korrekt angeben. Der Benutzer haftet für Probleme, die durch unvollständige oder falsche Informationen entstehen."
+      },
+      "4": {
+        "title": "4. Preisgestaltung",
+        "content": "Die auf der Website angezeigten Preise können je nach Route, Fahrzeugtyp, Reiseart und Sonderwünschen variieren. Der endgültige Preis wird während der Reservierung oder Angebotserstellung mitgeteilt."
+      },
+      "5": {
+        "title": "5. Sonderwünsche",
+        "content": "Kindersitze, zusätzliche Produkte im Fahrzeug oder spezielle Begrüßungen werden je nach Verfügbarkeit bereitgestellt. Für Sonderwünsche können zusätzliche Gebühren anfallen, die zum Gesamtpreis addiert werden."
+      },
+      "6": {
+        "title": "6. Stornierungen und Änderungen",
+        "content": "Stornierungs- oder Änderungswünsche müssen dem VIP Booking-Team so schnell wie möglich mitgeteilt werden. Die Bedingungen können je nach Art der Dienstleistung, Reservierungszeit und Betriebsstatus variieren."
+      },
+      "7": {
+        "title": "7. Pflichten des Benutzers",
+        "content": "Der Benutzer bestätigt, dass die übermittelten Informationen korrekt und aktuell sind. Für Verzögerungen oder Serviceunterbrechungen aufgrund falscher Standort-, Datums-, Zeit- oder Kontaktangaben haftet der Benutzer."
+      },
+      "8": {
+        "title": "8. Haftungsbeschränkungen",
+        "content": "VIP Booking bemüht sich, den Service wie geplant bereitzustellen. Die Haftung kann jedoch aufgrund von Verkehr, Wetterbedingungen, Straßensperrungen, Flugänderungen, höherer Gewalt oder Verzögerungen durch Dritte beschränkt sein."
+      },
+      "9": {
+        "title": "9. Geistiges Eigentum",
+        "content": "Die Designs, Texte, Bilder, Logos, Marken und sonstigen Inhalte auf der Website gehören den jeweiligen Rechteinhabern. Sie dürfen nicht ohne Genehmigung kopiert, reproduziert oder kommerziell genutzt werden."
+      },
+      "10": {
+        "title": "10. Kontakt",
+        "content": "Bei Fragen zu den Nutzungsbedingungen oder Serviceprozessen kontaktieren Sie uns unter reservation@vipbooking.com."
+      }
     }
   }
 }

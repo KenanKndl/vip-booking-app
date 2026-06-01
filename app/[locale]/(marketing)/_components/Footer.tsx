@@ -36,7 +36,7 @@ const socialLinks = [
     },
     {
         label: "WhatsApp",
-        href: "https://wa.me/905000000000",
+        href: "https://wa.me/905332382964",
         icon: FaWhatsapp,
     },
 ];
@@ -110,20 +110,20 @@ export function Footer() {
                             </div>
 
                             <Link
-                                href="tel:+905000000000"
+                                href="tel:+905332382964"
                                 className="-mx-2 flex rounded-xl px-2 py-2 text-sm text-white/45 transition-colors hover:bg-white/[0.03] hover:text-white sm:mx-0 sm:px-0 sm:py-0 sm:hover:bg-transparent"
                             >
                                 <Phone className="mr-3 h-4 w-4 shrink-0 text-white/35" />
-                                <span>+90 500 000 00 00</span>
+                                <span>+90 533 238 29 64</span>
                             </Link>
 
                             <Link
-                                href="mailto:reservation@vipbooking.com"
+                                href="mailto:matildaviptravel@gmail.com"
                                 className="-mx-2 flex rounded-xl px-2 py-2 text-sm text-white/45 transition-colors hover:bg-white/[0.03] hover:text-white sm:mx-0 sm:px-0 sm:py-0 sm:hover:bg-transparent"
                             >
                                 <Mail className="mr-3 h-4 w-4 shrink-0 text-white/35" />
                                 <span className="break-all">
-                                    reservation@vipbooking.com
+                                    matildaviptravel@gmail.com
                                 </span>
                             </Link>
                         </div>

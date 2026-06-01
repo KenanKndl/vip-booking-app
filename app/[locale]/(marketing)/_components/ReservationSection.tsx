@@ -188,8 +188,15 @@ export function ReservationSection({
         fetchExtras();
     }, [locale]);
 
-    const pickupLocations = useMemo(() => Array.from(new Set(dbRoutes.map((r) => r.pickup))).filter(Boolean) as string[], [dbRoutes]);
-    const dropoffLocations = useMemo(() => Array.from(new Set(dbRoutes.map((r) => r.dropoff))).filter(Boolean) as string[], [dbRoutes]);
+    const pickupLocations = useMemo(() => {
+        const locations = Array.from(new Set(dbRoutes.map((r) => r.pickup))).filter(Boolean) as string[];
+        return locations.sort((a, b) => a.localeCompare(b, locale));
+    }, [dbRoutes, locale]);
+
+    const dropoffLocations = useMemo(() => {
+        const locations = Array.from(new Set(dbRoutes.map((r) => r.dropoff))).filter(Boolean) as string[];
+        return locations.sort((a, b) => a.localeCompare(b, locale));
+    }, [dbRoutes, locale]);
 
     const otherPhoneCountries = useMemo(() => {
         return allPhoneCountries.filter((country) => !preferredPhoneCountries.some((preferred) => preferred.code === country.code)).sort((a, b) => a.label.localeCompare(b.label));

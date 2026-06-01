@@ -28,6 +28,7 @@ const languages = [
     { code: "en", label: "English", flagClass: "fi fi-gb" },
     { code: "de", label: "Deutsch", flagClass: "fi fi-de" },
     { code: "ru", label: "Русский", flagClass: "fi fi-ru" },
+    { code: "nl", label: "Nederlands", flagClass: "fi fi-nl" }, // YENİ: Hollandaca eklendi
 ];
 
 const currencies = [

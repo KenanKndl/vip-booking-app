@@ -15,7 +15,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export const dynamic = "force-dynamic";
 
 export default async function RezervasyonPage() {
-    // Sadece ekranda gösterilecek verileri nokta atışı çekiyoruz (85MB -> birkaç KB'a düşecek)
     const routes = await prisma.route.findMany({
         where: { isActive: true }, 
         select: {
@@ -26,9 +25,8 @@ export default async function RezervasyonPage() {
                 select: {
                     id: true,
                     price: true,
-                    roundTripPrice: true,
-                    roundTripPriceEur: true,
-                    returnPrice: true,
+                    // Eğer veritabanı şemanda (schema.prisma) gidiş-dönüş için özel bir alan varsa
+                    // sadece onu buraya ekleyebilirsin. Yoksa böyle kalması hatasız çalışacaktır.
                     vehicle: {
                         select: {
                             id: true,

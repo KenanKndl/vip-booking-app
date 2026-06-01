@@ -34,6 +34,7 @@ import {
 
 type ReservationSectionProps = {
     dbRoutes: any[];
+    vehicles?: any[];
     exchangeRates: {
         eurToTl: number;
         eurToUsd: number;
@@ -97,6 +98,7 @@ const labelClass = "flex items-center gap-2 pl-1 text-[11px] font-semibold upper
 
 export function ReservationSection({
     dbRoutes = [],
+    vehicles = [],
     exchangeRates,
 }: ReservationSectionProps) {
     const t = useTranslations("ReservationSection");
@@ -210,13 +212,17 @@ export function ReservationSection({
 
     const availablePricings = useMemo(() => {
         if (!selectedRoute) return [];
-        return selectedRoute.prices.filter((pricing: any) => {
+        return selectedRoute.prices.map((pricing: any) => {
+            // Rotalardan ayırdığımız araçları burada tekrar birleştiriyoruz
+            const car = pricing.vehicle || (vehicles && vehicles.find((v: any) => v.id === pricing.vehicleId));
+            return { ...pricing, vehicle: car };
+        }).filter((pricing: any) => {
             const car = pricing.vehicle;
-            if (!car.isActive) return false;
+            if (!car || !car.isActive) return false;
             const maxCapacity = parseInt(String(car.pax).replace(/[^\d]/g, "")) || 6;
             return totalPassengers <= maxCapacity;
         });
-    }, [selectedRoute, totalPassengers]);
+    }, [selectedRoute, totalPassengers, vehicles]);
 
     const getTripBasePrice = (pricing: any, tripType: TripType) => {
         if (tripType === "oneWay") return Number(pricing.price);

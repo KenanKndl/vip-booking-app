@@ -9,7 +9,7 @@ import { useTranslations } from "next-intl";
 const exploreConfig = [
     {
         key: "vehicles",
-        href: "/araclarimiz",
+        href: "/#",
         icon: Car,
         iconColor: "text-[#0891B2]",
         iconBg: "bg-[#22D3EE]/12",

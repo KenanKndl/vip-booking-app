@@ -4,14 +4,13 @@ import "../globals.css";
 import { cn } from "@/lib/utils";
 import { getTranslations, getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
-import Script from "next/script"; // YENİ: Google Analytics için Script eklendi
+import Script from "next/script"; 
 
 const figtree = Figtree({
     subsets: ["latin"],
     variable: "--font-sans",
 });
 
-// ÇÖZÜM 2: params artık bir Promise, bu yüzden önce await ile çözümlüyoruz
 export async function generateMetadata({
     params,
 }: {
@@ -23,6 +22,10 @@ export async function generateMetadata({
     return {
         title: t("title"),
         description: t("description"),
+        // YENİ: Google AdSense Doğrulama Meta Etiketi
+        other: {
+            "google-adsense-account": "ca-pub-5995294488210697"
+        }
     };
 }
 
@@ -34,26 +37,22 @@ export default async function RootLayout({
     params: Promise<{ locale: string }>;
 }>) {
     
-    // URL'den dili yakalıyoruz
     const { locale } = await params;
-    
-    // ÇÖZÜM 1: Client bileşenleri için (Navbar vb.) çevirileri alıyoruz
     const messages = await getMessages();
 
     return (
         <html lang={locale} className={cn("h-full antialiased scroll-smooth", figtree.variable)}>
-        <head>
-            {/* Google AdSense Kodu */}
-            <Script
-                async
-                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5995294488210697"
-                crossOrigin="anonymous"
-                strategy="afterInteractive"
-            />
-        </head>
         <body className="min-h-full bg-[#0d0d0d] font-sans text-foreground overflow-x-hidden">
         
-        {/* YENİ: Google Analytics Başlangıç */}
+        {/* YENİ: Google AdSense Scripti */}
+        <Script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5995294488210697"
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+        />
+
+        {/* Google Analytics Başlangıç */}
         <Script
           strategy="afterInteractive"
           src={`https://www.googletagmanager.com/gtag/js?id=G-3F1DJ3LTWK`}
@@ -74,7 +73,6 @@ export default async function RootLayout({
         />
         {/* Google Analytics Bitiş */}
 
-        {/* Tüm uygulamayı Provider ile sarmalıyoruz ki Client Component'lar çevirilere erişebilsin */}
         <NextIntlClientProvider messages={messages}>
             {children}
         </NextIntlClientProvider>

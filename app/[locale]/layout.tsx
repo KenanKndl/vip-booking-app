@@ -42,6 +42,15 @@ export default async function RootLayout({
 
     return (
         <html lang={locale} className={cn("h-full antialiased scroll-smooth", figtree.variable)}>
+        <head>
+            {/* Google AdSense Kodu */}
+            <Script
+                async
+                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5995294488210697"
+                crossOrigin="anonymous"
+                strategy="afterInteractive"
+            />
+        </head>
         <body className="min-h-full bg-[#0d0d0d] font-sans text-foreground overflow-x-hidden">
         
         {/* YENİ: Google Analytics Başlangıç */}

@@ -286,9 +286,9 @@ export function ContactSection() {
             iconColor: "text-[#22D3EE]",
             iconBg: "bg-[#22D3EE]/10",
             label: t("info.phoneLabel"),
-            title: "+90 533 238 29 64",
+            title: "+31 6 8799 0618",
             description: t("info.phoneDesc"),
-            href: "tel:+905332382964",
+            href: "tel:+31687990618",
         },
         {
             key: "email",

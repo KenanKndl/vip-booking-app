@@ -36,7 +36,7 @@ const socialLinks = [
     },
     {
         label: "WhatsApp",
-        href: "https://wa.me/905332382964",
+        href: "https://wa.me/31687990618",
         icon: FaWhatsapp,
     },
 ];
@@ -110,11 +110,11 @@ export function Footer() {
                             </div>
 
                             <Link
-                                href="tel:+905332382964"
+                                href="tel:+31687990618"
                                 className="-mx-2 flex rounded-xl px-2 py-2 text-sm text-white/45 transition-colors hover:bg-white/[0.03] hover:text-white sm:mx-0 sm:px-0 sm:py-0 sm:hover:bg-transparent"
                             >
                                 <Phone className="mr-3 h-4 w-4 shrink-0 text-white/35" />
-                                <span>+90 533 238 29 64</span>
+                                <span>+31 6 8799 0618</span>
                             </Link>
 
                             <Link

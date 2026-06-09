@@ -1,8 +1,9 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { ChevronDown, Menu, X, MapPinned } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     DropdownMenu,
@@ -13,14 +14,13 @@ import {
 import { useRouter, usePathname } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 
-import { useCurrencyStore } from "@/store/useCurrencyStore"; 
+import { useCurrencyStore } from "@/store/useCurrencyStore";
 
-// YENİ: PNR Sorgula linki doğrudan konfigürasyona eklendi (Daha temiz kod)
 const navConfig = [
     { key: "about", href: "/hakkimizda" },
     { key: "gallery", href: "/galeri" },
     { key: "contact", href: "/iletisim" },
-    { key: "pnrSearch", href: "/sorgula" }, 
+    { key: "pnrSearch", href: "/sorgula" },
 ];
 
 const languages = [
@@ -28,13 +28,13 @@ const languages = [
     { code: "en", label: "English", flagClass: "fi fi-gb" },
     { code: "de", label: "Deutsch", flagClass: "fi fi-de" },
     { code: "ru", label: "Русский", flagClass: "fi fi-ru" },
-    { code: "nl", label: "Nederlands", flagClass: "fi fi-nl" }, // YENİ: Hollandaca eklendi
+    { code: "nl", label: "Nederlands", flagClass: "fi fi-nl" },
 ];
 
 const currencies = [
     { code: "EUR", symbol: "€", label: "Euro" },
     { code: "USD", symbol: "$", label: "US Dollar" },
-    { code: "TRY", symbol: "₺", label: "Türk Lirası" }, 
+    { code: "TRY", symbol: "₺", label: "Türk Lirası" },
 ];
 
 export function Navbar() {
@@ -45,21 +45,24 @@ export function Navbar() {
 
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    
+
     const selectedCurrency = useCurrencyStore((state) => state.currency);
     const setSelectedCurrency = useCurrencyStore((state) => state.setCurrency);
 
     const selectedLanguageData =
-        languages.find((l) => l.code === currentLocale) ?? languages[0];
+        languages.find((language) => language.code === currentLocale) ?? languages[0];
+
     const activeCurrencyData =
-        currencies.find((c) => c.code === selectedCurrency) ?? currencies[0];
+        currencies.find((currency) => currency.code === selectedCurrency) ?? currencies[0];
 
     useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 20);
         };
+
         window.addEventListener("scroll", handleScroll);
         handleScroll();
+
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
@@ -77,16 +80,15 @@ export function Navbar() {
         >
             <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-6 lg:px-8">
                 <div className="flex items-center gap-12">
-                    <Link href="/" className="group flex items-center gap-3">
-                        <MapPinned className="h-8 w-8 shrink-0 text-white/60 stroke-[1.1] transition-colors group-hover:text-white" />
-                        <div className="flex flex-col leading-none">
-                            <span className="text-sm font-bold tracking-[0.22em] text-white uppercase sm:tracking-[0.3em]">
-                                {t("brandName")}
-                            </span>
-                            <span className="mt-1 text-[10px] font-medium tracking-[0.18em] text-white/40 uppercase sm:text-[11px] sm:tracking-[0.22em]">
-                                {t("brandSub")}
-                            </span>
-                        </div>
+                    <Link href="/" className="flex h-12 items-center">
+                        <Image
+                            src="/images/matilda-logo-cropped.png"
+                            alt="Matilda Logo"
+                            width={160}
+                            height={60}
+                            priority
+                            className="h-10 w-auto object-contain sm:h-11"
+                        />
                     </Link>
 
                     <nav className="hidden items-center gap-8 md:flex">
@@ -103,35 +105,42 @@ export function Navbar() {
                 </div>
 
                 <div className="hidden items-center gap-2 md:flex">
-
-                    {/* DİL SEÇİCİ */}
                     <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
                             <button
                                 type="button"
                                 className="flex h-10 min-w-[82px] items-center justify-center gap-2 rounded-full px-4 text-xs font-semibold text-white/60 transition-colors hover:bg-white/10 hover:text-white"
                             >
-                                <span className={`${selectedLanguageData.flagClass} bg-transparent text-base outline-none shadow-none`} />
+                                <span
+                                    className={`${selectedLanguageData.flagClass} bg-transparent text-base outline-none shadow-none`}
+                                />
                                 <span>{selectedLanguageData.code.toUpperCase()}</span>
                                 <ChevronDown className="h-3.5 w-3.5 text-white/40" />
                             </button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="min-w-40 border-white/10 bg-[#111111] p-1 text-white !shadow-none [box-shadow:none]">
+
+                        <DropdownMenuContent
+                            align="end"
+                            className="min-w-40 border-white/10 bg-[#111111] p-1 text-white !shadow-none [box-shadow:none]"
+                        >
                             {languages.map((language) => (
                                 <DropdownMenuItem
                                     key={language.code}
                                     onSelect={() => handleLocaleChange(language.code)}
                                     className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 !text-white outline-none transition-colors hover:!bg-white/10 hover:!text-white focus:!bg-white/10 focus:!text-white data-[highlighted]:!bg-white/10 data-[highlighted]:!text-white [&_span]:!text-white"
                                 >
-                                    <span className={`${language.flagClass} bg-transparent text-base outline-none shadow-none`} />
+                                    <span
+                                        className={`${language.flagClass} bg-transparent text-base outline-none shadow-none`}
+                                    />
                                     <span className="text-sm">{language.label}</span>
-                                    <span className="ml-auto text-xs">{language.code.toUpperCase()}</span>
+                                    <span className="ml-auto text-xs">
+                                        {language.code.toUpperCase()}
+                                    </span>
                                 </DropdownMenuItem>
                             ))}
                         </DropdownMenuContent>
                     </DropdownMenu>
 
-                    {/* KUR SEÇİCİ */}
                     <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
                             <button
@@ -143,14 +152,22 @@ export function Navbar() {
                                 <ChevronDown className="h-3.5 w-3.5 text-white/40" />
                             </button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="min-w-40 border-white/10 bg-[#111111] p-1 text-white !shadow-none [box-shadow:none]">
+
+                        <DropdownMenuContent
+                            align="end"
+                            className="min-w-40 border-white/10 bg-[#111111] p-1 text-white !shadow-none [box-shadow:none]"
+                        >
                             {currencies.map((currency) => (
                                 <DropdownMenuItem
                                     key={currency.code}
-                                    onSelect={() => setSelectedCurrency(currency.code as 'EUR' | 'USD' | 'TRY')}
+                                    onSelect={() =>
+                                        setSelectedCurrency(currency.code as "EUR" | "USD" | "TRY")
+                                    }
                                     className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 !text-white outline-none transition-colors hover:!bg-white/10 hover:!text-white focus:!bg-white/10 focus:!text-white data-[highlighted]:!bg-white/10 data-[highlighted]:!text-white [&_span]:!text-white"
                                 >
-                                    <span className="text-base font-bold text-white/70 w-4 text-center">{currency.symbol}</span>
+                                    <span className="w-4 text-center text-base font-bold text-white/70">
+                                        {currency.symbol}
+                                    </span>
                                     <span className="text-sm">{currency.label}</span>
                                     <span className="ml-auto text-xs">{currency.code}</span>
                                 </DropdownMenuItem>
@@ -170,7 +187,11 @@ export function Navbar() {
                     <button
                         type="button"
                         onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-                        aria-label={isMobileMenuOpen ? t("mobile.closeMenu") : t("mobile.openMenu")}
+                        aria-label={
+                            isMobileMenuOpen
+                                ? t("mobile.closeMenu")
+                                : t("mobile.openMenu")
+                        }
                         className="relative flex h-10 w-10 items-center justify-center rounded-full text-white/75 transition-colors duration-300 hover:text-white"
                     >
                         <AnimatePresence mode="wait" initial={false}>
@@ -226,14 +247,15 @@ export function Navbar() {
 
                                 <div className="my-2 h-px w-full bg-white/5" />
 
-                                {/* MOBİL DİL SEÇİMİ */}
                                 <div className="flex items-center justify-between">
                                     <span className="text-sm font-medium text-white/40">
                                         {t("mobile.languageSelection")}
                                     </span>
+
                                     <div className="flex gap-1.5">
                                         {languages.map((language) => {
                                             const isActive = currentLocale === language.code;
+
                                             return (
                                                 <button
                                                     key={language.code}
@@ -252,20 +274,25 @@ export function Navbar() {
                                     </div>
                                 </div>
 
-                                {/* MOBİL KUR SEÇİMİ */}
-                                <div className="flex items-center justify-between mt-2">
+                                <div className="mt-2 flex items-center justify-between">
                                     <span className="text-sm font-medium text-white/40">
                                         {t("mobile.currencySelection")}
                                     </span>
+
                                     <div className="flex gap-1.5">
                                         {currencies.map((currency) => {
                                             const isActive = selectedCurrency === currency.code;
+
                                             return (
                                                 <button
                                                     key={currency.code}
                                                     type="button"
-                                                    onClick={() => setSelectedCurrency(currency.code as 'EUR' | 'USD' | 'TRY')}
-                                                    className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors flex items-center gap-1 ${
+                                                    onClick={() =>
+                                                        setSelectedCurrency(
+                                                            currency.code as "EUR" | "USD" | "TRY"
+                                                        )
+                                                    }
+                                                    className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
                                                         isActive
                                                             ? "bg-white text-black"
                                                             : "text-white/55 hover:bg-white/10 hover:text-white"
